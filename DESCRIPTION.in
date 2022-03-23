@@ -1,0 +1,11 @@
+Package: @PROJECT_NAME@
+Type: Package
+Title: What the package does (short line)
+Version: @PROJECT_VERSION_R@
+Date: 2022-03-23
+Author: Who wrote it
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?
+Imports: Rcpp (>= 1.0.8)
+LinkingTo: Rcpp, RcppArmadillo
