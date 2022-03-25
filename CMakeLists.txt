@@ -16,10 +16,8 @@ include_directories(../include)
 
 add_custom_target(hgwrr_rbuild
     VERBATIM
+    WORKING_DIRECTORY ${PROJECT_RBUILD_DIR}/..
     COMMAND_EXPAND_LISTS
-    COMMAND ${CMAKE_COMMAND} -E
-        make_directory
-        ${PROJECT_RBUILD_DIR}
     COMMAND ${CMAKE_COMMAND} -E
         copy_directory ${CMAKE_SOURCE_DIR}/R/R ${PROJECT_RBUILD_DIR}/R
     COMMAND ${CMAKE_COMMAND} -E
@@ -30,7 +28,11 @@ add_custom_target(hgwrr_rbuild
         copy_directory ${CMAKE_SOURCE_DIR}/include ${PROJECT_RBUILD_DIR}/src/libhgwr
     COMMAND ${CMAKE_COMMAND} -E
         copy_directory ${CMAKE_SOURCE_DIR}/src ${PROJECT_RBUILD_DIR}/src/libhgwr
-    WORKING_DIRECTORY ${PROJECT_RBUILD_DIR}
+    COMMAND ${CMAKE_COMMAND} -E
+        make_directory "${PROJECT_NAME}.library"
+    COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
+    COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
+    COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
 )
 
 add_library(hgwrr_rcpp_export SHARED src/RcppExports.cpp)
