@@ -31,7 +31,7 @@ RcppExport SEXP _hgwrr_backfitting_maximum_likelihood(
     SEXP verboseSEXP
 ) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
+    Rcpp::List rcpp_result_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type g(gSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type z(zSEXP);
@@ -49,7 +49,7 @@ BEGIN_RCPP
     HLMGWRArgs args = { g, x, z, y, u, arma::conv_to<arma::uvec>::from((arma::vec)group), bw };
     HLMGWROptions options = { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type };
     HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options);
-    List rcpp_result_gen = List::create(
+    rcpp_result_gen = List::create(
         Named("gamma") = hgwr_result.gamma,
         Named("beta") = hgwr_result.beta,
         Named("mu") = hgwr_result.mu,
