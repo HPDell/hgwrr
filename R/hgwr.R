@@ -1,0 +1,65 @@
+#' Hierarchical and Geographically Weighted Regression
+#'
+#' A Hierarchical Linear Model (HLM) with local fixed effects.
+#'
+#' @param formula A formula.
+#' Its structure is similar to \code{\link[lme4]{lmer}} function
+#' in **lme4** package.
+#' @param data A DataFrame.
+#' @param local.fixed A character vector.
+#' It contains names of local fixed effects.
+#' @param coords A 2-column matrix.
+#' It consists of coordinates for each group.
+#' @param bw A numeric value. It is the value of bandwidth.
+#' In this stage this function only support adaptive bandwidth.
+#' And its unit must be the number of nearest neighbours.
+#' @param alpha A numeric value. It is the size of the first trial step in
+#' maximum likelihood algorithm.
+#' @param eps_iter A numeric value. Terminate threshold of back-fitting.
+#' @param eps_gradient A numeric value. Terminate threshold of
+#' maximum likelihood algorithm.
+#' @param max_iters An integer value. The maximum of iteration.
+#' @param max_retries An integer value. If the algorithm tends to be diverge,
+#' it stops automatically after trying *max_retires* times.
+#' @param ml_type An integer value. Represent which maximum likelihood
+#' algorithm is used. Possible values are:
+#' \describe{
+#'  \item{`HGWR_ML_TYPE_D_ONLY`}
+#'      {Only \eqn{D} is specified by maximum likelihood.}
+#'  \item{`HGWR_ML_TYPE_D_BETA`}
+#'      {Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
+#' }
+#' @param verbose An integer value. Determine the log level.
+#' Possible values are:
+#' \describe{
+#'  \item{0}{no log is printed.}
+#'  \item{1}{only logs in back-fitting are printed.}
+#'  \item{2}{all logs are printed.}
+#' }
+#'
+#' @return A list consists of \eqn{\gamma}, \eqn{\beta}, \eqn{D}, \eqn{\mu}
+#' of a HGWR model.
+#'
+hgwr <- function(formula, data, local.fixed, coords, bw,
+                 alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+                 max_iters = 1e6, max_retries = 10,
+                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0) {
+    ### Extract variables
+    model.desc <- parse.formula(formula)
+    y <- data[[model.desc$response]]
+    group <- data[[model.desc$group]]
+    z <- as.matrix(cbind(1, data[model.desc$random.effects]))
+    fe <- model.desc$fixed.effects
+    x <- as.matrix(cbind(1, data[fe[!(fe %in% local.fixed)]]))
+    g <- as.matrix(cbind(1, aggregate(data[fe[fe %in% local.fixed]],
+        list(group),
+        mean)[,-1]))
+    hgwr_result <- .hgwr_bml(g, x, z, y, coords, group, bw,
+                             alpha, eps_iter, eps_gradient,
+                             as.integer(max_iters), as.integer(max_retries),
+                             as.integer(ml_type), as.integer(verbose))
+    hgwr_result
+}
+
+HGWR_ML_TYPE_D_ONLY <- as.integer(0)
+HGWR_ML_TYPE_D_BETA <- as.integer(1)

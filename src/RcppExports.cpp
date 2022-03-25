@@ -3,6 +3,7 @@
 
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
+#include "hlmgwr.h"
 
 using namespace Rcpp;
 
@@ -11,55 +12,55 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rcpparma_hello_world
-arma::mat rcpparma_hello_world();
-RcppExport SEXP _hgwrr_rcpparma_hello_world() {
+
+// hlmgwr_backfitting_maximum_likelihood
+RcppExport SEXP _hgwrr_backfitting_maximum_likelihood(
+    SEXP gSEXP, 
+    SEXP xSEXP, 
+    SEXP zSEXP, 
+    SEXP ySEXP, 
+    SEXP uSEXP, 
+    SEXP groupSEXP, 
+    SEXP bwSEXP,
+    SEXP alphaSEXP, 
+    SEXP eps_iterSEXP, 
+    SEXP eps_gradientSEXP, 
+    SEXP max_itersSEXP, 
+    SEXP max_retriesSEXP,
+    SEXP ml_typeSEXP, 
+    SEXP verboseSEXP
+) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpparma_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_outerproduct
-arma::mat rcpparma_outerproduct(const arma::colvec& x);
-RcppExport SEXP _hgwrr_rcpparma_outerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_outerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_innerproduct
-double rcpparma_innerproduct(const arma::colvec& x);
-RcppExport SEXP _hgwrr_rcpparma_innerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_innerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_bothproducts
-Rcpp::List rcpparma_bothproducts(const arma::colvec& x);
-RcppExport SEXP _hgwrr_rcpparma_bothproducts(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_bothproducts(x));
+    Rcpp::traits::input_parameter< const arma::mat& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type group(groupSEXP);
+    Rcpp::traits::input_parameter< const double& >::type bw(bwSEXP);
+    Rcpp::traits::input_parameter< const double& >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps_iter(eps_iterSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps_gradient(eps_gradientSEXP);
+    Rcpp::traits::input_parameter< const size_t& >::type max_iters(max_itersSEXP);
+    Rcpp::traits::input_parameter< const size_t& >::type max_retries(max_retriesSEXP);
+    Rcpp::traits::input_parameter< const size_t& >::type ml_type(ml_typeSEXP);
+    Rcpp::traits::input_parameter< const size_t& >::type verbose(verboseSEXP);
+    HLMGWRArgs args = { g, x, z, y, u, arma::conv_to<arma::uvec>::from((arma::vec)group), bw };
+    HLMGWROptions options = { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type };
+    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options);
+    List rcpp_result_gen = List::create(
+        Named("gamma") = hgwr_result.gamma,
+        Named("beta") = hgwr_result.beta,
+        Named("mu") = hgwr_result.mu,
+        Named("D") = hgwr_result.D
+    );
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hgwrr_rcpparma_hello_world", (DL_FUNC) &_hgwrr_rcpparma_hello_world, 0},
-    {"_hgwrr_rcpparma_outerproduct", (DL_FUNC) &_hgwrr_rcpparma_outerproduct, 1},
-    {"_hgwrr_rcpparma_innerproduct", (DL_FUNC) &_hgwrr_rcpparma_innerproduct, 1},
-    {"_hgwrr_rcpparma_bothproducts", (DL_FUNC) &_hgwrr_rcpparma_bothproducts, 1},
+    {"_hgwrr_backfitting_maximum_likelihood", (DL_FUNC) &_hgwrr_backfitting_maximum_likelihood, 14},
     {NULL, NULL, 0}
 };
 
