@@ -28,13 +28,22 @@ add_custom_target(hgwrr_rbuild
         copy_directory ${CMAKE_SOURCE_DIR}/include ${PROJECT_RBUILD_DIR}/src/libhgwr
     COMMAND ${CMAKE_COMMAND} -E
         copy_directory ${CMAKE_SOURCE_DIR}/src ${PROJECT_RBUILD_DIR}/src/libhgwr
-    COMMAND ${CMAKE_COMMAND} -E
-        make_directory "${PROJECT_NAME}.library"
-    COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
-    COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
-    COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
+    # COMMAND ${CMAKE_COMMAND} -E
+    #     make_directory "${PROJECT_NAME}.library"
+    # COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
+    # COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
+    # COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
 )
 
 add_library(hgwrr_rcpp_export SHARED src/RcppExports.cpp)
 target_link_libraries(hgwrr_rcpp_export hgwrbml ${R_CORE_LIBRARY})
 set_target_properties(hgwrr_rcpp_export PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+set(HGWRR_TEST_SCRIPT_DIR ${hgwrr_BINARY_DIR}/bin)
+file(COPY test/test.R DESTINATION ${HGWRR_TEST_SCRIPT_DIR})
+
+add_test(
+    NAME Test_R_hgwr
+    COMMAND ${R_EXECUTABLE} < test.R TEST_DATA_DIR=${TEST_DATA_DIR}
+    WORKING_DIRECTORY ${HGWRR_TEST_SCRIPT_DIR}
+)
