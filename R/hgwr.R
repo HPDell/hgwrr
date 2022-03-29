@@ -43,17 +43,18 @@
 hgwr <- function(formula, data, local.fixed, coords, bw,
                  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
                  max_iters = 1e6, max_retries = 10,
-                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0) {
+                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0, debug = FALSE) {
     ### Extract variables
+    if (debug) {
+       browser()
+    }
     model.desc <- parse.formula(formula)
-    y <- data[[model.desc$response]]
-    group <- data[[model.desc$group]]
+    y <- as.vector(data[[model.desc$response]])
+    group <- as.vector(as.integer(data[[model.desc$group]]))
     z <- as.matrix(cbind(1, data[model.desc$random.effects]))
     fe <- model.desc$fixed.effects
     x <- as.matrix(cbind(1, data[fe[!(fe %in% local.fixed)]]))
-    g <- as.matrix(cbind(1, aggregate(data[fe[fe %in% local.fixed]],
-        list(group),
-        mean)[,-1]))
+    g <- as.matrix(cbind(1, aggregate(data[fe[fe %in% local.fixed]], list(group), mean)[,-1]))
     hgwr_result <- .hgwr_bml(g, x, z, y, coords, group, bw,
                              alpha, eps_iter, eps_gradient,
                              as.integer(max_iters), as.integer(max_retries),
