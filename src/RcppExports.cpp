@@ -38,7 +38,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type yParam(ySEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type uParam(uSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type groupParam(groupSEXP);
-    Rcpp::traits::input_parameter< const double& >::type bwParams(bwSEXP);
+    Rcpp::traits::input_parameter< const double& >::type bwParam(bwSEXP);
     Rcpp::traits::input_parameter< const double& >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< const double& >::type eps_iter(eps_iterSEXP);
     Rcpp::traits::input_parameter< const double& >::type eps_gradient(eps_gradientSEXP);
@@ -46,15 +46,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const size_t& >::type max_retries(max_retriesSEXP);
     Rcpp::traits::input_parameter< const size_t& >::type ml_type(ml_typeSEXP);
     Rcpp::traits::input_parameter< const size_t& >::type verbose(verboseSEXP);
+
     arma::mat g = arma::mat(gParam);
     arma::mat x = arma::mat(xParam);
     arma::mat z = arma::mat(zParam);
     arma::vec y = arma::vec(yParam);
     arma::mat u = arma::mat(uParam);
     arma::uvec group = arma::conv_to<arma::uvec>::from(arma::vec(groupParam)) - 1;
-    double bw = double(bwParams);
+    double bw = double(bwParam);
+    HLMGWRArgs args(g, x, z, y, u, group, bw);
     HLMGWROptions options(alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type);
-    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(g, x, z, y, u, group, bw, options);
+    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options);
+
     rcpp_result_gen = List::create(
         Named("gamma") = hgwr_result.gamma,
         Named("beta") = hgwr_result.beta,
