@@ -48,18 +48,33 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     if (debug) {
        browser()
     }
-    model.desc <- parse.formula(formula)
-    y <- as.vector(data[[model.desc$response]])
-    group <- as.vector(as.integer(data[[model.desc$group]]))
-    z <- as.matrix(cbind(1, data[model.desc$random.effects]))
-    fe <- model.desc$fixed.effects
-    x <- as.matrix(cbind(1, data[fe[!(fe %in% local.fixed)]]))
-    g <- as.matrix(cbind(1, aggregate(data[fe[fe %in% local.fixed]], list(group), mean)[,-1]))
+    model_desc <- parse.formula(formula)
+    y <- as.vector(data[[model_desc$response]])
+    group <- as.vector(as.integer(data[[model_desc$group]]))
+    group.unique <- unique(group)
+    z <- as.matrix(cbind(1, data[model_desc$random.effects]))
+    fe <- model_desc$fixed.effects
+    lfe <- fe[fe %in% local.fixed]
+    gfe <- fe[!(fe %in% local.fixed)]
+    x <- as.matrix(cbind(1, data[gfe]))
+    g <- as.matrix(cbind(1, aggregate(data[lfe], list(group), mean)[,-1]))
     hgwr_result <- .hgwr_bml(g, x, z, y, coords, group, bw,
                              alpha, eps_iter, eps_gradient,
                              as.integer(max_iters), as.integer(max_retries),
                              as.integer(ml_type), as.integer(verbose))
-    hgwr_result
+   gamma <- hgwr_result$gamma
+   beta <- t(hgwr_result$beta)
+   mu <- hgwr_result$mu
+   D <- hgwr_result$D
+   intercept <- gamma[,1] + mu[,1] + beta[,1]
+   coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
+   colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
+   fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
+   list(
+      coefficients = coefficients,
+      random.effects.var = D,
+      fitted = fitted
+   )
 }
 
 HGWR_ML_TYPE_D_ONLY <- as.integer(0)

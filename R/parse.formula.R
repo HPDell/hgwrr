@@ -58,8 +58,8 @@ parse.formula <- function(formula) {
             } else fe <- c(fe, cur)
         }
     }
-    model$random.effects <- as.character(re)
-    model$fixed.effects <- as.character(fe)
+    model$random.effects <- rev(as.character(re))
+    model$fixed.effects <- rev(as.character(fe))
     model
 }
 

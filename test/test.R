@@ -14,4 +14,9 @@ rownames(hgwr_data) <- NULL
 hgwr_coords <- as.matrix(data_u)
 hgwr_formula <- y ~ g1 + g2 + x1 + (z1 | group)
 
-hgwr(hgwr_formula, hgwr_data, c("g1", "g2"), hgwr_coords, 64)
+result <- hgwr(hgwr_formula, hgwr_data, c("g1", "g2"), hgwr_coords, 64)
+fitted <- result$fitted
+y <- hgwr_data$y
+residual <- y - fitted
+rsquared <- 1 - sum(residual^2) / sum((y - mean(y))^2)
+cat("Rsquared:", rsquared, "\n")
