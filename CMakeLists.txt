@@ -25,9 +25,9 @@ add_custom_target(hgwrr_rbuild
     COMMAND ${CMAKE_COMMAND} -E
         copy_directory ${CMAKE_SOURCE_DIR}/R/man ${PROJECT_RBUILD_DIR}/man
     COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/include ${PROJECT_RBUILD_DIR}/src/libhgwr
+        copy_directory ${CMAKE_SOURCE_DIR}/include ${PROJECT_RBUILD_DIR}/src
     COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/src ${PROJECT_RBUILD_DIR}/src/libhgwr
+        copy_directory ${CMAKE_SOURCE_DIR}/src ${PROJECT_RBUILD_DIR}/src
     # COMMAND ${CMAKE_COMMAND} -E
     #     make_directory "${PROJECT_NAME}.library"
     # COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
@@ -36,7 +36,7 @@ add_custom_target(hgwrr_rbuild
 )
 
 add_library(hgwrr_rcpp_export SHARED src/RcppExports.cpp)
-target_link_libraries(hgwrr_rcpp_export hgwrbml ${R_CORE_LIBRARY})
+target_link_libraries(hgwrr_rcpp_export hgwrbml)
 set_target_properties(hgwrr_rcpp_export PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 set(HGWRR_TEST_SCRIPT_DIR ${hgwrr_BINARY_DIR}/bin)
