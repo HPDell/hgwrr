@@ -3,18 +3,20 @@
 \alias{hgwrr}
 \docType{package}
 \title{
-\packageTitle{hgwrr}
+HGWR: Hierarchical and Geographically Weighted Regression
 }
 \description{
-\packageDescription{hgwrr}
+In this package we introduce an R and C++ implementation of Hierarchical 
+and Geographically Weighted Regression (HGWR) model. This model divides
+coefficients into three types: local fixed effects, global fixed effects, 
+and random effects. If data have spatial hierarchical structures 
+(especially are overlapping on some locations),
+it is worth trying this model to reach better fitness.
 }
 \details{
-
 The DESCRIPTION file:
 \packageDESCRIPTION{hgwrr}
 \packageIndices{hgwrr}
-~~ An overview of how to use the package, including the most important ~~
-~~ functions ~~
 }
 \author{
 \packageAuthor{hgwrr}
@@ -22,15 +24,11 @@ The DESCRIPTION file:
 Maintainer: \packageMaintainer{hgwrr}
 }
 \references{
-~~ Literature or other references for background information ~~
+Hu, Y., Lu, B., Ge, Y., Dong, G., 2022. 
+Uncovering spatial heterogeneity in real estate prices via 
+combined hierarchical linear model and geographically weighted regression. 
+Environment and Planning B: Urban Analytics and City Science 239980832110638. 
+\doi{10.1177/23998083211063885}
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
-~~ the R documentation directory ~~
 \keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-\examples{
-~~ simple examples of the most important functions ~~
-}
+

@@ -1,12 +1,12 @@
 Package: @PROJECT_NAME@
 Type: Package
-Title: What the package does (short line)
+Title: Hierarchical and Geographically Weighted Regression
 Version: @PROJECT_VERSION_R@
 Date: 2022-03-23
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Yigong Hu
+Maintainer: Yigong Hu <yigong.hu@bristol.ac.uk>
+Description: In this package we introduce an R and C++ implementation of Hierarchical and Geographically Weighted Regression (HGWR) model. This model divides coefficients into three types, i.e., local fixed effects, global fixed effects, and random effects. If data have spatial hierarchical structures (especially are overlapping on some locations), it is worth trying this model to reach better fitness.
+License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: GNU make

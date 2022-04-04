@@ -11,6 +11,12 @@ include_directories(${R_INCLUDE_DIRS} ${RCPP_ARMADILLO_INCLUDE_DIR} ${RCPP_INCLU
 
 configure_file(DESCRIPTION.in ${PROJECT_RBUILD_DIR}/DESCRIPTION)
 configure_file(NAMESPACE.in ${PROJECT_RBUILD_DIR}/NAMESPACE)
+file(COPY ${CMAKE_SOURCE_DIR}/R/R DESTINATION ${PROJECT_RBUILD_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/R/src DESTINATION ${PROJECT_RBUILD_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/R/man DESTINATION ${PROJECT_RBUILD_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/R/data DESTINATION ${PROJECT_RBUILD_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/include/hlmgwr.h DESTINATION ${PROJECT_RBUILD_DIR}/src)
+file(COPY ${CMAKE_SOURCE_DIR}/src/hlmgwr.cpp DESTINATION ${PROJECT_RBUILD_DIR}/src)
 
 include_directories(../include)
 
@@ -19,20 +25,10 @@ add_custom_target(hgwrr_rbuild
     WORKING_DIRECTORY ${PROJECT_RBUILD_DIR}/..
     COMMAND_EXPAND_LISTS
     COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/R/R ${PROJECT_RBUILD_DIR}/R
-    COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/R/src ${PROJECT_RBUILD_DIR}/src
-    COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/R/man ${PROJECT_RBUILD_DIR}/man
-    COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/include ${PROJECT_RBUILD_DIR}/src
-    COMMAND ${CMAKE_COMMAND} -E
-        copy_directory ${CMAKE_SOURCE_DIR}/src ${PROJECT_RBUILD_DIR}/src
-    # COMMAND ${CMAKE_COMMAND} -E
-    #     make_directory "${PROJECT_NAME}.library"
-    # COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
-    # COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
-    # COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
+        make_directory "${PROJECT_NAME}.library"
+    COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
+    COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
+    COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
 )
 
 add_library(hgwrr_rcpp_export SHARED src/RcppExports.cpp)
