@@ -58,7 +58,7 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     gfe <- fe[!(fe %in% local.fixed)]
     x <- as.matrix(cbind(1, data[gfe]))
     g <- as.matrix(cbind(1, aggregate(data[lfe], list(group), mean)[,-1]))
-    hgwr_result <- .hgwr_bml(g, x, z, y, coords, group, bw,
+    hgwr_result <- .hgwr_bml(g, x, z, y, as.matrix(coords), group, bw,
                              alpha, eps_iter, eps_gradient,
                              as.integer(max_iters), as.integer(max_retries),
                              as.integer(ml_type), as.integer(verbose))
