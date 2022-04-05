@@ -9,4 +9,5 @@ Description: In this package we introduce an R and C++ implementation of Hierarc
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp, RcppArmadillo
+Depends: R (>= 3.5.0), Rcpp, stats, utils
 SystemRequirements: GNU make
