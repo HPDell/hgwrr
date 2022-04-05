@@ -91,3 +91,59 @@ HGWR_ML_TYPE_D_ONLY <- as.integer(0)
 #'
 #' @family HGWR ML types
 HGWR_ML_TYPE_D_BETA <- as.integer(1)
+
+
+print.hgwrm.table <- function(x) {
+    x.length <- apply(x, 2, max)
+    x.fmt <- sprintf("%%%ds", x.length)
+    for(c in 1:ncol(x)) {
+        cat("|", sprintf(x.fmt[c], x[r, c]), " ")
+    }
+    cat("|\n")
+    for(c in 1:ncol(beta.str)) {
+        cat("|", sprintf(paste0(rep("-", x.fmt[c]))), " ")
+    }
+    cat("|\n")
+    for (r in 2:nrow(beta.str)) {
+        for (c in 1:ncol(beta.str)) {
+            cat("|", sprintf(x.fmt[c], x[r, c]), " ")
+        }
+        cat("|\n")
+    }
+}
+
+print.hgwrm <- function(x, ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwm object.")
+    }
+    cat("Hierarchical and geographically weighted regression model", "\n")
+    cat("=========================================================", "\n")
+    cat("Formula:", x$formula, "\n")
+    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
+    cat("   Data:", x$data.name, "\n")
+    cat("\n")
+    matrix2char <- function(m, fmt = "%.6f") {
+        apply(m, c(1, 2), function(x) { sprintf(fmt, x) })
+    }
+    effects <- x$model.effects
+    cat("Global Fixed Effects", "\n")
+    cat("-------------------", "\n")
+    beta.str <- rbind(
+        effects$global.fixed,
+        matrix2char(x$beta)
+    )
+    print.hgwrm.table(beta.str)
+    cat("\n")
+    cat("Local Fixed Effects", "\n")
+    cat("-------------------", "\n")
+    gamma.fivenum <- t(apply(x$gamma, 2, fivenum))
+    gamma.str <- rbind(
+        c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
+        cbind(effects$local.fixed, gamma.fivenum)
+    )
+    print.hgwrm.table(gamma.str)
+    cat("\n")
+    cat("Random Effects", "\n")
+    cat("--------------", "\n")
+    
+}
