@@ -12,6 +12,9 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+void prcout(std::string message) {
+    Rcout << message;
+}
 
 // hlmgwr_backfitting_maximum_likelihood
 RcppExport SEXP _hgwrr_backfitting_maximum_likelihood(
@@ -56,7 +59,7 @@ BEGIN_RCPP
     double bw = double(bwParam);
     HLMGWRArgs args(g, x, z, y, u, group, bw);
     HLMGWROptions options(alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type);
-    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options);
+    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options, prcout);
 
     rcpp_result_gen = List::create(
         Named("gamma") = hgwr_result.gamma,

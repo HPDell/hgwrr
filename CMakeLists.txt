@@ -21,6 +21,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/include/hlmgwr.h DESTINATION ${PROJECT_RBUILD_DIR}
 file(COPY ${CMAKE_SOURCE_DIR}/src/hlmgwr.cpp DESTINATION ${PROJECT_RBUILD_DIR}/src)
 
 include_directories(../include)
+add_definitions(-DRCPP_USE_GLOBAL_ROSTREAM)
 
 add_custom_target(hgwrr_rbuild
     VERBATIM
