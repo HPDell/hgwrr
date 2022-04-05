@@ -24,10 +24,8 @@
 #' @param ml_type An integer value. Represent which maximum likelihood
 #' algorithm is used. Possible values are:
 #' \describe{
-#'  \item{`HGWR_ML_TYPE_D_ONLY`}
-#'      {Only \eqn{D} is specified by maximum likelihood.}
-#'  \item{`HGWR_ML_TYPE_D_BETA`}
-#'      {Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
+#'  \item{\code{HGWR_ML_TYPE_D_ONLY}}{Only \eqn{D} is specified by maximum likelihood.}
+#'  \item{\code{HGWR_ML_TYPE_D_BETA}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
 #' }
 #' @param verbose An integer value. Determine the log level.
 #' Possible values are:
@@ -40,14 +38,19 @@
 #' @return A list consists of \eqn{\gamma}, \eqn{\beta}, \eqn{D}, \eqn{\mu}
 #' of a HGWR model.
 #'
+#' @examples
+#' data(multisampling)
+#' hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#'      data = multisampling$data,
+#'      local.fixed = c("g1", "g2"),
+#'      coords = multisampling$coord,
+#'      bw = 10)
+#'
 hgwr <- function(formula, data, local.fixed, coords, bw,
                  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
                  max_iters = 1e6, max_retries = 10,
-                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0, debug = FALSE) {
+                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0) {
     ### Extract variables
-    if (debug) {
-       browser()
-    }
     model_desc <- parse.formula(formula)
     y <- as.vector(data[[model_desc$response]])
     group <- as.vector(as.integer(data[[model_desc$group]]))
@@ -62,20 +65,27 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
                              alpha, eps_iter, eps_gradient,
                              as.integer(max_iters), as.integer(max_retries),
                              as.integer(ml_type), as.integer(verbose))
-   gamma <- hgwr_result$gamma
-   beta <- t(hgwr_result$beta)
-   mu <- hgwr_result$mu
-   D <- hgwr_result$D
-   intercept <- gamma[,1] + mu[,1] + beta[,1]
-   coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
-   colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
-   fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
-   list(
-      coefficients = coefficients,
-      random.effects.var = D,
-      fitted = fitted
-   )
+    gamma <- hgwr_result$gamma
+    beta <- t(hgwr_result$beta)
+    mu <- hgwr_result$mu
+    D <- hgwr_result$D
+    intercept <- gamma[,1] + mu[,1] + beta[,1]
+    coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
+    colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
+    fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
+    list(
+       coefficients = coefficients,
+       random.effects.var = D,
+       fitted = fitted
+    )
 }
 
+#' HGWR maximum likelihood algorithm type: D only.
+#'
+#' @family HGWR ML types
 HGWR_ML_TYPE_D_ONLY <- as.integer(0)
+
+#' HGWR maximum likelihood algorithm type: D and beta.
+#'
+#' @family HGWR ML types
 HGWR_ML_TYPE_D_BETA <- as.integer(1)

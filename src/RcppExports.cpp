@@ -15,19 +15,19 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // hlmgwr_backfitting_maximum_likelihood
 RcppExport SEXP _hgwrr_backfitting_maximum_likelihood(
-    SEXP gSEXP, 
-    SEXP xSEXP, 
-    SEXP zSEXP, 
-    SEXP ySEXP, 
-    SEXP uSEXP, 
-    SEXP groupSEXP, 
+    SEXP gSEXP,
+    SEXP xSEXP,
+    SEXP zSEXP,
+    SEXP ySEXP,
+    SEXP uSEXP,
+    SEXP groupSEXP,
     SEXP bwSEXP,
-    SEXP alphaSEXP, 
-    SEXP eps_iterSEXP, 
-    SEXP eps_gradientSEXP, 
-    SEXP max_itersSEXP, 
+    SEXP alphaSEXP,
+    SEXP eps_iterSEXP,
+    SEXP eps_gradientSEXP,
+    SEXP max_itersSEXP,
     SEXP max_retriesSEXP,
-    SEXP ml_typeSEXP, 
+    SEXP ml_typeSEXP,
     SEXP verboseSEXP
 ) {
 BEGIN_RCPP
