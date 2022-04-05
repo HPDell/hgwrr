@@ -11,6 +11,8 @@ include_directories(${R_INCLUDE_DIRS} ${RCPP_ARMADILLO_INCLUDE_DIR} ${RCPP_INCLU
 
 configure_file(DESCRIPTION.in ${PROJECT_RBUILD_DIR}/DESCRIPTION)
 configure_file(NAMESPACE.in ${PROJECT_RBUILD_DIR}/NAMESPACE)
+file(COPY configure DESTINATION ${PROJECT_RBUILD_DIR})
+file(COPY configure.ac DESTINATION ${PROJECT_RBUILD_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/R/R DESTINATION ${PROJECT_RBUILD_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/R/src DESTINATION ${PROJECT_RBUILD_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/R/man DESTINATION ${PROJECT_RBUILD_DIR})
@@ -26,8 +28,8 @@ add_custom_target(hgwrr_rbuild
     COMMAND_EXPAND_LISTS
     COMMAND ${CMAKE_COMMAND} -E
         make_directory "${PROJECT_NAME}.library"
-    COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library="${PROJECT_NAME}.library" ${PROJECT_NAME}
-    COMMAND ${R_EXECUTABLE} -e "devtools::document('${PROJECT_NAME}')"
+    COMMAND ${R_EXECUTABLE} CMD INSTALL --preclean --clean --library=${PROJECT_NAME}.library ${PROJECT_NAME}
+    COMMAND ${R_EXECUTABLE} -e "roxygen2::roxygenize('${PROJECT_NAME}', load_code = 'source')"
     COMMAND ${R_EXECUTABLE} CMD build ${PROJECT_NAME}
 )
 
