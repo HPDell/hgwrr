@@ -69,6 +69,7 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     beta <- t(hgwr_result$beta)
     mu <- hgwr_result$mu
     D <- hgwr_result$D
+    sigma <- hgwr_result$sigma
     intercept <- gamma[,1] + mu[,1] + beta[,1]
     coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
     colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
@@ -76,7 +77,8 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     list(
        coefficients = coefficients,
        random.effects.var = D,
-       fitted = fitted
+       fitted = fitted,
+       sigma = sigma
     )
 }
 

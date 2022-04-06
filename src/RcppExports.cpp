@@ -65,7 +65,8 @@ BEGIN_RCPP
         Named("gamma") = hgwr_result.gamma,
         Named("beta") = hgwr_result.beta,
         Named("mu") = hgwr_result.mu,
-        Named("D") = hgwr_result.D
+        Named("D") = hgwr_result.D,
+        Named("sigma") = hgwr_result.sigma
     );
     return rcpp_result_gen;
 END_RCPP
