@@ -70,16 +70,27 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
-    intercept <- gamma[,1] + mu[,1] + beta[,1]
-    coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
-    colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
+    # coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
+    # colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
     fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
-    list(
-       coefficients = coefficients,
-       random.effects.var = D,
-       fitted = fitted,
-       sigma = sigma
+    result <- list(
+        gamma = gamma,
+        beta = beta,
+        mu = mu,
+        D = D,
+        fitted = fitted,
+        sigma = sigma,
+        model.effects = list(
+            global.fixed = gfe,
+            local.fixed = lfe,
+            random = model_desc$random.effects,
+            group = model_desc$group
+        ),
+        call = match.call(),
+        frame = data
     )
+    class(result) <- "hgwrm"
+    result
 }
 
 #' HGWR maximum likelihood algorithm type: D only.
@@ -93,57 +104,91 @@ HGWR_ML_TYPE_D_ONLY <- as.integer(0)
 HGWR_ML_TYPE_D_BETA <- as.integer(1)
 
 
-print.hgwrm.table <- function(x) {
-    x.length <- apply(x, 2, max)
-    x.fmt <- sprintf("%%%ds", x.length)
+print.table.md <- function(x) {
+    x.length <- apply(x, c(1, 2), nchar)
+    x.length.max <- apply(x.length, 2, max)
+    x.fmt <- sprintf("%%%ds", x.length.max)
     for(c in 1:ncol(x)) {
-        cat("|", sprintf(x.fmt[c], x[r, c]), " ")
+        if(x.length.max[c] > 0)
+            cat("|", sprintf(x.fmt[c], x[1, c]), " ")
     }
     cat("|\n")
-    for(c in 1:ncol(beta.str)) {
-        cat("|", sprintf(paste0(rep("-", x.fmt[c]))), " ")
+    for(c in 1:ncol(x)) {
+        if(x.length.max[c] > 0)
+            cat("|", sprintf(paste(rep("-", x.length.max[c]), collapse = "")), " ")
     }
     cat("|\n")
-    for (r in 2:nrow(beta.str)) {
-        for (c in 1:ncol(beta.str)) {
-            cat("|", sprintf(x.fmt[c], x[r, c]), " ")
+    for (r in 2:nrow(x)) {
+        for (c in 1:ncol(x)) {
+            if(x.length.max[c] > 0)
+                cat("|", sprintf(x.fmt[c], x[r, c]), " ")
         }
         cat("|\n")
     }
 }
 
-print.hgwrm <- function(x, ...) {
+print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
+    matrix2char <- function(m, fmt = decimal.fmt) {
+        apply(m, c(1, 2), function(x) { sprintf(fmt, x) })
+    }
     if (class(x) != "hgwrm") {
         stop("It's not a hgwm object.")
     }
     cat("Hierarchical and geographically weighted regression model", "\n")
     cat("=========================================================", "\n")
-    cat("Formula:", x$formula, "\n")
+    cat("Formula:", deparse(x$call[[2]]), "\n")
     cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
-    cat("   Data:", x$data.name, "\n")
+    cat("   Data:", deparse(x$call[[3]]), "\n")
     cat("\n")
-    matrix2char <- function(m, fmt = "%.6f") {
-        apply(m, c(1, 2), function(x) { sprintf(fmt, x) })
-    }
     effects <- x$model.effects
     cat("Global Fixed Effects", "\n")
     cat("-------------------", "\n")
-    beta.str <- rbind(
-        effects$global.fixed,
+    beta_str <- rbind(
+        c("Intercept", effects$global.fixed),
         matrix2char(x$beta)
     )
-    print.hgwrm.table(beta.str)
+    print.table.md(beta_str)
     cat("\n")
     cat("Local Fixed Effects", "\n")
     cat("-------------------", "\n")
-    gamma.fivenum <- t(apply(x$gamma, 2, fivenum))
-    gamma.str <- rbind(
+    gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
+    gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-        cbind(effects$local.fixed, gamma.fivenum)
+        cbind(c("Intercept", effects$local.fixed), matrix2char(gamma_fivenum))
     )
-    print.hgwrm.table(gamma.str)
+    print.table.md(gamma_str)
     cat("\n")
     cat("Random Effects", "\n")
     cat("--------------", "\n")
-    
+    random_effects <- effects$random
+    random_corr_cov <- x$sigma * x$sigma * x$D
+    random_stddev <- sqrt(diag(random_corr_cov))
+    random_corr <- t(random_corr_cov / random_stddev) / random_stddev
+    diag(random_corr) <- 1
+    random_corr_str <- matrix2char(random_corr)
+    random_corr_str[!lower.tri(random_corr)] <- ""
+    random_corr_str <- rbind("", random_corr_str)
+    random_corr_str[1, 1] <- "Corr"
+    random_dev_str <- cbind(
+        "", c("Intercept", random_effects), matrix2char(matrix(random_stddev, ncol = 1))
+    )
+    random_dev_str[1, 1] <- effects$group
+    random_dev_str <- rbind(
+        c("Groups", "Name", "Std.Dev."),
+        random_dev_str
+    )
+    random_residual_str <- cbind(
+        matrix(c("Residual", "", sprintf(decimal.fmt, x$sigma)), nrow = 1),
+        matrix("", nrow = 1, ncol = ncol(random_corr))
+    )
+    random_str <- rbind(
+        cbind(random_dev_str, random_corr_str),
+        random_residual_str
+    )
+    print.table.md(random_str)
+    cat("\n")
+    cat("Other Information", "\n")
+    cat("-----------------", "\n")
+    cat("Number of Obs:", nrow(x$frame), "\n")
+    cat("       Groups:", effects$group, ",", nrow(x$mu), "\n")
 }

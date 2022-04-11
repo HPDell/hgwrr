@@ -5,3 +5,5 @@ importFrom("utils", "tail")
 export(hgwr)
 export(HGWR_ML_TYPE_D_ONLY)
 export(HGWR_ML_TYPE_D_BETA)
+
+S3method(print, hgwrm)
