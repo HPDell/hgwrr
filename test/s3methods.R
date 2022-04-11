@@ -6,3 +6,5 @@ result
 
 coef(result)
 coefficients(result)
+fitted(result)
+residuals(result)

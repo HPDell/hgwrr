@@ -70,19 +70,22 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
-    fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
+    fitted <- rowSums(g * gamma)[group] + as.vector(x %*% t(beta)) + rowSums(z * mu[group,])
+    residuals <- y - fitted
     result <- list(
         gamma = gamma,
         beta = beta,
         mu = mu,
         D = D,
         fitted = fitted,
+        residuals = residuals,
         sigma = sigma,
         model.effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
             random = model_desc$random.effects,
-            group = model_desc$group
+            group = model_desc$group,
+            response = model_desc$response
         ),
         call = match.call(),
         frame = data,
@@ -204,4 +207,18 @@ coef.hgwrm <- function(x, ...) {
     coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], x$groups))
     colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
     coef
+}
+
+fitted.hgwrm <- function(x, ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwm object.")
+    }
+    x$fitted
+}
+
+residuals.hgwrm <- function(x, ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwm object.")
+    }
+    x$residuals
 }
