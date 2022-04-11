@@ -70,8 +70,6 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
-    # coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
-    # colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
     fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
     result <- list(
         gamma = gamma,
@@ -87,7 +85,8 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
             group = model_desc$group
         ),
         call = match.call(),
-        frame = data
+        frame = data,
+        groups = group.unique
     )
     class(result) <- "hgwrm"
     result
@@ -191,4 +190,18 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-----------------", "\n")
     cat("Number of Obs:", nrow(x$frame), "\n")
     cat("       Groups:", effects$group, ",", nrow(x$mu), "\n")
+}
+
+coef.hgwrm <- function(x, ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwm object.")
+    }
+    gamma <- x$gamma
+    beta <- matrix(x$beta, nrow = length(x$groups), ncol = ncol(x$beta), byrow = T)
+    mu <- x$mu
+    intercept <- gamma[,1] + mu[,1] + beta[,1]
+    effects <- x$model.effects
+    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], x$groups))
+    colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
+    coef
 }
