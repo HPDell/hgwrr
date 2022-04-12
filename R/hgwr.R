@@ -288,3 +288,48 @@ residuals.hgwrm <- function(x, ...) {
     }
     x$residuals
 }
+
+summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwm object.")
+    }
+
+    ### Call information
+    cat("Hierarchical and geographically weighted regression model", "\n")
+    cat("=========================================================", "\n")
+    cat("Formula:", deparse(x$call[[2]]), "\n")
+    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
+    cat("   Data:", deparse(x$call[[3]]), "\n")
+    cat("\n")
+    
+    ### Diagnostics
+    cat("Diagnostics", "\n")
+    cat("-----------", "\n")
+    y <- x$frame[[x$model.effects$response]]
+    tss <- sum((y - mean(y))^2)
+    rss <- sum(x$residuals^2)
+    rsquared <- 1 - rss / tss
+    diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
+    diagnostic_chr <- rbind(
+        c("Rsquared"),
+        matrix2char(diagnostic_mat, decimal.fmt)
+    )
+    print.table.md(diagnostic_chr, ...)
+    cat("\n")
+
+    ### Residuals
+    cat("Scaled residuals", "\n")
+    cat("----------------", "\n")
+    resiudal_fivenum <- fivenum(x$residuals)
+    residual_fivenum_mat <- matrix(resiudal_fivenum, nrow = 1)
+    residual_fivenum_chr <- rbind(
+        c("Min", "1Q", "Median", "3Q", "Max"),
+        matrix2char(residual_fivenum_mat, decimal.fmt)
+    )
+    print.table.md(residual_fivenum_chr, ...)
+    cat("\n")
+    cat("Other Information", "\n")
+    cat("-----------------", "\n")
+    cat("Number of Obs:", nrow(x$frame), "\n")
+    cat("       Groups:", x$effects$group, ",", nrow(x$mu), "\n")
+}
