@@ -106,36 +106,79 @@ HGWR_ML_TYPE_D_ONLY <- as.integer(0)
 HGWR_ML_TYPE_D_BETA <- as.integer(1)
 
 
-print.table.md <- function(x) {
+print.table.md <- function(x, ...) {
+    mf <- match.call()
+    mfn <- names(mf)
+    if ("table.style" %in% mfn) {
+        table.style <- mf[["table.style"]]
+        if (table.style == "md") {
+            col.sep <- "|"
+            header.sep <- "-"
+            row.begin <- "|"
+            row.end <- "|"
+        } else if (table.style == "latex") {
+            col.sep <- "&"
+            header.sep <- ""
+            row.begin <- ""
+            row.end <- "\\\\"
+        } else if (table.style == "plain") {
+            col.sep <- ""
+            header.sep <- ""
+            row.begin <- ""
+            row.end <- ""
+        } else {
+           stop("Unknown table.style.")
+        }
+    } else {
+        col.sep <- ifelse("col.sep" %in% mfn, mf[["col.sep"]], "")
+        header.sep <- ifelse("header.sep" %in% mfn, mf[["header.sep"]], "")
+        row.begin <- ifelse("row.begin" %in% mfn, mf[["row.begin"]], col.sep)
+        row.end <- ifelse("row.end" %in% mfn, mf[["row.end"]], col.sep)
+    }
+    if (nchar(header.sep) > 1) {
+       stop("Currently only 1 character header.sep is supported.")
+    }
+    ### Print table
     x.length <- apply(x, c(1, 2), nchar)
     x.length.max <- apply(x.length, 2, max)
     x.fmt <- sprintf("%%%ds", x.length.max)
     for(c in 1:ncol(x)) {
         if(x.length.max[c] > 0)
-            cat("|", sprintf(x.fmt[c], x[1, c]), " ")
+            cat(ifelse(c == 1, row.begin, col.sep), sprintf(x.fmt[c], x[1, c]), " ")
     }
-    cat("|\n")
-    for(c in 1:ncol(x)) {
-        if(x.length.max[c] > 0)
-            cat("|", sprintf(paste(rep("-", x.length.max[c]), collapse = "")), " ")
+    cat(paste0(row.end, "\n"))
+    if (nchar(header.sep) > 0) {
+        for(c in 1:ncol(x)) {
+            if(x.length.max[c] > 0)
+                cat(ifelse(c == 1, row.begin, col.sep), sprintf(paste(rep("-", x.length.max[c]), collapse = "")), " ")
+        }
+        cat(paste0(row.end, "\n"))
     }
-    cat("|\n")
     for (r in 2:nrow(x)) {
         for (c in 1:ncol(x)) {
             if(x.length.max[c] > 0)
-                cat("|", sprintf(x.fmt[c], x[r, c]), " ")
+                cat(ifelse(c == 1, row.begin, col.sep), sprintf(x.fmt[c], x[r, c]), " ")
         }
-        cat("|\n")
+        cat(paste0(row.end, "\n"))
     }
 }
 
-print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
-    matrix2char <- function(m, fmt = decimal.fmt) {
-        apply(m, c(1, 2), function(x) { sprintf(fmt, x) })
+matrix2char <- function(m, fmt = "%.6f") {
+    mc <- NULL
+    if ("array" %in% class(m)) {
+        mc <- apply(m, seq(length(dim(m))), function(x) { sprintf(fmt, x) })
+    } else {
+        mc <- sprintf(fmt, m)
     }
+    mc
+}
+
+print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (class(x) != "hgwrm") {
         stop("It's not a hgwm object.")
     }
+
+    ### Basic Information
     cat("Hierarchical and geographically weighted regression model", "\n")
     cat("=========================================================", "\n")
     cat("Formula:", deparse(x$call[[2]]), "\n")
@@ -149,7 +192,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("Intercept", effects$global.fixed),
         matrix2char(x$beta)
     )
-    print.table.md(beta_str)
+    print.table.md(beta_str, ...)
     cat("\n")
     cat("Local Fixed Effects", "\n")
     cat("-------------------", "\n")
@@ -158,7 +201,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
         cbind(c("Intercept", effects$local.fixed), matrix2char(gamma_fivenum))
     )
-    print.table.md(gamma_str)
+    print.table.md(gamma_str, ...)
     cat("\n")
     cat("Random Effects", "\n")
     cat("--------------", "\n")
@@ -187,7 +230,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         cbind(random_dev_str, random_corr_str),
         random_residual_str
     )
-    print.table.md(random_str)
+    print.table.md(random_str, ...)
     cat("\n")
     cat("Other Information", "\n")
     cat("-----------------", "\n")
