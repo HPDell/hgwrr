@@ -105,7 +105,30 @@ HGWR_ML_TYPE_D_ONLY <- as.integer(0)
 #' @family HGWR ML types
 HGWR_ML_TYPE_D_BETA <- as.integer(1)
 
-
+#' Print a character matrix as a table.
+#' 
+#' @param x A character matrix.
+#' @param \dots Additional style control arguments. Acceptable arguments are:
+#' * `col.sep`: Column seperator. Default to `""`..
+#' * `header.sep`: Header seperator. Default to `"-"`.
+#' * `row.begin`: Character at the beginning of each row. Default to `col.sep`.
+#' * `row.end`: Character at the ending of each row. Default to `col.sep`.
+#' * `table.style`: Name of pre-defined style. Possible values are `plain`, `md` or `latex`. Default to `plain`.
+#' 
+#' @details 
+#' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin` and `row.end` would not take effects.
+#' Because this function will automatically set their values. 
+#' For each possible value of `table.style`, its corresponding style settings are shown in the following table.
+#' 
+#' |              | `plain` | `md`  | `latex`  |
+#' | ------------ | ------- | ----- | -------- |
+#' | `col.sep`    | `""`    | `"|"` | `"&"`    |
+#' | `header.sep` | `""`    | `"-"` | `""`     |
+#' | `row.begin`  | `""`    | `"|"` | `""`     |
+#' | `row.end`    | `""`    | `"|"` | `"\\\\"` |
+#' 
+#' In this function, characters are right padded by spaces.
+#' 
 print.table.md <- function(x, ...) {
     mf <- match.call()
     mfn <- names(mf)
