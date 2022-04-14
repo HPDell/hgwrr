@@ -162,12 +162,11 @@ summary.hgwrm <- function(o, ...) {
     }
 
     res <- as.list(o)
-    effects <- o$effects
     
     ### Diagnostics
     y <- o$frame[[o$effects$response]]
     tss <- sum((y - mean(y))^2)
-    x_residuals <- residuals.hgwrm(x)
+    x_residuals <- residuals.hgwrm(o)
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
     res$diagnostic <- list(
@@ -175,7 +174,6 @@ summary.hgwrm <- function(o, ...) {
     )
 
     ### Random effects
-    random_effects <- o$effects$random
     random_corr_cov <- o$sigma * o$sigma * o$D
     random_stddev <- sqrt(diag(random_corr_cov))
     random_corr <- t(random_corr_cov / random_stddev) / random_stddev

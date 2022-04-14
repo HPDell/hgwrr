@@ -7,6 +7,8 @@ export(print.hgwrm)
 export(coef.hgwrm)
 export(fitted.hgwrm)
 export(residuals.hgwrm)
+export(summary.hgwrm)
+export(print.summary.hgwrm)
 
 S3method(print, hgwrm)
 S3method(coef, hgwrm)
