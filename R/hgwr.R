@@ -192,36 +192,39 @@ summary.hgwrm <- function(o, ...) {
 #' Print a character matrix as a table.
 #' 
 #' @param x A character matrix.
-#' @param \dots Additional style control arguments. Acceptable arguments are:
-#' \describe{
-#'  \item{`col.sep`}{Column seperator. Default to `""`.}
-#'  \item{`header.sep`}{Header seperator. Default to `"-"`.}
-#'  \item{`row.begin`}{Character at the beginning of each row. Default to `col.sep`.}
-#'  \item{`row.end`}{Character at the ending of each row. Default to `col.sep`.}
-#'  \item{`table.style`}{Name of pre-defined style. Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.}
-#' }
-#' 
+#' @param col.sep Column seperator. Default to `""`.
+#' @param header.sep Header seperator. Default to `"-"`.
+#' @param row.begin Character at the beginning of each row.
+#' Default to `col.sep`.
+#' @param row.end Character at the ending of each row.
+#' Default to `col.sep`.
+#' @param table.style Name of pre-defined style.
+#' Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.
+#' @param \dots Additional style control arguments.
+#'
 #' @details 
-#' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin` and `row.end` would not take effects.
-#' Because this function will automatically set their values. 
-#' For each possible value of `table.style`, its corresponding style settings are shown in the following table.
-#' 
+#' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin`
+#' and `row.end` would not take effects.
+#' Because this function will automatically set their values.
+#' For each possible value of `table.style`, its corresponding style settings
+#' are shown in the following table.
+#'
 #' |              | `plain` | `md`   | `latex`  |
 #' | ------------ | ------- | ------ | -------- |
 #' | `col.sep`    | `""`    | `"\|"` | `"&"`    |
 #' | `header.sep` | `""`    | `"-"`  | `""`     |
 #' | `row.begin`  | `""`    | `"\|"` | `""`     |
 #' | `row.end`    | `""`    | `"\|"` | `"\\\\"` |
-#' 
+#'
 #' In this function, characters are right padded by spaces.
-#' 
+#'
 #' @seealso [print.hgwrm()], [summary.hgwrm()].
-#' 
-print.table.md <- function(x, ...) {
-    mf <- match.call()
-    mfn <- names(mf)
-    if ("table.style" %in% mfn) {
-        table.style <- mf[["table.style"]]
+print.table.md <- function(x, col.sep = "", header.sep = "",
+                           row.begin = "", row.end = "",
+                           table.style = c("plain", "md", "latex"), ...) {
+    
+    if (!missing(table.style)) {
+        table.style <- match.arg(table.style)
         if (table.style == "md") {
             col.sep <- "|"
             header.sep <- "-"
@@ -240,11 +243,6 @@ print.table.md <- function(x, ...) {
         } else {
            stop("Unknown table.style.")
         }
-    } else {
-        col.sep <- ifelse("col.sep" %in% mfn, mf[["col.sep"]], "")
-        header.sep <- ifelse("header.sep" %in% mfn, mf[["header.sep"]], "")
-        row.begin <- ifelse("row.begin" %in% mfn, mf[["row.begin"]], col.sep)
-        row.end <- ifelse("row.end" %in% mfn, mf[["row.end"]], col.sep)
     }
     if (nchar(header.sep) > 1) {
        stop("Currently only 1 character header.sep is supported.")
@@ -255,20 +253,26 @@ print.table.md <- function(x, ...) {
     x.fmt <- sprintf("%%%ds", x.length.max)
     for(c in 1:ncol(x)) {
         if(x.length.max[c] > 0)
-            cat(ifelse(c == 1, row.begin, col.sep), sprintf(x.fmt[c], x[1, c]), " ")
+            cat(ifelse(c == 1, row.begin, col.sep),
+                sprintf(x.fmt[c], x[1, c]), "")
     }
     cat(paste0(row.end, "\n"))
     if (nchar(header.sep) > 0) {
         for(c in 1:ncol(x)) {
-            if(x.length.max[c] > 0)
-                cat(ifelse(c == 1, row.begin, col.sep), sprintf(paste(rep("-", x.length.max[c]), collapse = "")), " ")
+            if(x.length.max[c] > 0) {
+                header.sep.full <- paste(rep("-", x.length.max[c]),
+                                         collapse = "")
+                cat(ifelse(c == 1, row.begin, col.sep),
+                    sprintf(header.sep.full), "")
+            }
         }
         cat(paste0(row.end, "\n"))
     }
     for (r in 2:nrow(x)) {
         for (c in 1:ncol(x)) {
             if(x.length.max[c] > 0)
-                cat(ifelse(c == 1, row.begin, col.sep), sprintf(x.fmt[c], x[r, c]), " ")
+                cat(ifelse(c == 1, row.begin, col.sep),
+                    sprintf(x.fmt[c], x[r, c]), "")
         }
         cat(paste0(row.end, "\n"))
     }
@@ -294,7 +298,7 @@ matrix2char <- function(m, fmt = "%.6f") {
 #' 
 #' @param x An `hgwrm` object returned by [hgwr()].
 #' @param decimal.fmt The format string passing to [base::sprintf()].
-#' @param \dots Optional parameters to [print.table.md()] and `print` methods.
+#' @inheritDotParams print.table.md
 #' 
 #' @examples 
 #' data(multisampling)
@@ -375,6 +379,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #' 
 #' @param x An object returned from [summary.hgwrm()].
 #' @inherit print.hgwrm
+#' @inheritDotParams print.table.md
 #' @examples 
 #' data(multisampling)
 #' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
