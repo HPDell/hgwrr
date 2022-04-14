@@ -11,3 +11,4 @@ Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp, RcppArmadillo
 Depends: R (>= 3.5.0), Rcpp, stats, utils
 SystemRequirements: GNU make
+Roxygen: list(markdown = TRUE)

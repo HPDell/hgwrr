@@ -105,25 +105,29 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
 #' 
 #' @param x A character matrix.
 #' @param \dots Additional style control arguments. Acceptable arguments are:
-#' * `col.sep`: Column seperator. Default to `""`..
-#' * `header.sep`: Header seperator. Default to `"-"`.
-#' * `row.begin`: Character at the beginning of each row. Default to `col.sep`.
-#' * `row.end`: Character at the ending of each row. Default to `col.sep`.
-#' * `table.style`: Name of pre-defined style. Possible values are `plain`, `md` or `latex`. Default to `plain`.
+#' \describe{
+#'  \item{`col.sep`}{Column seperator. Default to `""`.}
+#'  \item{`header.sep`}{Header seperator. Default to `"-"`.}
+#'  \item{`row.begin`}{Character at the beginning of each row. Default to `col.sep`.}
+#'  \item{`row.end`}{Character at the ending of each row. Default to `col.sep`.}
+#'  \item{`table.style`}{Name of pre-defined style. Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.}
+#' }
 #' 
 #' @details 
 #' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin` and `row.end` would not take effects.
 #' Because this function will automatically set their values. 
 #' For each possible value of `table.style`, its corresponding style settings are shown in the following table.
 #' 
-#' |              | `plain` | `md`  | `latex`  |
-#' | ------------ | ------- | ----- | -------- |
-#' | `col.sep`    | `""`    | `"|"` | `"&"`    |
-#' | `header.sep` | `""`    | `"-"` | `""`     |
-#' | `row.begin`  | `""`    | `"|"` | `""`     |
-#' | `row.end`    | `""`    | `"|"` | `"\\\\"` |
+#' |              | `plain` | `md`   | `latex`  |
+#' | ------------ | ------- | ------ | -------- |
+#' | `col.sep`    | `""`    | `"\|"` | `"&"`    |
+#' | `header.sep` | `""`    | `"-"`  | `""`     |
+#' | `row.begin`  | `""`    | `"\|"` | `""`     |
+#' | `row.end`    | `""`    | `"\|"` | `"\\\\"` |
 #' 
 #' In this function, characters are right padded by spaces.
+#' 
+#' @seealso [print.hgwrm()], [summary.hgwrm()].
 #' 
 print.table.md <- function(x, ...) {
     mf <- match.call()
@@ -192,6 +196,24 @@ matrix2char <- function(m, fmt = "%.6f") {
     mc
 }
 
+#' Print description of a `hgwrm` object.
+#' 
+#' @param x An `hgwrm` object returned by [hgwr()].
+#' @param decimal.fmt The format string passing to [base::sprintf()].
+#' @param \dots Optional parameters to [print.table.md()] and `print` methods.
+#' 
+#' @examples 
+#' data(multisampling)
+#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#'               data = multisampling$data,
+#'               local.fixed = c("g1", "g2"),
+#'               coords = multisampling$coord,
+#'               bw = 10)
+#' print(model)
+#' print(model, table.style = "md")
+#' 
+#' @seealso [summary.hgwrm()], [print.table.md()].
+#' 
 print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (class(x) != "hgwrm") {
         stop("It's not a hgwrm object.")
