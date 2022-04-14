@@ -70,17 +70,13 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
-    fitted <- rowSums(g * gamma)[group] + as.vector(x %*% t(beta)) + rowSums(z * mu[group,])
-    residuals <- y - fitted
     result <- list(
         gamma = gamma,
         beta = beta,
         mu = mu,
         D = D,
-        fitted = fitted,
-        residuals = residuals,
         sigma = sigma,
-        model.effects = list(
+        effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
             random = model_desc$random.effects,
@@ -89,6 +85,13 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
         ),
         call = match.call(),
         frame = data,
+        frame.parsed = list(
+            y = y,
+            x = x,
+            g = g,
+            z = z,
+            group = group
+        ),
         groups = group.unique
     )
     class(result) <- "hgwrm"
@@ -208,7 +211,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
     cat("   Data:", deparse(x$call[[3]]), "\n")
     cat("\n")
-    effects <- x$model.effects
+    effects <- x$effects
     cat("Global Fixed Effects", "\n")
     cat("-------------------", "\n")
     beta_str <- rbind(
@@ -263,35 +266,94 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 
 coef.hgwrm <- function(x, ...) {
     if (class(x) != "hgwrm") {
-        stop("It's not a hgwm object.")
+        stop("It's not a hgwrm object.")
     }
     gamma <- x$gamma
     beta <- matrix(x$beta, nrow = length(x$groups), ncol = ncol(x$beta), byrow = T)
     mu <- x$mu
     intercept <- gamma[,1] + mu[,1] + beta[,1]
-    effects <- x$model.effects
+    effects <- x$effects
     coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], x$groups))
     colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
     coef
 }
 
-fitted.hgwrm <- function(x, ...) {
-    if (class(x) != "hgwrm") {
-        stop("It's not a hgwm object.")
+fitted.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
     }
-    x$fitted
+    xf <- o$frame.parsed
+    rowSums(xf$g * o$gamma)[xf$group] +
+        as.vector(xf$x %*% t(o$beta)) +
+        rowSums(xf$z * o$mu[xf$group,])
 }
 
-residuals.hgwrm <- function(x, ...) {
-    if (class(x) != "hgwrm") {
-        stop("It's not a hgwm object.")
+residuals.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
     }
-    x$residuals
+    o$frame.parsed$y - fitted.hgwrm(o)
 }
 
-summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
-    if (class(x) != "hgwrm") {
-        stop("It's not a hgwm object.")
+#' Summary an `hgwrm` object.
+#' 
+#' @param o An `hgwrm` object returned from [hgwr()].
+#' 
+#' @return A list containing summary informations of this `hgwrm` object.
+#' 
+#' @seealso [hgwr()].
+#' 
+summary.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+
+    res <- as.list(o)
+    effects <- o$effects
+    
+    ### Diagnostics
+    y <- o$frame[[o$effects$response]]
+    tss <- sum((y - mean(y))^2)
+    x_residuals <- residuals.hgwrm(x)
+    rss <- sum(x_residuals^2)
+    rsquared <- 1 - rss / tss
+    res$diagnostic <- list(
+        rsquared = rsquared
+    )
+
+    ### Random effects
+    random_effects <- o$effects$random
+    random_corr_cov <- o$sigma * o$sigma * o$D
+    random_stddev <- sqrt(diag(random_corr_cov))
+    random_corr <- t(random_corr_cov / random_stddev) / random_stddev
+    diag(random_corr) <- 1
+    res$random.stddev <- random_stddev
+    res$random.corr <- random_corr
+    
+    ### Residuals
+    res$residuals <- x_residuals
+
+    ### return
+    class(res) <- "summary.hgwrm"
+    res
+}
+
+#' Print summary of an `hgwrm` object.
+#' 
+#' @param x An object returned from [summary.hgwrm()].
+#' @inherit print.hgwrm
+#' @examples 
+#' data(multisampling)
+#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#'               data = multisampling$data,
+#'               local.fixed = c("g1", "g2"),
+#'               coords = multisampling$coord,
+#'               bw = 10)
+#' summary(model)
+#' 
+print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
+    if (class(x) != "summary.hgwrm") {
+        stop("It's not a hgwrm object.")
     }
 
     ### Call information
@@ -305,10 +367,7 @@ summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     ### Diagnostics
     cat("Diagnostics", "\n")
     cat("-----------", "\n")
-    y <- x$frame[[x$model.effects$response]]
-    tss <- sum((y - mean(y))^2)
-    rss <- sum(x$residuals^2)
-    rsquared <- 1 - rss / tss
+    rsquared <- x$diagnostic$rsquared
     diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
     diagnostic_chr <- rbind(
         c("Rsquared"),
