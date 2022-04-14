@@ -208,13 +208,13 @@ summary.hgwrm <- function(o, ...) {
 #' Because this function will automatically set their values.
 #' For each possible value of `table.style`, its corresponding style settings
 #' are shown in the following table.
-#'
-#' |              | `plain` | `md`   | `latex`  |
-#' | ------------ | ------- | ------ | -------- |
-#' | `col.sep`    | `""`    | `"\|"` | `"&"`    |
-#' | `header.sep` | `""`    | `"-"`  | `""`     |
-#' | `row.begin`  | `""`    | `"\|"` | `""`     |
-#' | `row.end`    | `""`    | `"\|"` | `"\\\\"` |
+#' \tabular{llll}{
+#'                   \tab \strong{\code{plain}} \tab \strong{\code{md}} \tab \strong{\code{latex}} \cr
+#' \code{col.sep}    \tab \code{""}             \tab \code{"|"}         \tab \code{"&"}            \cr
+#' \code{header.sep} \tab \code{""}             \tab \code{"-"}         \tab \code{""}             \cr
+#' \code{row.begin}  \tab \code{""}             \tab \code{"|"}         \tab \code{""}             \cr
+#' \code{row.end}    \tab \code{""}             \tab \code{"|"}         \tab \code{"\\\\"}
+#' }
 #'
 #' In this function, characters are right padded by spaces.
 #'
@@ -222,7 +222,6 @@ summary.hgwrm <- function(o, ...) {
 print.table.md <- function(x, col.sep = "", header.sep = "",
                            row.begin = "", row.end = "",
                            table.style = c("plain", "md", "latex"), ...) {
-    
     if (!missing(table.style)) {
         table.style <- match.arg(table.style)
         if (table.style == "md") {
