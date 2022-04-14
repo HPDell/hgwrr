@@ -186,6 +186,12 @@ print.table.md <- function(x, ...) {
     }
 }
 
+#' Convert a numeric matrix to character matrix according to a format string.
+#' 
+#' @param m A numeric matrix.
+#' @param fmt Format string. Passing to [base::sprintf()].
+#' 
+#' @seealso [base::sprintf()], [print.hgwrm()], [print.summary.hgwrm()].
 matrix2char <- function(m, fmt = "%.6f") {
     mc <- NULL
     if ("array" %in% class(m)) {
@@ -277,20 +283,31 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("       Groups:", effects$group, ",", nrow(x$mu), "\n")
 }
 
-coef.hgwrm <- function(x, ...) {
-    if (class(x) != "hgwrm") {
+#' Get estimated coefficients.
+#' 
+#' @param o An `hgwrm` object returned by [hgwr()].
+#' @param \dots Parameter received from other functions.
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
+coef.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
         stop("It's not a hgwrm object.")
     }
-    gamma <- x$gamma
-    beta <- matrix(x$beta, nrow = length(x$groups), ncol = ncol(x$beta), byrow = T)
-    mu <- x$mu
+    gamma <- o$gamma
+    beta <- matrix(o$beta, nrow = length(o$groups), ncol = ncol(o$beta), byrow = T)
+    mu <- o$mu
     intercept <- gamma[,1] + mu[,1] + beta[,1]
-    effects <- x$effects
-    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], x$groups))
+    effects <- o$effects
+    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], o$groups))
     colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
     coef
 }
 
+#' Get fitted reponse.
+#' 
+#' @inheritParams coef.hgwrm
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
 fitted.hgwrm <- function(o, ...) {
     if (class(o) != "hgwrm") {
         stop("It's not a hgwrm object.")
@@ -301,6 +318,11 @@ fitted.hgwrm <- function(o, ...) {
         rowSums(xf$z * o$mu[xf$group,])
 }
 
+#' Get residuals.
+#' 
+#' @inheritParams coef.hgwrm
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
 residuals.hgwrm <- function(o, ...) {
     if (class(o) != "hgwrm") {
         stop("It's not a hgwrm object.")
