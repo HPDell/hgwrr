@@ -68,6 +68,8 @@ parse.formula <- function(formula) {
 #' @param s A `list`, `vector` or any other object which works with
 #'      function \code{\link[base]{c}}
 #' @param x An object which can be appended to `s`.
+#' 
+#' @rdname parse.formula
 #'
 stack.push <- function(s, x) {
     c(s, x)
@@ -77,6 +79,8 @@ stack.push <- function(s, x) {
 #'
 #' @param s A `list`, `vector` or any other object which works with
 #'      function \code{\link[base]{c}}
+#' 
+#' @rdname parse.formula
 #'
 stack.pop <- function(s) {
     s[-length(s)]

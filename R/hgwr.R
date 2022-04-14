@@ -24,8 +24,8 @@
 #' @param ml_type An integer value. Represent which maximum likelihood
 #' algorithm is used. Possible values are:
 #' \describe{
-#'  \item{\code{HGWR_ML_TYPE_D_ONLY}}{Only \eqn{D} is specified by maximum likelihood.}
-#'  \item{\code{HGWR_ML_TYPE_D_BETA}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
+#'  \item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
+#'  \item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
 #' }
 #' @param verbose An integer value. Determine the log level.
 #' Possible values are:
@@ -49,8 +49,11 @@
 hgwr <- function(formula, data, local.fixed, coords, bw,
                  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
                  max_iters = 1e6, max_retries = 10,
-                 ml_type = HGWR_ML_TYPE_D_ONLY, verbose = 0) {
+                 ml_type = c("D_Only", "D_Beta"), verbose = 0) {
     ### Extract variables
+    ml_type <- switch(match.arg(ml_type),
+                      "D_Only" = 0L,
+                      "D_Beta" = 1L)
     model_desc <- parse.formula(formula)
     y <- as.vector(data[[model_desc$response]])
     group <- as.vector(as.integer(data[[model_desc$group]]))
@@ -70,24 +73,359 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
-    intercept <- gamma[,1] + mu[,1] + beta[,1]
-    coefficients <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], group.unique))
-    colnames(coefficients) <- c("Intercept", lfe, gfe, model_desc$random.effects, model_desc$group)
-    fitted <- rowSums(g * gamma)[group] + x %*% t(beta) + rowSums(z * mu[group,])
-    list(
-       coefficients = coefficients,
-       random.effects.var = D,
-       fitted = fitted,
-       sigma = sigma
+    result <- list(
+        gamma = gamma,
+        beta = beta,
+        mu = mu,
+        D = D,
+        sigma = sigma,
+        effects = list(
+            global.fixed = gfe,
+            local.fixed = lfe,
+            random = model_desc$random.effects,
+            group = model_desc$group,
+            response = model_desc$response
+        ),
+        call = match.call(),
+        frame = data,
+        frame.parsed = list(
+            y = y,
+            x = x,
+            g = g,
+            z = z,
+            group = group
+        ),
+        groups = group.unique
     )
+    class(result) <- "hgwrm"
+    result
 }
 
-#' HGWR maximum likelihood algorithm type: D only.
-#'
-#' @family HGWR ML types
-HGWR_ML_TYPE_D_ONLY <- as.integer(0)
+#' Get estimated coefficients.
+#' 
+#' @param o An `hgwrm` object returned by [hgwr()].
+#' @param \dots Parameter received from other functions.
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
+coef.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+    gamma <- o$gamma
+    beta <- matrix(o$beta, nrow = length(o$groups), ncol = ncol(o$beta), byrow = T)
+    mu <- o$mu
+    intercept <- gamma[,1] + mu[,1] + beta[,1]
+    effects <- o$effects
+    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], o$groups))
+    colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
+    coef
+}
 
-#' HGWR maximum likelihood algorithm type: D and beta.
+#' Get fitted reponse.
+#' 
+#' @inheritParams coef.hgwrm
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
+fitted.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+    xf <- o$frame.parsed
+    rowSums(xf$g * o$gamma)[xf$group] +
+        as.vector(xf$x %*% t(o$beta)) +
+        rowSums(xf$z * o$mu[xf$group,])
+}
+
+#' Get residuals.
+#' 
+#' @inheritParams coef.hgwrm
+#' 
+#' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
+residuals.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+    o$frame.parsed$y - fitted.hgwrm(o)
+}
+
+#' Summary an `hgwrm` object.
+#' 
+#' @param o An `hgwrm` object returned from [hgwr()].
+#' 
+#' @return A list containing summary informations of this `hgwrm` object.
+#' 
+#' @seealso [hgwr()].
+#' 
+summary.hgwrm <- function(o, ...) {
+    if (class(o) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+
+    res <- as.list(o)
+    
+    ### Diagnostics
+    y <- o$frame[[o$effects$response]]
+    tss <- sum((y - mean(y))^2)
+    x_residuals <- residuals.hgwrm(o)
+    rss <- sum(x_residuals^2)
+    rsquared <- 1 - rss / tss
+    res$diagnostic <- list(
+        rsquared = rsquared
+    )
+
+    ### Random effects
+    random_corr_cov <- o$sigma * o$sigma * o$D
+    random_stddev <- sqrt(diag(random_corr_cov))
+    random_corr <- t(random_corr_cov / random_stddev) / random_stddev
+    diag(random_corr) <- 1
+    res$random.stddev <- random_stddev
+    res$random.corr <- random_corr
+    
+    ### Residuals
+    res$residuals <- x_residuals
+
+    ### return
+    class(res) <- "summary.hgwrm"
+    res
+}
+
+#' Print a character matrix as a table.
+#' 
+#' @param x A character matrix.
+#' @param col.sep Column seperator. Default to `""`.
+#' @param header.sep Header seperator. Default to `"-"`.
+#' @param row.begin Character at the beginning of each row.
+#' Default to `col.sep`.
+#' @param row.end Character at the ending of each row.
+#' Default to `col.sep`.
+#' @param table.style Name of pre-defined style.
+#' Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.
+#' @param \dots Additional style control arguments.
 #'
-#' @family HGWR ML types
-HGWR_ML_TYPE_D_BETA <- as.integer(1)
+#' @details 
+#' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin`
+#' and `row.end` would not take effects.
+#' Because this function will automatically set their values.
+#' For each possible value of `table.style`, its corresponding style settings
+#' are shown in the following table.
+#' \tabular{llll}{
+#'                   \tab \strong{\code{plain}} \tab \strong{\code{md}} \tab \strong{\code{latex}} \cr
+#' \code{col.sep}    \tab \code{""}             \tab \code{"|"}         \tab \code{"&"}            \cr
+#' \code{header.sep} \tab \code{""}             \tab \code{"-"}         \tab \code{""}             \cr
+#' \code{row.begin}  \tab \code{""}             \tab \code{"|"}         \tab \code{""}             \cr
+#' \code{row.end}    \tab \code{""}             \tab \code{"|"}         \tab \code{"\\\\"}
+#' }
+#'
+#' In this function, characters are right padded by spaces.
+#'
+#' @seealso [print.hgwrm()], [summary.hgwrm()].
+print.table.md <- function(x, col.sep = "", header.sep = "",
+                           row.begin = "", row.end = "",
+                           table.style = c("plain", "md", "latex"), ...) {
+    if (!missing(table.style)) {
+        table.style <- match.arg(table.style)
+        if (table.style == "md") {
+            col.sep <- "|"
+            header.sep <- "-"
+            row.begin <- "|"
+            row.end <- "|"
+        } else if (table.style == "latex") {
+            col.sep <- "&"
+            header.sep <- ""
+            row.begin <- ""
+            row.end <- "\\\\"
+        } else if (table.style == "plain") {
+            col.sep <- ""
+            header.sep <- ""
+            row.begin <- ""
+            row.end <- ""
+        } else {
+           stop("Unknown table.style.")
+        }
+    }
+    if (nchar(header.sep) > 1) {
+       stop("Currently only 1 character header.sep is supported.")
+    }
+    ### Print table
+    x.length <- apply(x, c(1, 2), nchar)
+    x.length.max <- apply(x.length, 2, max)
+    x.fmt <- sprintf("%%%ds", x.length.max)
+    for(c in 1:ncol(x)) {
+        if(x.length.max[c] > 0)
+            cat(ifelse(c == 1, row.begin, col.sep),
+                sprintf(x.fmt[c], x[1, c]), "")
+    }
+    cat(paste0(row.end, "\n"))
+    if (nchar(header.sep) > 0) {
+        for(c in 1:ncol(x)) {
+            if(x.length.max[c] > 0) {
+                header.sep.full <- paste(rep("-", x.length.max[c]),
+                                         collapse = "")
+                cat(ifelse(c == 1, row.begin, col.sep),
+                    sprintf(header.sep.full), "")
+            }
+        }
+        cat(paste0(row.end, "\n"))
+    }
+    for (r in 2:nrow(x)) {
+        for (c in 1:ncol(x)) {
+            if(x.length.max[c] > 0)
+                cat(ifelse(c == 1, row.begin, col.sep),
+                    sprintf(x.fmt[c], x[r, c]), "")
+        }
+        cat(paste0(row.end, "\n"))
+    }
+}
+
+#' Convert a numeric matrix to character matrix according to a format string.
+#' 
+#' @param m A numeric matrix.
+#' @param fmt Format string. Passing to [base::sprintf()].
+#' 
+#' @seealso [base::sprintf()], [print.hgwrm()], [print.summary.hgwrm()].
+matrix2char <- function(m, fmt = "%.6f") {
+    mc <- NULL
+    if ("array" %in% class(m)) {
+        mc <- apply(m, seq(length(dim(m))), function(x) { sprintf(fmt, x) })
+    } else {
+        mc <- sprintf(fmt, m)
+    }
+    mc
+}
+
+#' Print description of a `hgwrm` object.
+#' 
+#' @param x An `hgwrm` object returned by [hgwr()].
+#' @param decimal.fmt The format string passing to [base::sprintf()].
+#' @inheritDotParams print.table.md
+#' 
+#' @examples 
+#' data(multisampling)
+#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#'               data = multisampling$data,
+#'               local.fixed = c("g1", "g2"),
+#'               coords = multisampling$coord,
+#'               bw = 10)
+#' print(model)
+#' print(model, table.style = "md")
+#' 
+#' @seealso [summary.hgwrm()], [print.table.md()].
+#' 
+print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
+    if (class(x) != "hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+
+    ### Basic Information
+    cat("Hierarchical and geographically weighted regression model", "\n")
+    cat("=========================================================", "\n")
+    cat("Formula:", deparse(x$call[[2]]), "\n")
+    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
+    cat("   Data:", deparse(x$call[[3]]), "\n")
+    cat("\n")
+    effects <- x$effects
+    cat("Global Fixed Effects", "\n")
+    cat("-------------------", "\n")
+    beta_str <- rbind(
+        c("Intercept", effects$global.fixed),
+        matrix2char(x$beta)
+    )
+    print.table.md(beta_str, ...)
+    cat("\n")
+    cat("Local Fixed Effects", "\n")
+    cat("-------------------", "\n")
+    gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
+    gamma_str <- rbind(
+        c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
+        cbind(c("Intercept", effects$local.fixed), matrix2char(gamma_fivenum))
+    )
+    print.table.md(gamma_str, ...)
+    cat("\n")
+    cat("Random Effects", "\n")
+    cat("--------------", "\n")
+    x_summary <- summary.hgwrm(x)
+    random_stddev <- x_summary$random.stddev
+    random_corr <- x_summary$random.corr
+    random_corr_str <- matrix2char(random_corr)
+    random_corr_str[!lower.tri(random_corr)] <- ""
+    random_corr_str <- rbind("", random_corr_str)
+    random_corr_str[1, 1] <- "Corr"
+    random_dev_str <- cbind(
+        "", c("Intercept", x$effects$random), matrix2char(matrix(random_stddev, ncol = 1))
+    )
+    random_dev_str[1, 1] <- effects$group
+    random_dev_str <- rbind(
+        c("Groups", "Name", "Std.Dev."),
+        random_dev_str
+    )
+    random_residual_str <- cbind(
+        matrix(c("Residual", "", sprintf(decimal.fmt, x$sigma)), nrow = 1),
+        matrix("", nrow = 1, ncol = ncol(random_corr))
+    )
+    random_str <- rbind(
+        cbind(random_dev_str, random_corr_str),
+        random_residual_str
+    )
+    print.table.md(random_str, ...)
+    cat("\n")
+    cat("Other Information", "\n")
+    cat("-----------------", "\n")
+    cat("Number of Obs:", nrow(x$frame), "\n")
+    cat("       Groups:", effects$group, ",", nrow(x$mu), "\n")
+}
+
+#' Print summary of an `hgwrm` object.
+#' 
+#' @param x An object returned from [summary.hgwrm()].
+#' @inherit print.hgwrm
+#' @inheritDotParams print.table.md
+#' @examples 
+#' data(multisampling)
+#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#'               data = multisampling$data,
+#'               local.fixed = c("g1", "g2"),
+#'               coords = multisampling$coord,
+#'               bw = 10)
+#' summary(model)
+#' 
+print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
+    if (class(x) != "summary.hgwrm") {
+        stop("It's not a hgwrm object.")
+    }
+
+    ### Call information
+    cat("Hierarchical and geographically weighted regression model", "\n")
+    cat("=========================================================", "\n")
+    cat("Formula:", deparse(x$call[[2]]), "\n")
+    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
+    cat("   Data:", deparse(x$call[[3]]), "\n")
+    cat("\n")
+    
+    ### Diagnostics
+    cat("Diagnostics", "\n")
+    cat("-----------", "\n")
+    rsquared <- x$diagnostic$rsquared
+    diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
+    diagnostic_chr <- rbind(
+        c("Rsquared"),
+        matrix2char(diagnostic_mat, decimal.fmt)
+    )
+    print.table.md(diagnostic_chr, ...)
+    cat("\n")
+
+    ### Residuals
+    cat("Scaled residuals", "\n")
+    cat("----------------", "\n")
+    resiudal_fivenum <- fivenum(x$residuals)
+    residual_fivenum_mat <- matrix(resiudal_fivenum, nrow = 1)
+    residual_fivenum_chr <- rbind(
+        c("Min", "1Q", "Median", "3Q", "Max"),
+        matrix2char(residual_fivenum_mat, decimal.fmt)
+    )
+    print.table.md(residual_fivenum_chr, ...)
+    cat("\n")
+    cat("Other Information", "\n")
+    cat("-----------------", "\n")
+    cat("Number of Obs:", nrow(x$frame), "\n")
+    cat("       Groups:", x$effects$group, ",", nrow(x$mu), "\n")
+}
