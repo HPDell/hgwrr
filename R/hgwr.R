@@ -201,7 +201,7 @@ matrix2char <- function(m, fmt = "%.6f") {
 
 print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (class(x) != "hgwrm") {
-        stop("It's not a hgwm object.")
+        stop("It's not a hgwrm object.")
     }
 
     ### Basic Information
@@ -231,17 +231,15 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
     cat("Random Effects", "\n")
     cat("--------------", "\n")
-    random_effects <- effects$random
-    random_corr_cov <- x$sigma * x$sigma * x$D
-    random_stddev <- sqrt(diag(random_corr_cov))
-    random_corr <- t(random_corr_cov / random_stddev) / random_stddev
-    diag(random_corr) <- 1
+    x_summary <- summary.hgwrm(x)
+    random_stddev <- x_summary$random.stddev
+    random_corr <- x_summary$random.corr
     random_corr_str <- matrix2char(random_corr)
     random_corr_str[!lower.tri(random_corr)] <- ""
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
     random_dev_str <- cbind(
-        "", c("Intercept", random_effects), matrix2char(matrix(random_stddev, ncol = 1))
+        "", c("Intercept", x$effects$random), matrix2char(matrix(random_stddev, ncol = 1))
     )
     random_dev_str[1, 1] <- effects$group
     random_dev_str <- rbind(
