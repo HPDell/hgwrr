@@ -25,6 +25,7 @@ RcppExport SEXP _hgwrr_backfitting_maximum_likelihood(
     SEXP uSEXP,
     SEXP groupSEXP,
     SEXP bwSEXP,
+    SEXP kernelSEXP,
     SEXP alphaSEXP,
     SEXP eps_iterSEXP,
     SEXP eps_gradientSEXP,
@@ -42,6 +43,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type uParam(uSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type groupParam(groupSEXP);
     Rcpp::traits::input_parameter< const double& >::type bwParam(bwSEXP);
+    Rcpp::traits::input_parameter< const size_t& >::type kernelParam(kernelSEXP);
     Rcpp::traits::input_parameter< const double& >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< const double& >::type eps_iter(eps_iterSEXP);
     Rcpp::traits::input_parameter< const double& >::type eps_gradient(eps_gradientSEXP);
@@ -57,7 +59,8 @@ BEGIN_RCPP
     arma::mat u = arma::mat(uParam);
     arma::uvec group = arma::conv_to<arma::uvec>::from(arma::vec(groupParam)) - 1;
     double bw = double(bwParam);
-    HLMGWRArgs args(g, x, z, y, u, group, bw);
+    GWRKernelType kernel = GWRKernelType(size_t(kernelParam));
+    HLMGWRArgs args(g, x, z, y, u, group, bw, kernel);
     HLMGWROptions options(alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type);
     HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options, prcout);
 
@@ -73,7 +76,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hgwrr_backfitting_maximum_likelihood", (DL_FUNC) &_hgwrr_backfitting_maximum_likelihood, 14},
+    {"_hgwrr_backfitting_maximum_likelihood", (DL_FUNC) &_hgwrr_backfitting_maximum_likelihood, 15},
     {NULL, NULL, 0}
 };
 
