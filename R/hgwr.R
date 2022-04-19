@@ -13,6 +13,12 @@
 #' @param bw A numeric value. It is the value of bandwidth.
 #' In this stage this function only support adaptive bandwidth.
 #' And its unit must be the number of nearest neighbours.
+#' @param kernel A character value. It specify which kernel function is used
+#' in GWR part. Possible values are
+#' \describe{
+#'  \item{\code{gaussian}}{Gaussian kernel function \eqn{k(d)=\exp\left(-\frac{d^2}{b^2}\right)}}
+#'  \item{\code{bisquared}}{Bi-squared kernel function. If \eqn{d<b} then \eqn{k(d)=\left(1-\frac{d^2}{b^2}\right)^2} else \eqn{k(d)=0}}
+#' }
 #' @param alpha A numeric value. It is the size of the first trial step in
 #' maximum likelihood algorithm.
 #' @param eps_iter A numeric value. Terminate threshold of back-fitting.
@@ -46,14 +52,21 @@
 #'      coords = multisampling$coord,
 #'      bw = 10)
 #'
-hgwr <- function(formula, data, local.fixed, coords, bw,
-                 alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-                 max_iters = 1e6, max_retries = 10,
-                 ml_type = c("D_Only", "D_Beta"), verbose = 0) {
+hgwr <- function(
+    formula, data, local.fixed, coords, bw,
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 10,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
     ### Extract variables
-    ml_type <- switch(match.arg(ml_type),
-                      "D_Only" = 0L,
-                      "D_Beta" = 1L)
+    kernel <- match.arg(kernel)
+    print(kernel)
+    ml_type <- switch(
+        match.arg(ml_type),
+        "D_Only" = 0L,
+        "D_Beta" = 1L
+    )
     model_desc <- parse.formula(formula)
     y <- as.vector(data[[model_desc$response]])
     group <- as.vector(as.integer(data[[model_desc$group]]))
@@ -64,10 +77,12 @@ hgwr <- function(formula, data, local.fixed, coords, bw,
     gfe <- fe[!(fe %in% local.fixed)]
     x <- as.matrix(cbind(1, data[gfe]))
     g <- as.matrix(cbind(1, aggregate(data[lfe], list(group), mean)[,-1]))
-    hgwr_result <- .hgwr_bml(g, x, z, y, as.matrix(coords), group, bw,
-                             alpha, eps_iter, eps_gradient,
-                             as.integer(max_iters), as.integer(max_retries),
-                             as.integer(ml_type), as.integer(verbose))
+    hgwr_result <- .hgwr_bml(
+        g, x, z, y, as.matrix(coords), group, bw, kernel,
+        alpha, eps_iter, eps_gradient,
+        as.integer(max_iters), as.integer(max_retries),
+        as.integer(ml_type), as.integer(verbose)
+    )
     gamma <- hgwr_result$gamma
     beta <- t(hgwr_result$beta)
     mu <- hgwr_result$mu
