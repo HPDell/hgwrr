@@ -166,6 +166,7 @@ residuals.hgwrm <- function(object, ...) {
 #' Summary an `hgwrm` object.
 #' 
 #' @param object An `hgwrm` object returned from [hgwr()].
+#' @param \dots Other arguments passed from other functions.
 #' 
 #' @return A list containing summary informations of this `hgwrm` object.
 #' 

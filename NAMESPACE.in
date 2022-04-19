@@ -1,6 +1,6 @@
 useDynLib(@PROJECT_NAME@, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
-importFrom("stats", "aggregate", "as.formula")
+importFrom("stats", "aggregate", "as.formula", "fivenum")
 importFrom("utils", "tail")
 export(hgwr)
 export(print.hgwrm)
