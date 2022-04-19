@@ -118,20 +118,20 @@ hgwr <- function(
 
 #' Get estimated coefficients.
 #' 
-#' @param o An `hgwrm` object returned by [hgwr()].
+#' @param object An `hgwrm` object returned by [hgwr()].
 #' @param \dots Parameter received from other functions.
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
-coef.hgwrm <- function(o, ...) {
-    if (class(o) != "hgwrm") {
+coef.hgwrm <- function(object, ...) {
+    if (class(object) != "hgwrm") {
         stop("It's not a hgwrm object.")
     }
-    gamma <- o$gamma
-    beta <- matrix(o$beta, nrow = length(o$groups), ncol = ncol(o$beta), byrow = T)
-    mu <- o$mu
+    gamma <- object$gamma
+    beta <- matrix(object$beta, nrow = length(object$groups), ncol = ncol(object$beta), byrow = T)
+    mu <- object$mu
     intercept <- gamma[,1] + mu[,1] + beta[,1]
-    effects <- o$effects
-    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], o$groups))
+    effects <- object$effects
+    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], object$groups))
     colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
     coef
 }
@@ -141,14 +141,14 @@ coef.hgwrm <- function(o, ...) {
 #' @inheritParams coef.hgwrm
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
-fitted.hgwrm <- function(o, ...) {
-    if (class(o) != "hgwrm") {
+fitted.hgwrm <- function(object, ...) {
+    if (class(object) != "hgwrm") {
         stop("It's not a hgwrm object.")
     }
-    xf <- o$frame.parsed
-    rowSums(xf$g * o$gamma)[xf$group] +
-        as.vector(xf$x %*% t(o$beta)) +
-        rowSums(xf$z * o$mu[xf$group,])
+    xf <- object$frame.parsed
+    rowSums(xf$g * object$gamma)[xf$group] +
+        as.vector(xf$x %*% t(object$beta)) +
+        rowSums(xf$z * object$mu[xf$group,])
 }
 
 #' Get residuals.
@@ -156,32 +156,33 @@ fitted.hgwrm <- function(o, ...) {
 #' @inheritParams coef.hgwrm
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
-residuals.hgwrm <- function(o, ...) {
-    if (class(o) != "hgwrm") {
+residuals.hgwrm <- function(object, ...) {
+    if (class(object) != "hgwrm") {
         stop("It's not a hgwrm object.")
     }
-    o$frame.parsed$y - fitted.hgwrm(o)
+    object$frame.parsed$y - fitted.hgwrm(object)
 }
 
 #' Summary an `hgwrm` object.
 #' 
-#' @param o An `hgwrm` object returned from [hgwr()].
+#' @param object An `hgwrm` object returned from [hgwr()].
+#' @param \dots Other arguments passed from other functions.
 #' 
 #' @return A list containing summary informations of this `hgwrm` object.
 #' 
 #' @seealso [hgwr()].
 #' 
-summary.hgwrm <- function(o, ...) {
-    if (class(o) != "hgwrm") {
+summary.hgwrm <- function(object, ...) {
+    if (class(object) != "hgwrm") {
         stop("It's not a hgwrm object.")
     }
 
-    res <- as.list(o)
+    res <- as.list(object)
     
     ### Diagnostics
-    y <- o$frame[[o$effects$response]]
+    y <- object$frame[[object$effects$response]]
     tss <- sum((y - mean(y))^2)
-    x_residuals <- residuals.hgwrm(o)
+    x_residuals <- residuals.hgwrm(object)
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
     res$diagnostic <- list(
@@ -189,7 +190,7 @@ summary.hgwrm <- function(o, ...) {
     )
 
     ### Random effects
-    random_corr_cov <- o$sigma * o$sigma * o$D
+    random_corr_cov <- object$sigma * object$sigma * object$D
     random_stddev <- sqrt(diag(random_corr_cov))
     random_corr <- t(random_corr_cov / random_stddev) / random_stddev
     diag(random_corr) <- 1
