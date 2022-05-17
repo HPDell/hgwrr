@@ -404,8 +404,8 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #' summary(model)
 #' 
 print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
-    if (inherits(x, "summary.hgwrm")) {
-        stop("It's not a hgwrm object.")
+    if (!inherits(x, "summary.hgwrm")) {
+        stop("It's not a summary.hgwrm object.")
     }
 
     ### Call information
