@@ -61,7 +61,6 @@ hgwr <- function(
 ) {
     ### Extract variables
     kernel <- match.arg(kernel)
-    print(kernel)
     ml_type <- switch(
         match.arg(ml_type),
         "D_Only" = 0L,
@@ -123,7 +122,7 @@ hgwr <- function(
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
 coef.hgwrm <- function(object, ...) {
-    if (class(object) != "hgwrm") {
+    if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
     gamma <- object$gamma
@@ -142,7 +141,7 @@ coef.hgwrm <- function(object, ...) {
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
 fitted.hgwrm <- function(object, ...) {
-    if (class(object) != "hgwrm") {
+    if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
     xf <- object$frame.parsed
@@ -157,7 +156,7 @@ fitted.hgwrm <- function(object, ...) {
 #' 
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
 residuals.hgwrm <- function(object, ...) {
-    if (class(object) != "hgwrm") {
+    if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
     object$frame.parsed$y - fitted.hgwrm(object)
@@ -173,7 +172,7 @@ residuals.hgwrm <- function(object, ...) {
 #' @seealso [hgwr()].
 #' 
 summary.hgwrm <- function(object, ...) {
-    if (class(object) != "hgwrm") {
+    if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
 
@@ -328,7 +327,7 @@ matrix2char <- function(m, fmt = "%.6f") {
 #' @seealso [summary.hgwrm()], [print.table.md()].
 #' 
 print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
-    if (class(x) != "hgwrm") {
+    if (!inherits(x, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
 
@@ -405,8 +404,8 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #' summary(model)
 #' 
 print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
-    if (class(x) != "summary.hgwrm") {
-        stop("It's not a hgwrm object.")
+    if (!inherits(x, "summary.hgwrm")) {
+        stop("It's not a summary.hgwrm object.")
     }
 
     ### Call information
