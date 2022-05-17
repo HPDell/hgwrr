@@ -131,7 +131,7 @@ coef.hgwrm <- function(object, ...) {
     intercept <- gamma[,1] + mu[,1] + beta[,1]
     effects <- object$effects
     coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], object$groups))
-    colnames(coef) <- c("Intercept", effects$global.fixed, effects$local.fixed, effects$random, effects$group)
+    colnames(coef) <- c("Intercept", effects$local.fixed, effects$global.fixed, effects$random, effects$group)
     coef
 }
 
