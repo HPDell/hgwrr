@@ -61,7 +61,6 @@ hgwr <- function(
 ) {
     ### Extract variables
     kernel <- match.arg(kernel)
-    print(kernel)
     ml_type <- switch(
         match.arg(ml_type),
         "D_Only" = 0L,
