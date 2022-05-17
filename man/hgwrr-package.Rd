@@ -28,7 +28,7 @@ Hu, Y., Lu, B., Ge, Y., Dong, G., 2022.
 Uncovering spatial heterogeneity in real estate prices via
 combined hierarchical linear model and geographically weighted regression.
 Environment and Planning B: Urban Analytics and City Science.
-\doi{10.1177/23998083211063885}
+DOI: 10.1177/23998083211063885.
 }
 \keyword{ package }
 
