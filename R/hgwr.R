@@ -41,8 +41,19 @@
 #'  \item{2}{all logs are printed.}
 #' }
 #'
-#' @return A list consists of \eqn{\gamma}, \eqn{\beta}, \eqn{D}, \eqn{\mu}
-#' of a HGWR model.
+#' @return A list describing the model with following fields.
+#' \describe{
+#'  \item{\code{gamma}}{Coefficients of local fixed effects.}
+#'  \item{\code{beta}}{Coefficients of global fixed effects.}
+#'  \item{\code{mu}}{Coefficients of random effects.}
+#'  \item{\code{D}}{Variance-covariance matrix of random effects.}
+#'  \item{\code{sigma}}{Variance of errors.}
+#'  \item{\code{effects}}{A list including names of all effects.}
+#'  \item{\code{call}}{Calling of this function.}
+#'  \item{\code{frame}}{The DataFrame object sent to this call.}
+#'  \item{\code{frame.parsed}}{Variables extracted from the data.}
+#'  \item{\code{groups}}{Unique group labels extracted from the data.}
+#' }
 #'
 #' @examples
 #' data(multisampling)
@@ -116,10 +127,12 @@ hgwr <- function(
 }
 
 #' Get estimated coefficients.
-#' 
+#'
 #' @param object An `hgwrm` object returned by [hgwr()].
 #' @param \dots Parameter received from other functions.
-#' 
+#'
+#' @return A \code{DataFrame} object consists of all estimated coefficients.
+#'
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
 coef.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
@@ -136,9 +149,11 @@ coef.hgwrm <- function(object, ...) {
 }
 
 #' Get fitted reponse.
-#' 
+#'
 #' @inheritParams coef.hgwrm
-#' 
+#'
+#' @return A vector consists of fitted response values.
+#'
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
 fitted.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
@@ -151,9 +166,11 @@ fitted.hgwrm <- function(object, ...) {
 }
 
 #' Get residuals.
-#' 
+#'
 #' @inheritParams coef.hgwrm
-#' 
+#'
+#' @return A vector consists of residuals.
+#'
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
 residuals.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
@@ -163,21 +180,28 @@ residuals.hgwrm <- function(object, ...) {
 }
 
 #' Summary an `hgwrm` object.
-#' 
+#'
 #' @param object An `hgwrm` object returned from [hgwr()].
 #' @param \dots Other arguments passed from other functions.
-#' 
-#' @return A list containing summary informations of this `hgwrm` object.
-#' 
+#'
+#' @return A list containing summary informations of this `hgwrm` object
+#' with the following fields.
+#' \describe{
+#'  \item{\code{diagnostic}}{A list of diagnostic information.}
+#'  \item{\code{random.stddev}}{The standard deviation of random effects.}
+#'  \item{\code{random.corr}}{The correlation matrix of random effects.}
+#'  \item{\code{residuals}}{The residual vector.}
+#' }
+#'
 #' @seealso [hgwr()].
-#' 
+#'
 summary.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
 
     res <- as.list(object)
-    
+
     ### Diagnostics
     y <- object$frame[[object$effects$response]]
     tss <- sum((y - mean(y))^2)
@@ -195,7 +219,7 @@ summary.hgwrm <- function(object, ...) {
     diag(random_corr) <- 1
     res$random.stddev <- random_stddev
     res$random.corr <- random_corr
-    
+
     ### Residuals
     res$residuals <- x_residuals
 
@@ -205,7 +229,7 @@ summary.hgwrm <- function(object, ...) {
 }
 
 #' Print a character matrix as a table.
-#' 
+#'
 #' @param x A character matrix.
 #' @param col.sep Column seperator. Default to `""`.
 #' @param header.sep Header seperator. Default to `"-"`.
@@ -217,7 +241,9 @@ summary.hgwrm <- function(object, ...) {
 #' Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.
 #' @param \dots Additional style control arguments.
 #'
-#' @details 
+#' @return No return.
+#'
+#' @details
 #' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin`
 #' and `row.end` would not take effects.
 #' Because this function will automatically set their values.
@@ -293,10 +319,10 @@ print.table.md <- function(x, col.sep = "", header.sep = "",
 }
 
 #' Convert a numeric matrix to character matrix according to a format string.
-#' 
+#'
 #' @param m A numeric matrix.
 #' @param fmt Format string. Passing to [base::sprintf()].
-#' 
+#'
 #' @seealso [base::sprintf()], [print.hgwrm()], [print.summary.hgwrm()].
 matrix2char <- function(m, fmt = "%.6f") {
     mc <- NULL
@@ -309,12 +335,14 @@ matrix2char <- function(m, fmt = "%.6f") {
 }
 
 #' Print description of a `hgwrm` object.
-#' 
+#'
 #' @param x An `hgwrm` object returned by [hgwr()].
 #' @param decimal.fmt The format string passing to [base::sprintf()].
 #' @inheritDotParams print.table.md
-#' 
-#' @examples 
+#'
+#' @return No return.
+#'
+#' @examples
 #' data(multisampling)
 #' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
 #'               data = multisampling$data,
@@ -323,9 +351,9 @@ matrix2char <- function(m, fmt = "%.6f") {
 #'               bw = 10)
 #' print(model)
 #' print(model, table.style = "md")
-#' 
+#'
 #' @seealso [summary.hgwrm()], [print.table.md()].
-#' 
+#'
 print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (!inherits(x, "hgwrm")) {
         stop("It's not a hgwrm object.")
@@ -390,11 +418,14 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 }
 
 #' Print summary of an `hgwrm` object.
-#' 
+#'
 #' @param x An object returned from [summary.hgwrm()].
 #' @inherit print.hgwrm
 #' @inheritDotParams print.table.md
-#' @examples 
+#'
+#' @return No return.
+#'
+#' @examples
 #' data(multisampling)
 #' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
 #'               data = multisampling$data,
@@ -402,7 +433,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #'               coords = multisampling$coord,
 #'               bw = 10)
 #' summary(model)
-#' 
+#'
 print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (!inherits(x, "summary.hgwrm")) {
         stop("It's not a summary.hgwrm object.")
@@ -415,7 +446,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
     cat("   Data:", deparse(x$call[[3]]), "\n")
     cat("\n")
-    
+
     ### Diagnostics
     cat("Diagnostics", "\n")
     cat("-----------", "\n")
