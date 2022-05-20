@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12.0)
-project(hgwrr VERSION 0.2.1)
+project(hgwrr VERSION 0.2.2)
 
 set(PROJECT_VERSION_R "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}-${PROJECT_VERSION_PATCH}")
 
