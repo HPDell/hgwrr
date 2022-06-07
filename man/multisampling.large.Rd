@@ -1,4 +1,5 @@
 \name{multisampling.large}
+\alias{multisampling.large}
 \docType{data}
 \title{Large Scale Simulated Spatial Multisampling Data (DataFrame)}
 \description{

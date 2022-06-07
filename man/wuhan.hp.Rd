@@ -1,9 +1,9 @@
 \name{wuhan.hp}
+\alias{wuhan.hp}
 \docType{data}
 \title{Wuhan Second-hand House Price and POI Data (DataFrame)}
 \description{
 A data set of second-hand house price in Wuhan, China collected in 2018.
-
 }
 \usage{data(multisampling)}
 \format{
@@ -64,7 +64,7 @@ Item "coords" is a 779-by-2 matrix of coordinates of all neighbourhoods.
 }
 \author{Yigong Hu \email{yigong.hu@bristol.ac.uk}}
 \examples{
-data(multisampling.large)
+data(wuhan.hp)
 hgwr(
   formula = Price ~ d.Water + d.Commercial + d.PrimarySchool +
             d.Kindergarten + Fee + BuildingArea + (Floor.High | group),
