@@ -1,6 +1,4 @@
 \name{multisampling}
-\alias{multisampling}
-\alias{Multisampling}
 \docType{data}
 \title{Simulated Spatial Multisampling Data (DataFrame)}
 \description{
