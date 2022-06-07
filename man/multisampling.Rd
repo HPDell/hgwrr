@@ -5,7 +5,7 @@
 \title{Simulated Spatial Multisampling Data (DataFrame)}
 \description{
 A simulation data of spatial hierarchical structure and
-samples are overlapping on certain locations.
+samples overlapping on certain locations.
 }
 \usage{data(multisampling)}
 \format{
@@ -30,6 +30,6 @@ data(multisampling)
 hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
      data = multisampling$data,
      local.fixed = c("g1", "g2"),
-     coords = multisampling$coord,
+     coords = multisampling$coords,
      bw = 10)
 }
