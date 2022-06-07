@@ -1,16 +1,16 @@
-\name{multisampling}
-\alias{multisampling}
+\name{multisampling.large}
+\alias{multisampling.large}
 \docType{data}
-\title{Simulated Spatial Multisampling Data (DataFrame)}
+\title{Large Scale Simulated Spatial Multisampling Data (DataFrame)}
 \description{
-A simulation data of spatial hierarchical structure and
+A large scale simulation data of spatial hierarchical structure and
 samples overlapping on certain locations.
 }
 \usage{data(multisampling)}
 \format{
-A list of two items called "data" and "coord".
-Item "data" is a data frame with 484 observations at 16 locations
-on the following 6 variables.
+A list of three items called "data", "coords" and "beta".
+Item "data" is a data frame with 13862 observations at 200 locations
+and the following 6 variables.
 \describe{
     \item{\code{y}}{a numeric vector, dependent variable \eqn{y}}
     \item{\code{g1}}{a numeric vector, group level independent variable \eqn{g_1}}
@@ -25,10 +25,10 @@ and \code{z1} is used to estimate random effects.
 }
 \author{Yigong Hu \email{yigong.hu@bristol.ac.uk}}
 \examples{
-data(multisampling)
+data(multisampling.large)
 hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
-     data = multisampling$data,
+     data = multisampling.large$data,
      local.fixed = c("g1", "g2"),
-     coords = multisampling$coords,
-     bw = 10)
+     coords = multisampling.large$coords,
+     bw = 32, kernel = "bisquared")
 }

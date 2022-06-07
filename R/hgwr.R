@@ -60,7 +60,7 @@
 #' hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
 #'      data = multisampling$data,
 #'      local.fixed = c("g1", "g2"),
-#'      coords = multisampling$coord,
+#'      coords = multisampling$coords,
 #'      bw = 10)
 #'
 hgwr <- function(
@@ -347,7 +347,7 @@ matrix2char <- function(m, fmt = "%.6f") {
 #' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
 #'               data = multisampling$data,
 #'               local.fixed = c("g1", "g2"),
-#'               coords = multisampling$coord,
+#'               coords = multisampling$coords,
 #'               bw = 10)
 #' print(model)
 #' print(model, table.style = "md")
@@ -430,7 +430,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
 #'               data = multisampling$data,
 #'               local.fixed = c("g1", "g2"),
-#'               coords = multisampling$coord,
+#'               coords = multisampling$coords,
 #'               bw = 10)
 #' summary(model)
 #'
