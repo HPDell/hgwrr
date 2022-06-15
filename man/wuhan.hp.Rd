@@ -16,7 +16,7 @@ and the following 22 variables.
     \item{\code{Floor.Low}}{1 if a property is on a low floor, otherwise 0.}
     \item{\code{Decoration.Fine}}{1 if a property is well decorated, otherwise 0.}
     \item{\code{PlateTower}}{1 if a property is of the plate-tower type, otherwise 0.}
-    \item{\code{Steel}}{1 if a property is of ‘steel’ structure, otherwise 0.}
+    \item{\code{Steel}}{1 if a property is of 'steel' structure, otherwise 0.}
     \item{\code{BuildingArea}}{Building area in square metres.}
     \item{\code{Fee}}{Management fee per square meter per month.}
     \item{\code{d.Commercial}}{Distance to the nearest commercial area.}
