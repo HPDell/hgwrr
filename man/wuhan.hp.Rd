@@ -64,6 +64,7 @@ Item "coords" is a 779-by-2 matrix of coordinates of all neighbourhoods.
 }
 \author{Yigong Hu \email{yigong.hu@bristol.ac.uk}}
 \examples{
+\dontrun{
 data(wuhan.hp)
 hgwr(
   formula = Price ~ d.Water + d.Commercial + d.PrimarySchool +
@@ -72,4 +73,5 @@ hgwr(
   local.fixed = c("d.Water", "d.Commercial", "d.PrimarySchool",
                   "d.Kindergarten", "Fee"),
   coords = wuhan.hp$coords, bw = 50, kernel = "bisquared")
+}
 }
