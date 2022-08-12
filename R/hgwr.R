@@ -361,23 +361,23 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     }
 
     ### Basic Information
-    cat("Hierarchical and geographically weighted regression model", "\n")
-    cat("=========================================================", "\n")
-    cat("Formula:", deparse(x$call[[2]]), "\n")
-    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
-    cat("   Data:", deparse(x$call[[3]]), "\n")
+    cat("Hierarchical and geographically weighted regression model", fill = T)
+    cat("=========================================================", fill = T)
+    cat("Formula:", deparse(x$call[[2]]), fill = T)
+    cat(" Method:", "Back-fitting and Maximum likelihood", fill = T)
+    cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
     effects <- x$effects
-    cat("Global Fixed Effects", "\n")
-    cat("-------------------", "\n")
+    cat("Global Fixed Effects", fill = T)
+    cat("-------------------", fill = T)
     beta_str <- rbind(
         c("Intercept", effects$global.fixed),
         matrix2char(x$beta)
     )
     print.table.md(beta_str, ...)
     cat("\n")
-    cat("Local Fixed Effects", "\n")
-    cat("-------------------", "\n")
+    cat("Local Fixed Effects", fill = T)
+    cat("-------------------", fill = T)
     gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
     gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
@@ -385,8 +385,8 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     )
     print.table.md(gamma_str, ...)
     cat("\n")
-    cat("Random Effects", "\n")
-    cat("--------------", "\n")
+    cat("Random Effects", fill = T)
+    cat("--------------", fill = T)
     x_summary <- summary.hgwrm(x)
     random_stddev <- x_summary$random.stddev
     random_corr <- x_summary$random.corr
@@ -412,10 +412,10 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     )
     print.table.md(random_str, ...)
     cat("\n")
-    cat("Other Information", "\n")
-    cat("-----------------", "\n")
-    cat("Number of Obs:", nrow(x$frame), "\n")
-    cat("       Groups:", effects$group, ",", nrow(x$mu), "\n")
+    cat("Other Information", fill = T)
+    cat("-----------------", fill = T)
+    cat("Number of Obs:", nrow(x$frame), fill = T)
+    cat("       Groups:", effects$group, ",", nrow(x$mu), fill = T)
 }
 
 #' Print summary of an `hgwrm` object.
@@ -441,16 +441,16 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     }
 
     ### Call information
-    cat("Hierarchical and geographically weighted regression model", "\n")
-    cat("=========================================================", "\n")
-    cat("Formula:", deparse(x$call[[2]]), "\n")
-    cat(" Method:", "Back-fitting and Maximum likelihood", "\n")
-    cat("   Data:", deparse(x$call[[3]]), "\n")
+    cat("Hierarchical and geographically weighted regression model", fill = T)
+    cat("=========================================================", fill = T)
+    cat("Formula:", deparse(x$call[[2]]), fill = T)
+    cat(" Method:", "Back-fitting and Maximum likelihood", fill = T)
+    cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
 
     ### Diagnostics
-    cat("Diagnostics", "\n")
-    cat("-----------", "\n")
+    cat("Diagnostics", fill = T)
+    cat("-----------", fill = T)
     rsquared <- x$diagnostic$rsquared
     diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
     diagnostic_chr <- rbind(
@@ -461,8 +461,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
 
     ### Residuals
-    cat("Scaled residuals", "\n")
-    cat("----------------", "\n")
+    cat("Scaled residuals", fill = T)
+    cat("----------------", fill = T)
     resiudal_fivenum <- fivenum(x$residuals)
     residual_fivenum_mat <- matrix(resiudal_fivenum, nrow = 1)
     residual_fivenum_chr <- rbind(
@@ -471,8 +471,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     )
     print.table.md(residual_fivenum_chr, ...)
     cat("\n")
-    cat("Other Information", "\n")
-    cat("-----------------", "\n")
-    cat("Number of Obs:", nrow(x$frame), "\n")
-    cat("       Groups:", x$effects$group, ",", nrow(x$mu), "\n")
+    cat("Other Information", fill = T)
+    cat("-----------------", fill = T)
+    cat("Number of Obs:", nrow(x$frame), fill = T)
+    cat("       Groups:", x$effects$group, ",", nrow(x$mu), fill = T)
 }
