@@ -10,9 +10,11 @@
 #' It contains names of local fixed effects.
 #' @param coords A 2-column matrix.
 #' It consists of coordinates for each group.
-#' @param bw A numeric value. It is the value of bandwidth.
+#' @param bw A numeric value. It is the value of bandwidth or `"CV"`.
 #' In this stage this function only support adaptive bandwidth.
 #' And its unit must be the number of nearest neighbours.
+#' If `"CV"` is specified, the algorithm will automatically select an
+#' optimized bandwidth value.
 #' @param kernel A character value. It specify which kernel function is used
 #' in GWR part. Possible values are
 #' \describe{
@@ -64,10 +66,10 @@
 #'      bw = 10)
 #'
 hgwr <- function(
-    formula, data, local.fixed, coords, bw,
+    formula, data, local.fixed, coords, bw = "CV",
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-    max_iters = 1e6, max_retries = 10,
+    max_iters = 1e6, max_retries = 1e6,
     ml_type = c("D_Only", "D_Beta"), verbose = 0
 ) {
     ### Extract variables
@@ -88,8 +90,22 @@ hgwr <- function(
     gfe <- fe[!(fe %in% local.fixed)]
     x <- as.matrix(cbind(1, data[gfe]))
     g <- as.matrix(cbind(1, aggregate(data[lfe], list(group), mean)[,-1]))
+
+    ### Get bandwidth value
+    if (is.character(bw) && bw == "CV") {
+        bw_value <- 0.0
+        optim_bw <- TRUE
+    } else if (is.numeric(bw) || is.integer(bw)) {
+        bw_value <- bw
+        optim_bw <- FALSE
+    } else {
+        bw_value <- Inf
+        optim_bw <- FALSE
+    }
+
+    ### Call C
     hgwr_result <- .hgwr_bml(
-        g, x, z, y, as.matrix(coords), group_index, bw, kernel,
+        g, x, z, y, as.matrix(coords), group_index, bw_value, kernel,
         alpha, eps_iter, eps_gradient,
         as.integer(max_iters), as.integer(max_retries),
         as.integer(ml_type), as.integer(verbose)
@@ -99,12 +115,17 @@ hgwr <- function(
     mu <- hgwr_result$mu
     D <- hgwr_result$D
     sigma <- hgwr_result$sigma
+    if (optim_bw)
+        bw_value <- hgwr_result$bw
+
+    ### Prepare Return Result
     result <- list(
         gamma = gamma,
         beta = beta,
         mu = mu,
         D = D,
         sigma = sigma,
+        bw = bw_value,
         effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
@@ -378,6 +399,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
     cat("Local Fixed Effects", fill = T)
     cat("-------------------", fill = T)
+    cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
     gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
     gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
