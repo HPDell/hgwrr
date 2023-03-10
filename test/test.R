@@ -14,7 +14,7 @@ rownames(hgwr_data) <- NULL
 hgwr_coords <- as.matrix(data_u)
 hgwr_formula <- y ~ g1 + g2 + x1 + (z1 | group)
 
-result <- hgwr(hgwr_formula, hgwr_data, c("g1", "g2"), hgwr_coords, 64)
+result <- hgwr(hgwr_formula, hgwr_data, c("g1", "g2"), hgwr_coords, "CV", kernel = "bisquared", verbose = 1, max_retries = 10000)
 fitted <- result$fitted
 y <- hgwr_data$y
 residual <- y - fitted
