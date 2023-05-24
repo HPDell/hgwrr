@@ -2,7 +2,7 @@ Package: @PROJECT_NAME@
 Type: Package
 Title: Hierarchical and Geographically Weighted Regression
 Version: @PROJECT_VERSION_R@
-Date: 2022-05-17
+Date: 2023-05-24
 Author: Yigong Hu, Richard Harris, Richard Timmerman
 Maintainer: Yigong Hu <yigong.hu@bristol.ac.uk>
 Description: This model divides coefficients into three types,
