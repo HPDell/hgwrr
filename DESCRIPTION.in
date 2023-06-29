@@ -14,5 +14,6 @@ URL: https://github.com/HPDell/hgwr/, https://hpdell.github.io/hgwr/
 Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp, RcppArmadillo
 Depends: R (>= 3.5.0), stats, utils
+Suggests: testthat (>= 3.0.0)
 SystemRequirements: GNU make
 Roxygen: list(markdown = TRUE)

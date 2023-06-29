@@ -27,9 +27,8 @@ and \code{z1} is used to estimate random effects.
 \examples{
 \dontrun{
 data(multisampling.large)
-hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
      data = multisampling.large$data,
-     local.fixed = c("g1", "g2"),
      coords = multisampling.large$coords,
      bw = 32, kernel = "bisquared")
 }
