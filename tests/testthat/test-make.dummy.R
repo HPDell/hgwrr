@@ -3,7 +3,7 @@ d <- data.frame(
   number = rnorm(5),
   level = c("top", "mid", "low", "mid", "top"),
   distance = factor(c("far", "near", "near", "far", "far")),
-  sold = c(T, T, F, F,T)
+  sold = c(TRUE, TRUE, FALSE, FALSE, TRUE)
 )
 
 test_that("make dummy", {

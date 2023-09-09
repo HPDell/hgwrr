@@ -10,6 +10,17 @@ test_that("hgwr fit", {
   ))
 })
 
+test_that("hgwr fit sf", {
+  data(multisampling)
+  ms_sf <- with(multisampling, cbind(coords[data$group, ], data))
+  ms_sf <- sf::st_as_sf(ms_sf, coords = 1:2)
+  expect_no_error(hgwr(
+    formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+    data = ms_sf,
+    bw = 10
+  ))
+})
+
 test_that("hgwr parse formula", {
   expect_setequal(m$effects$local.fixed, c("g1", "g2"))
   expect_setequal(m$effects$global.fixed, c("x1"))
@@ -27,4 +38,13 @@ test_that("hgwr s3 methods", {
   expect_no_error(residuals(m))
   expect_no_error(summary(m))
   expect_no_error(print(summary(m), table.style = "md"))
+})
+
+test_that("hgwr data.frame coords check", {
+  data(multisampling)
+  expect_error(hgwr(
+    formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+    data = multisampling$data,
+    bw = 10
+  ))
 })

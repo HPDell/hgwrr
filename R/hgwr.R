@@ -10,9 +10,8 @@
 #' response ~ L(local.fixed) + global.fixed + (random | group)
 #' ```
 #' For more information, please see the `formula` subsection in details.
-#' @param data A DataFrame.
-#' @param coords A 2-column matrix.
-#' It consists of coordinates for each group.
+#' @param data The data.
+#' @param \dots Further arguments for the specified type of `data`.
 #' @param bw A numeric value. It is the value of bandwidth or `"CV"`.
 #' In this stage this function only support adaptive bandwidth.
 #' And its unit must be the number of nearest neighbours.
@@ -88,8 +87,70 @@
 #' @importFrom stats aggregate
 #' 
 #' @export 
-#'
 hgwr <- function(
+    formula, data, ..., bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    UseMethod("hgwr", data)
+}
+
+#' @rdname hgwr
+#' @method hgwr sf
+#' 
+#' @importFrom sf st_centroid st_coordinates
+#' @importFrom stats aggregate
+#' 
+#' @export 
+hgwr.sf <- function(
+    formula, data, ..., bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    ### Generate group-level coordinates by taking means
+    data_coords <- sf::st_coordinates(sf::st_centroid(data))
+    data <- sf::st_drop_geometry(data)
+    group <- data[[parse.formula(formula)$group]]
+    group_unique <- unique(group)
+    group_index <- as.vector(match(group, group_unique))
+    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)
+    mc0 <- mc <- match.call(expand.dots = TRUE)
+    mc[[1]] <- as.name("hgwr_fit")
+    mc[["data"]] <- data
+    mc[["coords"]] <- group_coords
+    mev <- eval.parent(mc)
+    mev$call <- mc0
+    mev
+}
+
+#' @rdname hgwr
+#' @method hgwr data.frame
+#' 
+#' @param coords A 2-column matrix.
+#' It consists of coordinates for each group.
+#' 
+#' @export 
+hgwr.data.frame <- function(
+    formula, data, ..., coords, bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    mc0 <- mc <- match.call(expand.dots = TRUE)
+    mc[[1]] <- as.name("hgwr_fit")
+    mev <- eval.parent(mc)
+    mev$call <- mc0
+    mev
+}
+
+#' @describeIn hgwr Fit a HGWR mdoel
+#' @export 
+hgwr_fit <- function(
     formula, data, coords, bw = "CV",
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
@@ -156,7 +217,6 @@ hgwr <- function(
             group = model_desc$group,
             response = model_desc$response
         ),
-        call = match.call(),
         frame = data,
         frame.parsed = list(
             y = y,

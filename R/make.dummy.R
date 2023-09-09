@@ -93,7 +93,7 @@ make.dummy.extract.factor <- function(col, name) {
 #' with value `TRUE` mapped to `1` and `FALSE` to `0`.
 #' 
 #' @examples
-#' make.dummy.extract(c(T, T, F), "sold")
+#' make.dummy.extract(c(TRUE, TRUE, FALSE), "sold")
 #' 
 #' @rdname make.dummy
 #' @method make.dummy.extract logical
