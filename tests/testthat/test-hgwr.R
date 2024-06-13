@@ -10,6 +10,28 @@ test_that("hgwr fit", {
   ))
 })
 
+test_that("hgwr fit no intercept", {
+  data(multisampling)
+  expect_no_error(hgwr(
+    formula = y ~ L(0 + g1 + g2) + x1 + (z1 | group),
+    data = multisampling$data,
+    coords = multisampling$coords,
+    bw = 10
+  ))
+  expect_no_error(hgwr(
+    formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
+    data = multisampling$data,
+    coords = multisampling$coords,
+    bw = 10
+  ))
+  expect_no_error(hgwr(
+    formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
+    data = multisampling$data,
+    coords = multisampling$coords,
+    bw = 10
+  ))
+})
+
 test_that("hgwr fit sf", {
   data(multisampling)
   ms_sf <- with(multisampling, cbind(coords[data$group, ], data))

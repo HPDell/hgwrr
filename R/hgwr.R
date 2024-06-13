@@ -169,11 +169,14 @@ hgwr_fit <- function(
     group <- data[[model_desc$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
-    z <- as.matrix(cbind(1, make.dummy(data[model_desc$random.effects])))
+    z <- as.matrix(make.dummy(data[model_desc$random.effects]))
+    if (model_desc$intercept$random) z <- cbind(1, z)
     gfe <- model_desc$fixed.effects
     lfe <- model_desc$local.fixed.effects
-    x <- as.matrix(cbind(1, make.dummy(data[gfe])))
-    g <- as.matrix(cbind(1, aggregate(make.dummy(data[lfe]), list(group), mean)[,-1]))
+    x <- as.matrix(make.dummy(data[gfe]))
+    if (model_desc$intercept$fixed) x <- cbind(1, x)
+    g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
+    if (model_desc$intercept$local) g <- cbind(1, g)
 
     ### Get bandwidth value
     if (is.character(bw) && bw == "CV") {
@@ -217,6 +220,7 @@ hgwr_fit <- function(
             group = model_desc$group,
             response = model_desc$response
         ),
+        intercept = model_desc$intercept,
         frame = data,
         frame.parsed = list(
             y = y,
@@ -489,10 +493,14 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
     effects <- x$effects
+    intercept <- x$intercept
+    if (intercept$fixed) effects$global.fixed <- c("Intercept", effects$global.fixed)
+    if (intercept$local) effects$local.fixed <- c("Intercept", effects$local.fixed)
+    if (intercept$random) effects$random <- c("Intercept", effects$random)
     cat("Global Fixed Effects", fill = T)
     cat("-------------------", fill = T)
     beta_str <- rbind(
-        c("Intercept", effects$global.fixed),
+        effects$global.fixed,
         matrix2char(x$beta)
     )
     print.table.md(beta_str, ...)
@@ -503,7 +511,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
     gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-        cbind(c("Intercept", effects$local.fixed), matrix2char(gamma_fivenum))
+        cbind(effects$local.fixed, matrix2char(gamma_fivenum))
     )
     print.table.md(gamma_str, ...)
     cat("\n")
@@ -517,7 +525,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
     random_dev_str <- cbind(
-        "", c("Intercept", x$effects$random), matrix2char(matrix(random_stddev, ncol = 1))
+        "", effects$random, matrix2char(matrix(random_stddev, ncol = 1))
     )
     random_dev_str[1, 1] <- effects$group
     random_dev_str <- rbind(

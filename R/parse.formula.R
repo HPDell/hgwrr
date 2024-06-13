@@ -20,7 +20,13 @@
 #' @noRd
 #'
 parse.formula <- function(formula) {
-    model <- list()
+    model <- list(
+        intercept = list(
+            random = TRUE,
+            fixed = TRUE,
+            local = TRUE
+        )
+    )
     root <- as.formula(formula)
     stack <- list(root)
     re <- list()
@@ -66,16 +72,21 @@ parse.formula <- function(formula) {
             } else stop("Error in formula: unrecognized symbol.")
         } else {
             if (random_mode) {
-                re <- c(re, cur)
+                if (inherits(cur, "numeric") && cur == 0) model$intercept$random = FALSE
+                else re <- c(re, cur)
                 if (length(stack) == random_start_length) {
                     random_mode <- FALSE
                 }
             } else if (local_mode) {
-                le <- c(le, cur)
+                if (inherits(cur, "numeric") && cur == 0) model$intercept$local = FALSE
+                else le <- c(le, cur)
                 if (length(stack) == local_start_length) {
                     local_mode <- FALSE
                 }
-            } else fe <- c(fe, cur)
+            } else {
+                if (inherits(cur, "numeric") && cur == 0) model$intercept$fixed = FALSE
+                else fe <- c(fe, cur)
+            }
         }
     }
     model$random.effects <- rev(as.character(re))
