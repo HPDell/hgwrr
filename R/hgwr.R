@@ -196,7 +196,7 @@ hgwr_fit <- function(
     }
 
     ### Call C
-    hgwr_result <- .hgwr_bfml(
+    hgwr_result <- hgwr_bfml(
         g, x, z, y, as.matrix(coords), group_index, bw_value, kernel_index,
         alpha, eps_iter, eps_gradient,
         as.integer(max_iters), as.integer(max_retries),
