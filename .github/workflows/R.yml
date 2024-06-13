@@ -23,6 +23,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
+      - name: Install R Dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, any::roxygen2
+          needs: check
       - name: Build and Check package
         uses: r-lib/actions/check-r-package@v2
         with:
