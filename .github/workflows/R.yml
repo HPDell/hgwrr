@@ -1,0 +1,121 @@
+name: R Package Check
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*.*-*
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  check_linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [debian, fedora]
+      fail-fast: false
+    container:
+      image: ghcr.io/gwmodel-lab/hgwr-${{ matrix.os }}-docker-action:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build and Check package
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual", "--as-cran")'
+          build_args: 'c("--no-manual", "--resave-data")'
+          error-on: '"error"'
+          check-dir: '"check"'
+  
+  check_macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up R release
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Install Dependencies
+        run: brew install gsl pandoc
+      - name: Install R Dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, any::roxygen2
+          needs: check
+      - name: Check Package
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual", "--as-cran")'
+          build_args: 'c("--no-manual", "--resave-data")'
+          error-on: '"error"'
+          check-dir: '"check"'
+  
+  check_windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Dependencies
+        run: |
+          choco install pandoc
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          rtools-version: '42'
+          update-rtools: true
+      - name: Install R Dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, any::roxygen2
+          needs: check
+      - name: Check Package
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual", "--as-cran")'
+          build_args: 'c("--no-manual", "--resave-data")'
+          error-on: '"error"'
+          check-dir: '"check"'
+  
+  deploy_build:
+    if: github.ref_type == 'tag'
+    needs: [build_ubuntu, build_fedora, build_debian, build_macos, build_windows]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker://ghcr.io/hpdell/hgwr-ubuntu-docker-action:latest
+      - id: extract_r_version
+        name: Extract R version number
+        run: |
+          R_DESC_VERSION=`grep "Version" build/hgwrr/DESCRIPTION`
+          R_PACKAGE_VERSION=${R_DESC_VERSION:9}
+          echo "::set-output name=r_version::${R_PACKAGE_VERSION}"
+      - name: Upload R package as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: hgwrr_cran_source
+          path: build/hgwrr_${{steps.extract_r_version.outputs.r_version}}.tar.gz
+    outputs:
+      r_version: ${{steps.extract_r_version.outputs.r_version}}
+  
+  deploy_github_release:
+    if: github.ref_type == 'tag'
+    needs: [deploy_build]
+    permissions:
+      contents: write
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download R Package
+        uses: actions/download-artifact@v3
+        with:
+          name: hgwrr_cran_source
+      - name: Upload to GitHub 
+        uses: softprops/action-gh-release@v1
+        with:
+          files: hgwrr_${{needs.deploy_build.outputs.r_version}}.tar.gz
