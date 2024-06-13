@@ -1,0 +1,3 @@
+[submodule "src/libhgwr"]
+	path = src/libhgwr
+	url = https://github.com/HPDell/hgwr.git

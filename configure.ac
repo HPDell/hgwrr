@@ -1,4 +1,4 @@
-AC_INIT([hgwrr], 0.2-2)
+AC_INIT([hgwrr], 0.3-1)
 
 AC_LANG(C++)
 AC_REQUIRE_CPP
@@ -14,6 +14,7 @@ fi
 
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
+AC_SUBST(PKG_LIBS)
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

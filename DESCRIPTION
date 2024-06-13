@@ -1,7 +1,7 @@
-Package: @PROJECT_NAME@
+Package: hgwrr
 Type: Package
 Title: Hierarchical and Geographically Weighted Regression
-Version: @PROJECT_VERSION_R@
+Version: 0.3.1
 Date: 2023-05-24
 Author: Yigong Hu, Richard Harris, Richard Timmerman
 Maintainer: Yigong Hu <yigong.hu@bristol.ac.uk>
@@ -10,10 +10,12 @@ Description: This model divides coefficients into three types,
         If data have spatial hierarchical structures (especially are overlapping on some locations),
         it is worth trying this model to reach better fitness.
 License: GPL (>= 2)
-URL: https://github.com/HPDell/hgwr/, https://hpdell.github.io/hgwr/
-Imports: Rcpp (>= 1.0.8), sf
+URL: https://github.com/HPDell/hgwrr/, https://hpdell.github.io/hgwrr/
+Imports: Rcpp (>= 1.0.8), methods
 LinkingTo: Rcpp, RcppArmadillo
-Depends: R (>= 3.5.0), stats, utils
+Depends: R (>= 3.5.0), sf, stats, utils
+NeedsCompilation: yes
 Suggests: testthat (>= 3.0.0)
 SystemRequirements: GNU make
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3

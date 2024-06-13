@@ -159,6 +159,11 @@ hgwr_fit <- function(
 ) {
     ### Extract variables
     kernel <- match.arg(kernel)
+    kernel_index <- switch(
+        kernel,
+        "gaussian" = 0L,
+        "bisquared" = 1L
+    )
     ml_type <- switch(
         match.arg(ml_type),
         "D_Only" = 0L,
@@ -191,8 +196,8 @@ hgwr_fit <- function(
     }
 
     ### Call C
-    hgwr_result <- .hgwr_bml(
-        g, x, z, y, as.matrix(coords), group_index, bw_value, kernel,
+    hgwr_result <- .hgwr_bfml(
+        g, x, z, y, as.matrix(coords), group_index, bw_value, kernel_index,
         alpha, eps_iter, eps_gradient,
         as.integer(max_iters), as.integer(max_retries),
         as.integer(ml_type), as.integer(verbose)
