@@ -9,7 +9,7 @@
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
 
-LIBHGWR_CXXFLAGS = -I./libhgwr
+LIBHGWR_CXXFLAGS = -I./libhgwr/include
 
 GSL_LIBS = -L$(R_HOME)/lib -lgsl -lgslcblas
 
