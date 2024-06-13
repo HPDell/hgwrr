@@ -26,9 +26,8 @@ and \code{z1} is used to estimate random effects.
 \author{Yigong Hu \email{yigong.hu@bristol.ac.uk}}
 \examples{
 data(multisampling)
-hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
      data = multisampling$data,
-     local.fixed = c("g1", "g2"),
      coords = multisampling$coords,
      bw = 10)
 }

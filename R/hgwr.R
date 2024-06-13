@@ -5,11 +5,13 @@
 #' @param formula A formula.
 #' Its structure is similar to \code{\link[lme4]{lmer}} function
 #' in **lme4** package.
-#' @param data A DataFrame.
-#' @param local.fixed A character vector.
-#' It contains names of local fixed effects.
-#' @param coords A 2-column matrix.
-#' It consists of coordinates for each group.
+#' Models can be specified with the following form:
+#' ```r
+#' response ~ L(local.fixed) + global.fixed + (random | group)
+#' ```
+#' For more information, please see the `formula` subsection in details.
+#' @param data The data.
+#' @param \dots Further arguments for the specified type of `data`.
 #' @param bw A numeric value. It is the value of bandwidth or `"CV"`.
 #' In this stage this function only support adaptive bandwidth.
 #' And its unit must be the number of nearest neighbours.
@@ -56,17 +58,100 @@
 #'  \item{\code{frame.parsed}}{Variables extracted from the data.}
 #'  \item{\code{groups}}{Unique group labels extracted from the data.}
 #' }
+#' 
+#' @details  
+#' ## Effect Specification in Formula
+#' In the HGWR model, there are three types of effects specified by the
+#' `formula` argument:
+#' \describe{
+#'  \item{Local fixed effects}{Effects wrapped by functional symbol `L`.}
+#'  \item{Random effects}{Effects specified outside the functional symbol `L` but to the left of symbol `|`.}
+#'  \item{Global fixed effects}{Other effects}
+#' }
+#' For example, the following formula in the example of this function below is written as
+#' ```r
+#' y ~ L(g1 + g2) + x1 + (z1 | group)
+#' ```
+#' where `g1` and `g2` are local fixed effects,
+#' `x1` is the global fixed effects,
+#' and `z1` is the random effects grouped by the group indicator `group`.
+#' Note that random effects can only be specified once!
 #'
 #' @examples
 #' data(multisampling)
-#' hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#' hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
 #'      data = multisampling$data,
-#'      local.fixed = c("g1", "g2"),
 #'      coords = multisampling$coords,
 #'      bw = 10)
-#'
+#' 
+#' @importFrom stats aggregate
+#' 
+#' @export 
 hgwr <- function(
-    formula, data, local.fixed, coords, bw = "CV",
+    formula, data, ..., bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    UseMethod("hgwr", data)
+}
+
+#' @rdname hgwr
+#' @method hgwr sf
+#' 
+#' @importFrom sf st_centroid st_coordinates
+#' @importFrom stats aggregate
+#' 
+#' @export 
+hgwr.sf <- function(
+    formula, data, ..., bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    ### Generate group-level coordinates by taking means
+    data_coords <- sf::st_coordinates(sf::st_centroid(data))
+    data <- sf::st_drop_geometry(data)
+    group <- data[[parse.formula(formula)$group]]
+    group_unique <- unique(group)
+    group_index <- as.vector(match(group, group_unique))
+    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)
+    mc0 <- mc <- match.call(expand.dots = TRUE)
+    mc[[1]] <- as.name("hgwr_fit")
+    mc[["data"]] <- data
+    mc[["coords"]] <- group_coords
+    mev <- eval.parent(mc)
+    mev$call <- mc0
+    mev
+}
+
+#' @rdname hgwr
+#' @method hgwr data.frame
+#' 
+#' @param coords A 2-column matrix.
+#' It consists of coordinates for each group.
+#' 
+#' @export 
+hgwr.data.frame <- function(
+    formula, data, ..., coords, bw = "CV",
+    kernel = c("gaussian", "bisquared"),
+    alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+    max_iters = 1e6, max_retries = 1e6,
+    ml_type = c("D_Only", "D_Beta"), verbose = 0
+) {
+    mc0 <- mc <- match.call(expand.dots = TRUE)
+    mc[[1]] <- as.name("hgwr_fit")
+    mev <- eval.parent(mc)
+    mev$call <- mc0
+    mev
+}
+
+#' @describeIn hgwr Fit a HGWR mdoel
+#' @export 
+hgwr_fit <- function(
+    formula, data, coords, bw = "CV",
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
@@ -81,15 +166,17 @@ hgwr <- function(
     )
     model_desc <- parse.formula(formula)
     y <- as.vector(data[[model_desc$response]])
-    group <- as.vector(as.integer(data[[model_desc$group]]))
+    group <- data[[model_desc$group]]
     group_unique <- unique(group)
-    group_index <- match(group, group_unique)
-    z <- as.matrix(cbind(1, data[model_desc$random.effects]))
-    fe <- model_desc$fixed.effects
-    lfe <- fe[fe %in% local.fixed]
-    gfe <- fe[!(fe %in% local.fixed)]
-    x <- as.matrix(cbind(1, data[gfe]))
-    g <- as.matrix(cbind(1, aggregate(data[lfe], list(group), mean)[,-1]))
+    group_index <- as.vector(match(group, group_unique))
+    z <- as.matrix(make.dummy(data[model_desc$random.effects]))
+    if (model_desc$intercept$random) z <- cbind(1, z)
+    gfe <- model_desc$fixed.effects
+    lfe <- model_desc$local.fixed.effects
+    x <- as.matrix(make.dummy(data[gfe]))
+    if (model_desc$intercept$fixed) x <- cbind(1, x)
+    g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
+    if (model_desc$intercept$local) g <- cbind(1, g)
 
     ### Get bandwidth value
     if (is.character(bw) && bw == "CV") {
@@ -133,14 +220,14 @@ hgwr <- function(
             group = model_desc$group,
             response = model_desc$response
         ),
-        call = match.call(),
+        intercept = model_desc$intercept,
         frame = data,
         frame.parsed = list(
             y = y,
             x = x,
             g = g,
             z = z,
-            group = group
+            group = group_index
         ),
         groups = group_unique
     )
@@ -156,6 +243,9 @@ hgwr <- function(
 #' @return A \code{DataFrame} object consists of all estimated coefficients.
 #'
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
+#' 
+#' @export 
+#' 
 coef.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
@@ -194,6 +284,9 @@ fitted.hgwrm <- function(object, ...) {
 #' @return A vector consists of residuals.
 #'
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [fitted.hgwrm()].
+#' 
+#' @export 
+#' 
 residuals.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
@@ -216,6 +309,8 @@ residuals.hgwrm <- function(object, ...) {
 #' }
 #'
 #' @seealso [hgwr()].
+#' 
+#' @export 
 #'
 summary.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
@@ -282,6 +377,9 @@ summary.hgwrm <- function(object, ...) {
 #' In this function, characters are right padded by spaces.
 #'
 #' @seealso [print.hgwrm()], [summary.hgwrm()].
+#' 
+#' @export 
+#' 
 print.table.md <- function(x, col.sep = "", header.sep = "",
                            row.begin = "", row.end = "",
                            table.style = c("plain", "md", "latex"), ...) {
@@ -346,6 +444,9 @@ print.table.md <- function(x, col.sep = "", header.sep = "",
 #' @param fmt Format string. Passing to [base::sprintf()].
 #'
 #' @seealso [base::sprintf()], [print.hgwrm()], [print.summary.hgwrm()].
+#' 
+#' @export 
+#' 
 matrix2char <- function(m, fmt = "%.6f") {
     mc <- NULL
     if ("array" %in% class(m)) {
@@ -366,15 +467,18 @@ matrix2char <- function(m, fmt = "%.6f") {
 #'
 #' @examples
 #' data(multisampling)
-#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#' model <- hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
 #'               data = multisampling$data,
-#'               local.fixed = c("g1", "g2"),
 #'               coords = multisampling$coords,
 #'               bw = 10)
 #' print(model)
 #' print(model, table.style = "md")
 #'
 #' @seealso [summary.hgwrm()], [print.table.md()].
+#' 
+#' @importFrom stats fivenum
+#' 
+#' @export 
 #'
 print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (!inherits(x, "hgwrm")) {
@@ -389,10 +493,14 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
     effects <- x$effects
+    intercept <- x$intercept
+    if (intercept$fixed) effects$global.fixed <- c("Intercept", effects$global.fixed)
+    if (intercept$local) effects$local.fixed <- c("Intercept", effects$local.fixed)
+    if (intercept$random) effects$random <- c("Intercept", effects$random)
     cat("Global Fixed Effects", fill = T)
     cat("-------------------", fill = T)
     beta_str <- rbind(
-        c("Intercept", effects$global.fixed),
+        effects$global.fixed,
         matrix2char(x$beta)
     )
     print.table.md(beta_str, ...)
@@ -403,7 +511,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
     gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-        cbind(c("Intercept", effects$local.fixed), matrix2char(gamma_fivenum))
+        cbind(effects$local.fixed, matrix2char(gamma_fivenum))
     )
     print.table.md(gamma_str, ...)
     cat("\n")
@@ -417,7 +525,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
     random_dev_str <- cbind(
-        "", c("Intercept", x$effects$random), matrix2char(matrix(random_stddev, ncol = 1))
+        "", effects$random, matrix2char(matrix(random_stddev, ncol = 1))
     )
     random_dev_str[1, 1] <- effects$group
     random_dev_str <- rbind(
@@ -450,12 +558,13 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #'
 #' @examples
 #' data(multisampling)
-#' model <- hgwr(formula = y ~ g1 + g2 + x1 + (z1 | group),
+#' model <- hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
 #'               data = multisampling$data,
-#'               local.fixed = c("g1", "g2"),
 #'               coords = multisampling$coords,
 #'               bw = 10)
 #' summary(model)
+#' 
+#' @export 
 #'
 print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (!inherits(x, "summary.hgwrm")) {
