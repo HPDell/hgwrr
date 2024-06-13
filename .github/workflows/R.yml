@@ -84,7 +84,7 @@ jobs:
   
   deploy_build:
     if: github.ref_type == 'tag'
-    needs: [build_ubuntu, build_fedora, build_debian, build_macos, build_windows]
+    needs: [check_linux, check_macos, check_windows]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
