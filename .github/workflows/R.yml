@@ -17,7 +17,7 @@ jobs:
         os: [debian, fedora]
       fail-fast: false
     container:
-      image: ghcr.io/gwmodel-lab/hgwr-${{ matrix.os }}-docker-action:latest
+      image: ghcr.io/hpdell/hgwr-${{ matrix.os }}-docker-action:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
