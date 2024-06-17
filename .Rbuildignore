@@ -17,3 +17,4 @@ src/libhgwr/docs
 _cache$
 ^doc$
 ^Meta$
+^\.github$

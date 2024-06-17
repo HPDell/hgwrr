@@ -10,7 +10,8 @@ Description: This model divides coefficients into three types,
         If data have spatial hierarchical structures (especially are overlapping on some locations),
         it is worth trying this model to reach better fitness.
 License: GPL (>= 2)
-URL: https://github.com/HPDell/hgwrr/, https://hpdell.github.io/hgwrr/
+URL: https://github.com/HPDell/hgwrr/,
+    https://hpdell.github.io/hgwrr/
 Imports: Rcpp (>= 1.0.8), methods
 LinkingTo: Rcpp, RcppArmadillo
 Depends: R (>= 3.5.0), sf, stats, utils
