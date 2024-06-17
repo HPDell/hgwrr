@@ -36,16 +36,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: |
-            any::rcmdcheck
-            any::roxygen2
-            any::tidyverse
-            any::sf
-            any::tmap
-            any::GWmodel
-            any::lme4
-            any::pkgdown
-            local::.
+          extra-packages: any::pkgdown, local::.
           needs: website
 
       - name: Build site
