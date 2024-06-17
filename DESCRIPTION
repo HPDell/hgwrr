@@ -15,7 +15,11 @@ Imports: Rcpp (>= 1.0.8), methods
 LinkingTo: Rcpp, RcppArmadillo
 Depends: R (>= 3.5.0), sf, stats, utils
 NeedsCompilation: yes
-Suggests: testthat (>= 3.0.0)
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 SystemRequirements: GNU make
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr
