@@ -304,14 +304,7 @@ library(GWmodel)
 msl_gwr_data <- multisampling.large$data
 coordinates(msl_gwr_data) <- with(multisampling.large, coords[data$group, ])
 ##### Get optimized bandwidth via golden minimization algorithm.
-msl_gwr_bw <- bw.gwr(
-  formula = y ~ g1 + g2 + x1 + z1,
-  data = msl_gwr_data,
-  approach = "AIC",
-  adaptive = TRUE,
-  parallel.method = parallel_method,
-  parallel.arg = parallel_arg
-)
+msl_gwr_bw <- 265  # The bandiwdth is pre-optimised to save time.
 ##### Calibrate GWR model with optimized bandwidth.
 msl_gwr <- gwr.basic(
   formula = y ~ g1 + g2 + x1 + z1,
