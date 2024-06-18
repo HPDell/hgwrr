@@ -455,8 +455,7 @@ For coefficients, we can simply combine it with coordinates of houses.
 Because coefficients, coordinates and groups can be one-to-one matched.
 
 ```{r}
-download.file("https://raw.githubusercontent.com/hpdell/hgwr/docs/data/wuhan.geojson", "wuhan.geojson")
-wuhan <- sf::read_sf("wuhan.geojson")
+wuhan <- sf::read_sf("https://raw.githubusercontent.com/hpdell/hgwr/docs/data/wuhan.geojson")
 wuhan_hp_groups <- st_centroid(aggregate(wuhan.hp, by = list(wuhan.hp$group), mean))
 wuhp_coef_sf <- cbind(coef(whhp_hgwr), st_coordinates(wuhan_hp_groups)) %>%
   st_as_sf(coords = c("X", "Y"), crs = 4547)
