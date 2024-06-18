@@ -26,7 +26,7 @@ jobs:
       - name: Set up R release
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: 'release'
+          r-version: '4.2.2'
       - name: Install R Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -49,7 +49,7 @@ jobs:
       - name: Set up R release
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: 'release'
+          r-version: '4.2.2'
       - name: Install Dependencies
         run: brew install gsl pandoc
       - name: Install R Dependencies
@@ -77,7 +77,7 @@ jobs:
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: 'release'
+          r-version: '4.2.2'
           rtools-version: '42'
           update-rtools: true
       - name: Install R Dependencies
