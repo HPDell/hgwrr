@@ -272,6 +272,8 @@ coef.hgwrm <- function(object, ...) {
 #' @return A vector consists of fitted response values.
 #'
 #' @seealso [hgwr()], [summary.hgwrm()], [coef.hgwrm()] and [residuals.hgwrm()].
+#' 
+#' @export 
 fitted.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")

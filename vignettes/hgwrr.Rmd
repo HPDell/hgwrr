@@ -1,0 +1,136 @@
+---
+title: "hgwrr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hgwrr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The package **hgwrr** is used to calibrate Hierarchical and Geographically Weighted Regression (HGWR) model on spatial data.
+It requires the spatial hierarchical structure in the data; i.e., samples are grouped by their locations.
+All the variables are either in the group level or sample level.
+For the group-level variables, they can have fixed effects (globally constant) or spatially weighted effects (varying with the location).
+For the sample-level variables, they can have fixed effects or random effects (varying among groups).
+We note the fixed effects as $\beta$, the group-level spatially weighted (GLSW) effects as $\gamma$, and sample-level random (SLR) effects as $\mu$.
+The HGWR model consists of these three kinds of effects and estimates the three kinds of effects considering the spatial heterogeneity.
+
+```{r setup}
+library(hgwrr)
+```
+
+# Usage
+
+## Model calibration
+
+To calibrate a HGWR model, use the function `hgwr()`.
+
+```r
+hgwr(
+  formula, data, ..., bw = "CV",
+  kernel = c("gaussian", "bisquared"),
+  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
+  max_iters = 1e6, max_retries = 1e6,
+  ml_type = c("D_Only", "D_Beta"), verbose = 0
+)
+```
+
+The following is explaintion of some important parameters.
+
+### `formula`
+
+This parameter specifies the model form.
+Recall that the three kinds of effects are GLSW, fixed, and SLR effects.
+They are specified in different parts of the formula.
+
+```r
+response ~ L(GLSW) + fixed + (SLR | group)
+```
+
+In the formula, `L()` is used to mark some effects as GLSW effects, and `( | group)` is used to set the SLR effects and grouping indicator.
+Only group-level variables can have GLSW effects.
+
+### `data`
+
+**`sf` objects**
+
+From version 0.3-1, this parameter supports `sf` objects.
+In this case, no further arguments in `...` are required.
+Here is an example.
+
+```{r}
+data(wuhan.hp)
+m_sf <- hgwr(
+  formula = Price ~ L(d.PrimarySchool + d.ShoppingMall) + BuildingArea + (Floor.High | group),
+  data = wuhan.hp
+)
+```
+
+**`data.frame` objects**
+
+If the data is a normal `data.frame` object, an extra argument `coords` is required to specify the coordinates of each group.
+Note that the row order of `coords` needs to match that of the `group` variable.
+Here is an example.
+
+```{r}
+data(multisampling)
+m_df <- hgwr(
+  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+  data = multisampling$data,
+  coords = multisampling$coords
+)
+```
+
+### `bw` and `kernel`
+
+Argument `bw` is the bandwidth used to estimate GLSW effects.
+It can be either of the following options:
+
+- A integer value representing the number of nearest neighbours.
+- `"CV"` letting the algorithm select one.
+
+Argument `kernel` is the kernel function used to estimate GLSW effects.
+Currently, there are only two choices: `"gaussian"` and `"bisquared"`.
+
+## Results
+
+The output of returned object of `hgwr()` shows the estimates of the effects.
+
+```{r}
+m_sf
+```
+
+And the `summary()` method shows some diagnostic information.
+
+```{r}
+summary(m_sf)
+```
+
+Some other methods are provided.
+
+```{r}
+head(coef(m_sf))
+head(fitted(m_sf))
+head(residuals(m_sf))
+```
+
+# Further reading
+
+## Model comparison
+
+- Article [*HGWR Model and How to Use It*](`r paste0(strsplit(packageDescription("hgwrr")[["URL"]], ",\\n")[[1]][2], "articles/introduction.html")`) in this site compares HGWR with GWR and HLM on the simulation data.
+- This [short paper](https://doi.org/10.4230/LIPIcs.GIScience.2023.39) compares HGWR, GWR, MGWR, and HLM with a simulation data. All the codes are shown in this [site](https://hpdell.github.io/GIScience-Materials/posts/HGWR/).
+
+## Mathematical basis
+
+The following papers shows more details about the mathematical basis about the HGWR model.
+
+- Yigong Hu, Richard Harris, Richard Timmerman, and Binbin Lu. A Hierarchical and Geographically Weighted Regression Model and Its Backfitting Maximum Likelihood Estimator (Short Paper). In 12th International Conference on Geographic Information Science (GIScience 2023). Leibniz International Proceedings in Informatics (LIPIcs), Volume 277, pp. 39:1-39:6, Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2023) [DOI](https://journals.sagepub.com/doi/10.1177/23998083211063885)
+- Hu, Yigong, Lu, Binbin, Ge, Yong, Dong, Guanpeng, 2022. Uncovering spatial heterogeneity in real estate prices via combined hierarchical linear model and geographically weighted regression. Environment and Planning B: Urban Analytics and City Science. [DOI](https://doi.org/10.4230/LIPIcs.GIScience.2023.39)

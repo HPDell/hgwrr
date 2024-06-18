@@ -27,7 +27,9 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck, any::roxygen2
-          needs: check
+          needs: |
+            check
+            website
       - name: Build and Check package
         uses: r-lib/actions/check-r-package@v2
         with:
@@ -47,12 +49,14 @@ jobs:
         with:
           r-version: 'release'
       - name: Install Dependencies
-        run: brew install gsl pandoc
+        run: brew install gsl pandoc armadillo boost 
       - name: Install R Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck, any::roxygen2
-          needs: check
+          needs: |
+            check
+            website
       - name: Check Package
         uses: r-lib/actions/check-r-package@v2
         with:
@@ -80,7 +84,9 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck, any::roxygen2
-          needs: check
+          needs: |
+            check
+            website
       - name: Check Package
         uses: r-lib/actions/check-r-package@v2
         with:
