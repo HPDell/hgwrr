@@ -18,3 +18,4 @@ _cache$
 ^doc$
 ^Meta$
 ^\.github$
+^vignettes/articles$

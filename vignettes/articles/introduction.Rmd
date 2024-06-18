@@ -1,10 +1,5 @@
 ---
 title: "HGWR Model and How to Use It"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{HGWR Model and How to Use It}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
