@@ -385,14 +385,14 @@ but more precisely than GWR does.
 As the fitness of HGWR has been demonstrated with simulation data,
 we are thing about applying it in collected data sets.
 Here we are going to use a case study to show the usage of HGWR on this type of data.
-The data set is provided in this [file](./data/wuhan_house_price.rda).
+The data set is provided as `wuhan.hp` by this package.
 
 ```{r}
 data(wuhan.hp)
-glimpse(wuhan.hp)
+plot(wuhan.hp["Price"])
 ```
 
-This data set, collected in 2018, has `r nrow(wuhan.hp$data)` properties located in `r nrow(wuhan.hp$coords)` communities.
+This data set, collected in 2018, has `r nrow(wuhan.hp)` properties located in `r nrow(wuhan.hp)` communities.
 In each observation, there are fields of house properties, locational and neighbourhood variables.
 In details, they are distances to nearby educational resources
 (kindergartens, primary schools, middle schools, high schools, universities),
@@ -401,8 +401,6 @@ transportation facilities (metro stations and bus stations),
 rivers, lakes, and green lands.
 The following figure shows the distribution of these properties,
 and the table gives information about all available variables.
-
-![Map of second-hand properties](./assets/CaseStudy1_WuhanHouseData.jpeg)
 
 | Variables         | Value                                                    | Level  | Type          | Logarithm |
 | ----------------- | -------------------------------------------------------- | ------ | ------------- | --------- |
