@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <armadillo>
 
-void prcout(std::string message)
+void prcout(const std::string& message)
 {
     Rcpp::Rcout << message;
 }
