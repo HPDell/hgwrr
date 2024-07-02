@@ -190,22 +190,22 @@ estimates of the effects.</p>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt;  Intercept  BuildingArea </span></span>
-<span><span class="co">#&gt;  10.006959     -0.021972 </span></span>
+<span><span class="co">#&gt;  10.001432     -0.020691 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Local Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Bandwidth: 5 (nearest neighbours)</span></span>
 <span><span class="co">#&gt;      Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
-<span><span class="co">#&gt;        Intercept  -5.096788     -0.600757  -0.123186      0.411892  4.010903 </span></span>
-<span><span class="co">#&gt;  d.PrimarySchool  -0.438557     -0.056147  -0.003678      0.065917  1.105139 </span></span>
-<span><span class="co">#&gt;   d.ShoppingMall  -0.873130     -0.077407  -0.023721      0.031590  0.936269 </span></span>
+<span><span class="co">#&gt;        Intercept  -5.001588     -0.602239  -0.126958      0.410095  3.996967 </span></span>
+<span><span class="co">#&gt;  d.PrimarySchool  -0.429613     -0.056204  -0.003844      0.064953  1.101605 </span></span>
+<span><span class="co">#&gt;   d.ShoppingMall  -0.869904     -0.077189  -0.023644      0.031606  0.929402 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups        Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  0.251018           </span></span>
-<span><span class="co">#&gt;            Floor.High  0.084879  0.037128 </span></span>
-<span><span class="co">#&gt;  Residual              0.080083           </span></span>
+<span><span class="co">#&gt;     group   Intercept  0.103542           </span></span>
+<span><span class="co">#&gt;            Floor.High  0.085536  0.075881 </span></span>
+<span><span class="co">#&gt;  Residual              0.081513           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -225,12 +225,12 @@ information.</p>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
 <span><span class="co">#&gt;  Rsquared </span></span>
-<span><span class="co">#&gt;  0.921548 </span></span>
+<span><span class="co">#&gt;  0.921381 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Scaled residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -0.508315  -0.045769  -0.002598  0.041858  0.859726 </span></span>
+<span><span class="co">#&gt;  -0.507865  -0.045573  -0.002432  0.041901  0.859673 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -239,19 +239,19 @@ information.</p>
 <p>Some other methods are provided.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept d.PrimarySchool d.ShoppingMall BuildingArea   Floor.High group</span></span>
-<span><span class="co">#&gt; 1  8.869389     -0.04435926   -0.077424120  -0.02197192 -0.013263593     1</span></span>
-<span><span class="co">#&gt; 2  8.869044     -0.05114719   -0.118495583  -0.02197192  0.034409559     2</span></span>
-<span><span class="co">#&gt; 3  9.167366     -0.05526013   -0.019173510  -0.02197192 -0.005944934     3</span></span>
-<span><span class="co">#&gt; 4  9.380077     -0.04901098    0.004423516  -0.02197192  0.025006400     4</span></span>
-<span><span class="co">#&gt; 5  8.835420     -0.04119408   -0.130348637  -0.02197192  0.017951303     5</span></span>
-<span><span class="co">#&gt; 6  9.384880     -0.05794949    0.008106449  -0.02197192  0.070820257     6</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intercept d.PrimarySchool d.ShoppingMall BuildingArea  Floor.High group</span></span>
+<span><span class="co">#&gt; 1  8.884834     -0.04424340   -0.077268083  -0.02069085 -0.03352510     1</span></span>
+<span><span class="co">#&gt; 2  8.870427     -0.05093882   -0.118210808  -0.02069085  0.02936480     2</span></span>
+<span><span class="co">#&gt; 3  9.166970     -0.05483916   -0.019135931  -0.02069085 -0.01001839     3</span></span>
+<span><span class="co">#&gt; 4  9.375207     -0.04850985    0.004227169  -0.02069085  0.02493700     4</span></span>
+<span><span class="co">#&gt; 5  8.836228     -0.04083049   -0.130147898  -0.02069085  0.01395447     5</span></span>
+<span><span class="co">#&gt; 6  9.378261     -0.05746188    0.007812618  -0.02069085  0.07232532     6</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 9.497093 9.494835 9.497241 9.497176 9.508582 9.498787</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 9.517168 9.515041 9.517307 9.517246 9.527987 9.518763</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.03856575 -0.13909629 -0.06183929  0.07634766  0.14919657  0.16371113</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.05864031 -0.15930254 -0.08190522  0.05627794  0.12979187  0.14373532</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
