@@ -17,7 +17,7 @@ jobs:
         os: [debian, fedora]
       fail-fast: false
     container:
-      image: ghcr.io/hpdell/hgwr-${{ matrix.os }}-docker-action:3.2.0
+      image: ghcr.io/hpdell/hgwr-${{ matrix.os }}-docker-action:3.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
