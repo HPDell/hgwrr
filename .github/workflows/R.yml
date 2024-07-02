@@ -17,19 +17,12 @@ jobs:
         os: [debian, fedora]
       fail-fast: false
     container:
-      image: ghcr.io/hpdell/hgwr-${{ matrix.os }}-docker-action:latest
+      image: ghcr.io/hpdell/hgwr-${{ matrix.os }}-docker-action:3.2.1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck, any::roxygen2
-          needs: |
-            check
-            website
       - name: Build and Check package
         uses: r-lib/actions/check-r-package@v2
         with:
