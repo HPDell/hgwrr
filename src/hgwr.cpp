@@ -43,6 +43,9 @@ List hgwr_bfml(
         Named("mu") = mywrap(hgwr_result.mu),
         Named("D") = mywrap(hgwr_result.D),
         Named("sigma") = hgwr_result.sigma,
-        Named("bw") = hgwr_result.bw
+        Named("bw") = hgwr_result.bw,
+        Named("logLik") = algorithm.get_loglik(),
+        Named("trS") = mywrap(algorithm.get_trS()),
+        Named("var_beta") = mywrap(algorithm.get_var_beta())
     );
 }

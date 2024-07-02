@@ -2,12 +2,15 @@ m <- NULL
 
 test_that("hgwr fit", {
   data(multisampling)
-  m <<- expect_no_error(hgwr(
-    formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-    data = multisampling$data,
-    coords = multisampling$coords,
-    bw = 10
-  ))
+  m <<- expect_no_error({
+    hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = 10,
+      alpha = 1e-8
+    )
+  })
 })
 
 test_that("hgwr fit no intercept", {
@@ -16,19 +19,22 @@ test_that("hgwr fit no intercept", {
     formula = y ~ L(0 + g1 + g2) + x1 + (z1 | group),
     data = multisampling$data,
     coords = multisampling$coords,
-    bw = 10
+    bw = 10,
+    alpha = 1e-8
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
     data = multisampling$data,
     coords = multisampling$coords,
-    bw = 10
+    bw = 10,
+    alpha = 1e-8
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
     data = multisampling$data,
     coords = multisampling$coords,
-    bw = 10
+    bw = 10,
+    alpha = 1e-8
   ))
 })
 
@@ -39,7 +45,8 @@ test_that("hgwr fit sf", {
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = ms_sf,
-    bw = 10
+    bw = 10,
+    alpha = 1e-8
   ))
 })
 
@@ -67,6 +74,7 @@ test_that("hgwr data.frame coords check", {
   expect_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = multisampling$data,
-    bw = 10
+    bw = 10,
+    alpha = 1e-8
   ))
 })

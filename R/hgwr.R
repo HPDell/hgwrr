@@ -202,22 +202,20 @@ hgwr_fit <- function(
         as.integer(max_iters), as.integer(max_retries),
         as.integer(ml_type), as.integer(verbose)
     )
-    gamma <- hgwr_result$gamma
-    beta <- t(hgwr_result$beta)
-    mu <- hgwr_result$mu
-    D <- hgwr_result$D
-    sigma <- hgwr_result$sigma
     if (optim_bw)
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
     result <- list(
-        gamma = gamma,
-        beta = beta,
-        mu = mu,
-        D = D,
-        sigma = sigma,
+        gamma = hgwr_result$gamma,
+        beta = hgwr_result$beta,
+        mu = hgwr_result$mu,
+        D = hgwr_result$D,
+        sigma = hgwr_result$sigma,
         bw = bw_value,
+        logLik = hgwr_result$logLik,
+        trS = hgwr_result$trS,
+        var_beta = hgwr_result$var_beta,
         effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
@@ -280,7 +278,7 @@ fitted.hgwrm <- function(object, ...) {
     }
     xf <- object$frame.parsed
     rowSums(xf$g * object$gamma)[xf$group] +
-        as.vector(xf$x %*% t(object$beta)) +
+        as.vector(xf$x %*% object$beta) +
         rowSums(xf$z * object$mu[xf$group,])
 }
 
@@ -326,15 +324,46 @@ summary.hgwrm <- function(object, ...) {
 
     res <- as.list(object)
 
-    ### Diagnostics
+    ### Get data
     y <- object$frame[[object$effects$response]]
+    r <- ncol(object$gamma)
+    p <- length(object$beta)
+    q <- ncol(object$mu)
+    logLik <- object$logLik
+    trS <- object$trS
+
+    ### Diagnostics
+    #### R-squared
     tss <- sum((y - mean(y))^2)
     x_residuals <- residuals.hgwrm(object)
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
+    #### AIC
+    enp_gwr <- 2 * trS[1] - trS[2]
+    enp_hlm <- p + q * (q + 1) / 2 + 1
+    enp <- enp_gwr + enp_hlm
+    AIC <- -2 * logLik + 2 * enp
+    #### Record results
     res$diagnostic <- list(
-        rsquared = rsquared
+        rsquared = rsquared,
+        logLik = logLik,
+        AIC = AIC
     )
+
+    ### Significance test
+    significance <- list()
+    #### Beta
+    edf <- length(y) - enp
+    se_beta <- sqrt(object$var_beta)
+    t_beta <- abs(object$beta) / se_beta
+    p_beta <- (1 - pt(t_beta, edf)) * 2
+    significance$beta <- data.frame(
+        est = object$beta,
+        sd = se_beta,
+        tv = t_beta,
+        pv = p_beta
+    )
+    res$significance <- significance
 
     ### Random effects
     random_corr_cov <- object$sigma * object$sigma * object$D
@@ -508,7 +537,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-------------------", fill = T)
     beta_str <- rbind(
         effects$global.fixed,
-        matrix2char(x$beta)
+        matrix2char(t(x$beta))
     )
     print.table.md(beta_str, ...)
     cat("\n")
@@ -586,14 +615,38 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
 
+    ### Parameter Estimates
+    cat("Parameter estimates", fill = T)
+    cat("-------------------", fill = T)
+    cat("Fixed effects:", fill = T)
+    gfe <- x$effects$global.fixed
+    if (x$intercept$fixed) {
+        gfe <- c("Intercept", gfe)
+    }
+    print.table.md(rbind(
+        c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)"),
+        as.matrix(cbind(variable = gfe, x$significance$beta))
+    ), ...)
+    cat("\n")
+    cat("Local fixed effects:", fill = T)
+    lfe <- x$effects$local.fixed
+    if (x$intercept$local) {
+        lfe <- c("Intercept", lfe)
+    }
+    gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
+    gamma_str <- rbind(
+        c("", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
+        cbind(lfe, matrix2char(gamma_fivenum))
+    )
+    print.table.md(gamma_str, ...)
+    cat("\n")
+
     ### Diagnostics
     cat("Diagnostics", fill = T)
     cat("-----------", fill = T)
-    rsquared <- x$diagnostic$rsquared
-    diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
-    diagnostic_chr <- rbind(
-        c("Rsquared"),
-        matrix2char(diagnostic_mat, decimal.fmt)
+    diagnostic_chr <- cbind(
+        names(x$diagnostic),
+        matrix2char(unlist(x$diagnostic), decimal.fmt)
     )
     print.table.md(diagnostic_chr, ...)
     cat("\n")
