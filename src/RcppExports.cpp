@@ -12,12 +12,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // spatial_hetero_perm
-List spatial_hetero_perm(const NumericVector& rx, const NumericMatrix& ruv, int poly, int resample, double bw, int kernel);
+List spatial_hetero_perm(const NumericMatrix& rx, const NumericMatrix& ruv, int poly, int resample, double bw, int kernel);
 RcppExport SEXP _hgwrr_spatial_hetero_perm(SEXP rxSEXP, SEXP ruvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type rx(rxSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type rx(rxSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type ruv(ruvSEXP);
     Rcpp::traits::input_parameter< int >::type poly(polySEXP);
     Rcpp::traits::input_parameter< int >::type resample(resampleSEXP);

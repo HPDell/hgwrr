@@ -378,9 +378,9 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
         }
         mean_gamma <- colMeans(object$gamma)
         sd_gamma <- apply(object$gamma, 2, sd)
-        pv <- apply(object$gamma, 2, function(g) {
-            res <- spatial_hetero_perm(g, as.matrix(object$coords), poly, resample, bw)
-            with(res, mean(t > t0[1]))
+        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw)
+        pv <- sapply(seq_along(t_gamma$t0), function(i) {
+            with(t_gamma, mean(t[,i] > t0[i]))
         })
         significance$gamma <- data.frame(
             mean = mean_gamma,

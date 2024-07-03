@@ -20,15 +20,15 @@ vec kernel_bisquare_ada(const mat& uv, double bw, uword focus) {
 }
 
 mat denreg_poly(
-    const vec& x,
+    const mat& x,
     const mat& uv,
     size_t poly = 2,
     double bw = 10,
     int kernel = 0
 ) {
     uword ndp = uv.n_rows, dim = uv.n_cols;
-    vec g(ndp);
-    for (uword i = 0; i < x.n_elem; i++) {
+    mat g(arma::size(x));
+    for (uword i = 0; i < x.n_rows; i++) {
         mat wi = kernel_bisquare_ada(uv, bw, i);
         mat duv = (uv.each_row() - uv.row(i));
         mat U(ndp, dim * poly + 1, fill::ones);
@@ -36,34 +36,36 @@ mat denreg_poly(
             U.cols(p * dim + 1, p * dim + dim) = pow(duv, p + 1);
         }
         mat Utw = trans(U.each_col() % wi);
-        mat UtwU = Utw * U, UtwX = Utw * x;
-        vec r = solve(UtwU, UtwX);
-        g(i) = r(0);
+        mat UtwU = Utw * U;
+        for (uword k = 0; k < x.n_cols; k++) {
+            vec r = solve(UtwU, Utw * x.col(k));
+            g(i, k) = r(0);
+        }
     }
     return g;
 }
 
 // [[Rcpp::export]]
 List spatial_hetero_perm(
-    const NumericVector& rx,
+    const NumericMatrix& rx,
     const NumericMatrix& ruv,
     int poly = 2,
     int resample = 5000,
     double bw = 10,
     int kernel = 0
 ) {
-    vec x = myas(rx);
+    mat x = myas(rx);
     mat uv = myas(ruv);
-    vec r0 = denreg_poly(x, uv, poly, bw, kernel);
-    double stat0 = var(r0);
-    vec stats(x.n_elem);
-    for (size_t i = 0; i < x.n_elem; i++) {
-        vec xi = shuffle(x);
-        vec ri = denreg_poly(xi, uv, poly, bw, kernel);
-        stats(i) = var(ri);
+    mat r0 = denreg_poly(x, uv, poly, bw, kernel);
+    rowvec stat0 = var(r0, 0, 0);
+    mat stats(resample, x.n_cols);
+    for (size_t i = 0; i < resample; i++) {
+        mat xi = shuffle(x, 0);
+        mat ri = denreg_poly(xi, uv, poly, bw, kernel);
+        stats.row(i) = var(ri, 0, 0);
     }
     return Rcpp::List::create(
-        Rcpp::Named("t") = stats,
-        Rcpp::Named("t0") = stat0
+        Rcpp::Named("t") = mywrap(stats),
+        Rcpp::Named("t0") = mywrap(stat0)
     );
 }
