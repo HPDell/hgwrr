@@ -117,7 +117,7 @@ hgwr.sf <- function(
     group <- data[[parse.formula(formula)$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
-    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)
+    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)[,-1]
     mc0 <- mc <- match.call(expand.dots = TRUE)
     mc[[1]] <- as.name("hgwr_fit")
     mc[["data"]] <- data
