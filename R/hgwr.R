@@ -324,35 +324,27 @@ summary.hgwrm <- function(object, ...) {
 
     res <- as.list(object)
 
-    ### Get data
-    y <- object$frame[[object$effects$response]]
-    r <- ncol(object$gamma)
-    p <- length(object$beta)
-    q <- ncol(object$mu)
-    logLik <- object$logLik
-    trS <- object$trS
-
     ### Diagnostics
     #### R-squared
+    y <- object$frame[[object$effects$response]]
     tss <- sum((y - mean(y))^2)
     x_residuals <- residuals.hgwrm(object)
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
     #### AIC
-    enp_gwr <- 2 * trS[1] - trS[2]
-    enp_hlm <- p + q * (q + 1) / 2 + 1
-    enp <- enp_gwr + enp_hlm
-    AIC <- -2 * logLik + 2 * enp
+    logLik_object <- logLik(object)
+    aic <- AIC(logLik_object)
     #### Record results
     res$diagnostic <- list(
         rsquared = rsquared,
-        logLik = logLik,
-        AIC = AIC
+        logLik = object$logLik,
+        AIC = aic
     )
 
     ### Significance test
     significance <- list()
     #### Beta
+    enp <- attr(logLik_object, "df")
     edf <- length(y) - enp
     se_beta <- sqrt(object$var_beta)
     t_beta <- abs(object$beta) / se_beta
@@ -666,4 +658,31 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-----------------", fill = T)
     cat("Number of Obs:", nrow(x$frame), fill = T)
     cat("       Groups:", x$effects$group, ",", nrow(x$mu), fill = T)
+}
+
+#' Log likelihood function
+#' 
+#' @param object An `hgwrm` object.
+#' @param \dots Additional arguments.
+#' 
+#' @return An `logLik` instance used for S3 method `logLik()`.
+#' 
+#' @method logLik hgwrm
+#' @export 
+logLik.hgwrm <- function(object, ...) {
+    if (!inherits(object, "hgwrm")) {
+        stop("It's not an hgwrm object.")
+    }
+    n <- object$frame.parsed$y
+    p <- length(object$beta)
+    q <- ncol(object$mu)
+    enp_gwr <- 2 * object$trS[1] - object$trS[2]
+    enp_hlm <- p + q * (q + 1) / 2 + 1
+    enp <- enp_gwr + enp_hlm
+    val <- object$logLik
+    attr(val, "df") <- enp
+    attr(val, "nall") <- n
+    attr(val, "nobs") <- n
+    class(val) <- "logLik"
+    val
 }
