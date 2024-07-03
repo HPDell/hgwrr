@@ -21,6 +21,7 @@ OBJECTS_LIBHGWR = \
 
 OBJECTS_HGWRR = \
 	hgwr.o \
+	hetero_test.o \
 	RcppExports.o
 
 OBJECTS = $(OBJECTS_LIBHGWR) $(OBJECTS_HGWRR)

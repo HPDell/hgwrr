@@ -232,7 +232,8 @@ hgwr_fit <- function(
             z = z,
             group = group_index
         ),
-        groups = group_unique
+        groups = group_unique,
+        coords = coords
     )
     class(result) <- "hgwrm"
     result
@@ -303,6 +304,11 @@ residuals.hgwrm <- function(object, ...) {
 #'
 #' @param object An `hgwrm` object returned from [hgwr()].
 #' @param \dots Other arguments passed from other functions.
+#' @param test_hetero Logical/list value.
+#' Whether to test the spatial heterogeneity of local fixed effects.
+#' If it is set to `FALSE`, the test will not be executed.
+#' If it is set to `TRUE`, the test will be executed with default parameters (see details below).
+#' It accepts a list to enable the test with specified parameters.
 #'
 #' @return A list containing summary informations of this `hgwrm` object
 #' with the following fields.
@@ -312,12 +318,17 @@ residuals.hgwrm <- function(object, ...) {
 #'  \item{\code{random.corr}}{The correlation matrix of random effects.}
 #'  \item{\code{residuals}}{The residual vector.}
 #' }
+#' 
+#' @details The parameters used to perform test of spatial heterogeneity are
+#' \describe{
+#'  \item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: `10`.}
+#'  \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: `2`.}
+#'  \item{\code{resample}}{Total resampling times. Default: `5000`.}
+#' }
 #'
 #' @seealso [hgwr()].
-#' 
 #' @export 
-#'
-summary.hgwrm <- function(object, ...) {
+summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
@@ -355,6 +366,29 @@ summary.hgwrm <- function(object, ...) {
         tv = t_beta,
         pv = p_beta
     )
+    #### Gamma
+    if (test_hetero == TRUE || is.list(test_hetero)) {
+        bw <- 10L
+        resample <- 5000L
+        poly <- 2L
+        if (is.list(test_hetero)) {
+            bw <- ifelse("bw" %in% names(test_hetero), test_hetero$bw, bw)
+            resample <- ifelse("resample" %in% names(test_hetero), test_hetero$resample, resample)
+            poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
+        }
+        mean_gamma <- colMeans(object$gamma)
+        sd_gamma <- apply(object$gamma, 2, sd)
+        pv <- apply(object$gamma, 2, function(g) {
+            res <- spatial_hetero_perm(g, as.matrix(object$coords), poly, resample, bw)
+            with(res, mean(t > t0[1]))
+        })
+        significance$gamma <- data.frame(
+            mean = mean_gamma,
+            sd = sd_gamma,
+            pv = pv
+        )
+    }
+    #### Save results
     res$significance <- significance
 
     ### Random effects
@@ -503,14 +537,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (x$intercept$fixed) {
         gfe <- c("Intercept", gfe)
     }
-    pv <- x$significance$beta$pv
-    stars <- vapply(pv, function(x) {
-        if (x < 0.001) "***"
-        else if (x < 0.01) "**"
-        else if (x < 0.05) "*"
-        else if (x < 0.1) "."
-        else " "
-    }, rep(" ", n = length(pv)))
+    pv_gfe <- x$significance$beta$pv
+    stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
     print.table.md(rbind(
         c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
@@ -521,10 +549,20 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (x$intercept$local) {
         lfe <- c("Intercept", lfe)
     }
-    gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
+    gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
+    gamma_stats_name <- c("Min", "1st Quartile", "Median", "3rd Quartile", "Max")
+    if (!is.null(x$significance$gamma)) {
+        pv_lfe <- x$significance$gamma$pv
+        gamma_stats <- cbind(
+            gamma_stats,
+            pv = matrix2char(pv_lfe),
+            stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
+        )
+        gamma_stats_name <- c(gamma_stats_name, "Pr(>|t|)", "")
+    }
     gamma_str <- rbind(
-        c("", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-        cbind(lfe, matrix2char(gamma_fivenum))
+        c("", gamma_stats_name),
+        cbind(lfe, gamma_stats)
     )
     print.table.md(gamma_str, ...)
     cat("\n")

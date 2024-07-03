@@ -106,3 +106,24 @@ matrix2char <- function(m, fmt = "%.6f") {
     }
     mc
 }
+
+#' Convert p values to stars
+#' 
+#' @param p The p value
+#' @return Stars representing significance level. See details below.
+#' 
+#' @details 
+#' - `***` for $p<=0.001$;
+#' - `**` for $0.001<p<=0.01$;
+#' - `*` for $0.01<p<=0.05$;
+#' - `.` for $0.05<p<=0.1$;
+#' - ` ` for $0.1<p$.
+#' 
+#' @noRd
+pv2stars <- function(p) {
+    if (p < 0.001) "***"
+    else if (p < 0.01) "**"
+    else if (p < 0.05) "*"
+    else if (p < 0.1) "."
+    else " "
+}

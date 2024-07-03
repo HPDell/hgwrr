@@ -78,3 +78,9 @@ test_that("hgwr data.frame coords check", {
     alpha = 1e-8
   ))
 })
+
+test_that("hgwr summary with spatial heterogeneity test", {
+  expect_no_error({
+    summary(m, test_hetero = TRUE)
+  })
+})
