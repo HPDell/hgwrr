@@ -254,7 +254,7 @@ coef.hgwrm <- function(object, ...) {
         stop("It's not a hgwrm object.")
     }
     gamma <- object$gamma
-    beta <- matrix(object$beta, nrow = length(object$groups), ncol = ncol(object$beta), byrow = T)
+    beta <- matrix(object$beta, nrow = length(object$groups), ncol = length(object$beta), byrow = T)
     mu <- object$mu
     intercept <- gamma[,1] + mu[,1] + beta[,1]
     effects <- object$effects
