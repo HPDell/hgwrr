@@ -503,9 +503,17 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (x$intercept$fixed) {
         gfe <- c("Intercept", gfe)
     }
+    pv <- x$significance$beta$pv
+    stars <- vapply(pv, function(x) {
+        if (x < 0.001) "***"
+        else if (x < 0.01) "**"
+        else if (x < 0.05) "*"
+        else if (x < 0.1) "."
+        else " "
+    }, rep(" ", n = length(pv)))
     print.table.md(rbind(
-        c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)"),
-        as.matrix(cbind(variable = gfe, x$significance$beta))
+        c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
+        as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
     ), ...)
     cat("\n")
     cat("Local fixed effects:", fill = T)
