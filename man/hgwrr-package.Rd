@@ -16,7 +16,7 @@ it is worth trying this model to reach better fitness.
 \packageDESCRIPTION{hgwrr}
 }
 \note{
-Acknowledgements: We gratefully acknowledge support from China Scholarship Council.
+Acknowledgement: We gratefully acknowledge support from China Scholarship Council.
 }
 \references{
 Hu, Y., Lu, B., Ge, Y., Dong, G., 2022.
