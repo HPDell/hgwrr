@@ -9,12 +9,12 @@
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
 
+CXX_STD = CXX17
+
 GSL_LIBS = @GSL_LIBS@
 GSL_CFLAGS = @GSL_CFLAGS@
 
 ARMA_FLAGS = \
-	-DARMA_COUT_STREAM=Rcpp::Rcout \
-	-DARMA_CERR_STREAM=Rcpp::Rcerr \
 	-DARMA_NO_DEBUG \
 	-DARMA_USE_LAPACK \
 	-DARMA_USE_BLAS
