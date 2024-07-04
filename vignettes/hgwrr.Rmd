@@ -42,7 +42,7 @@ hgwr(
 )
 ```
 
-The following is explaintion of some important parameters.
+The following is explanation of some important parameters.
 
 ### `formula`
 

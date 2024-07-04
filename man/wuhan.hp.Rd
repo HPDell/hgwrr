@@ -50,7 +50,7 @@ The following variables are group level:
 - \code{d.Supermarket}
 - \code{d.ShoppingMall}
 
-The follwoing variables are sample level:
+The following variables are sample level:
 
 - \code{Price}
 - \code{Floor.High}

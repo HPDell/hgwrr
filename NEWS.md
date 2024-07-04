@@ -35,7 +35,7 @@
 # Version 0.2.0
 
 - Feature: R interface to set kernel
-- Fix: incompactible generic function definations
+- Fix: incompatible generic function definitions
 - Fix: other R check warnings
 
 # Version 0.1.0

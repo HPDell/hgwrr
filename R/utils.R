@@ -3,8 +3,8 @@
 #' Print a character matrix as a table.
 #'
 #' @param x A character matrix.
-#' @param col.sep Column seperator. Default to `""`.
-#' @param header.sep Header seperator. Default to `"-"`.
+#' @param col.sep Column separator. Default to `""`.
+#' @param header.sep Header separator. Default to `"-"`.
 #' @param row.begin Character at the beginning of each row.
 #' Default to `col.sep`.
 #' @param row.end Character at the ending of each row.
