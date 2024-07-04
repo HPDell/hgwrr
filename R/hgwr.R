@@ -248,7 +248,7 @@ hgwr_fit <- function(
 #'
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
 #' 
-#' @export 
+#' @export
 coef.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
@@ -341,7 +341,8 @@ residuals.hgwrm <- function(object, ...) {
 #'  \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: `2`.}
 #'  \item{\code{resample}}{Total resampling times. Default: `5000`.}
 #' }
-#'
+#' 
+#' @importFrom stats AIC logLik pt sd
 #' @seealso [hgwr()].
 #' @export 
 summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
@@ -359,8 +360,8 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
     #### AIC
-    logLik_object <- logLik(object)
-    aic <- AIC(logLik_object)
+    logLik_object <- stats::logLik(object)
+    aic <- stats::AIC(logLik_object)
     #### Record results
     res$diagnostic <- list(
         rsquared = rsquared,
@@ -375,7 +376,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
     edf <- length(y) - enp
     se_beta <- sqrt(object$var_beta)
     t_beta <- abs(object$beta) / se_beta
-    p_beta <- (1 - pt(t_beta, edf)) * 2
+    p_beta <- (1 - stats::pt(t_beta, edf)) * 2
     significance$beta <- data.frame(
         est = object$beta,
         sd = se_beta,
@@ -393,7 +394,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
             poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
         }
         mean_gamma <- colMeans(object$gamma)
-        sd_gamma <- apply(object$gamma, 2, sd)
+        sd_gamma <- apply(object$gamma, 2, stats::sd)
         t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw)
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
