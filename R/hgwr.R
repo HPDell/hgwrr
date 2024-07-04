@@ -249,7 +249,6 @@ hgwr_fit <- function(
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
 #' 
 #' @export 
-#' 
 coef.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
@@ -257,10 +256,27 @@ coef.hgwrm <- function(object, ...) {
     gamma <- object$gamma
     beta <- matrix(object$beta, nrow = length(object$groups), ncol = length(object$beta), byrow = T)
     mu <- object$mu
-    intercept <- gamma[,1] + mu[,1] + beta[,1]
+    intercept <- matrix(0, length(object$groups), 1)
+    if (object$intercept$local) {
+        intercept <- intercept + gamma[,1]
+        gamma <- gamma[,-1]
+    }
+    if (object$intercept$fixed) {
+        intercept <- intercept + beta[,1]
+        beta <- beta[,-1]
+    }
+    if (object$intercept$random) {
+        intercept <- intercept + mu[,1]
+        mu <- mu[,-1]
+    }
     effects <- object$effects
-    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], object$groups))
-    colnames(coef) <- c("Intercept", effects$local.fixed, effects$global.fixed, effects$random, effects$group)
+    coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
+    coef_names <- c(effects$local.fixed, effects$global.fixed, effects$random)
+    if (any(unlist(object$intercept))) {
+        colnames(coef) <- c("Intercept", coef_names)
+    } else {
+        colnames(coef) <- coef_names
+    }
     coef
 }
 
