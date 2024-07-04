@@ -1,7 +1,7 @@
 # hgwrr
 
 [![CRAN](https://www.r-pkg.org/badges/version/hgwrr)](https://cran.r-project.org/package=hgwrr)
-[![Documentation](https://img.shields.io/badge/Documentation-blue)](https://hpdell.github.io/hgwrr)
+[![Documentation](https://img.shields.io/badge/Documentation-blue)](https://hpdell.github.io/hgwrr/)
 [![R Package Check](https://github.com/HPDell/hgwrr/actions/workflows/R.yml/badge.svg)](https://github.com/HPDell/hgwrr/actions/workflows/R.yml)
 
 This package is provides R interfaces to calibrate the Hierarchical and Geographically Weighted Regression (HGWR) model.

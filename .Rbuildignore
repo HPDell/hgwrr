@@ -20,3 +20,4 @@ _cache$
 ^Meta$
 ^\.github$
 ^vignettes/articles$
+^README\.md$
