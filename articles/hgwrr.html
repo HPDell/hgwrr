@@ -141,7 +141,7 @@ Here is an example.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wuhan.hp</span><span class="op">)</span></span>
 <span><span class="va">m_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hgwr.html">hgwr</a></span><span class="op">(</span></span>
-<span>  formula <span class="op">=</span> <span class="va">Price</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">d.PrimarySchool</span> <span class="op">+</span> <span class="va">d.ShoppingMall</span><span class="op">)</span> <span class="op">+</span> <span class="va">BuildingArea</span> <span class="op">+</span> <span class="op">(</span><span class="va">Floor.High</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">Price</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">d.Water</span> <span class="op">+</span> <span class="va">d.Commercial</span><span class="op">)</span> <span class="op">+</span> <span class="va">BuildingArea</span> <span class="op">+</span> <span class="op">(</span><span class="va">Floor.High</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">wuhan.hp</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><strong><code>data.frame</code> objects</strong></p>
@@ -182,30 +182,30 @@ estimates of the effects.</p>
 <code class="sourceCode R"><span><span class="va">m_sf</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
-<span><span class="co">#&gt; Formula: Price ~ L(d.PrimarySchool + d.ShoppingMall) + BuildingArea +  </span></span>
-<span><span class="co">#&gt;     (Floor.High | group)</span></span>
+<span><span class="co">#&gt; Formula: Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High |  </span></span>
+<span><span class="co">#&gt;     group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
 <span><span class="co">#&gt;    Data: wuhan.hp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt;  Intercept  BuildingArea </span></span>
-<span><span class="co">#&gt;  10.001432     -0.020691 </span></span>
+<span><span class="co">#&gt;  10.008232     -0.020732 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Local Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
-<span><span class="co">#&gt; Bandwidth: 5 (nearest neighbours)</span></span>
-<span><span class="co">#&gt;      Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
-<span><span class="co">#&gt;        Intercept  -5.001588     -0.602239  -0.126958      0.410095  3.996967 </span></span>
-<span><span class="co">#&gt;  d.PrimarySchool  -0.429613     -0.056204  -0.003844      0.064953  1.101605 </span></span>
-<span><span class="co">#&gt;   d.ShoppingMall  -0.869904     -0.077189  -0.023644      0.031606  0.929402 </span></span>
+<span><span class="co">#&gt; Bandwidth: 4 (nearest neighbours)</span></span>
+<span><span class="co">#&gt;   Coefficient           Min  1st Quartile     Median  3rd Quartile         Max </span></span>
+<span><span class="co">#&gt;     Intercept     -2.956253     -0.125587   0.143338      0.405493    3.572753 </span></span>
+<span><span class="co">#&gt;       d.Water   -157.647881    -14.198803  -2.423598      6.753992  169.499432 </span></span>
+<span><span class="co">#&gt;  d.Commercial  -1229.561779     -9.364932  -1.297365     13.221426  355.622525 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups        Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  0.103542           </span></span>
-<span><span class="co">#&gt;            Floor.High  0.085536  0.075881 </span></span>
-<span><span class="co">#&gt;  Residual              0.081513           </span></span>
+<span><span class="co">#&gt;     group   Intercept  0.093518           </span></span>
+<span><span class="co">#&gt;            Floor.High  0.084110  0.051649 </span></span>
+<span><span class="co">#&gt;  Residual              0.081659           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -217,20 +217,34 @@ information.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
-<span><span class="co">#&gt; Formula: Price ~ L(d.PrimarySchool + d.ShoppingMall) + BuildingArea +  </span></span>
-<span><span class="co">#&gt;     (Floor.High | group)</span></span>
+<span><span class="co">#&gt; Formula: Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High |  </span></span>
+<span><span class="co">#&gt;     group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
 <span><span class="co">#&gt;    Data: wuhan.hp</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter estimates</span></span>
+<span><span class="co">#&gt; -------------------</span></span>
+<span><span class="co">#&gt; Fixed effects:</span></span>
+<span><span class="co">#&gt;                  Estimated    Sd. Err       t.val   Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;     Intercept  10.00823152  0.1393714  71.8097948  0.0000000  *** </span></span>
+<span><span class="co">#&gt;  BuildingArea  -0.02073159  0.0290205   0.7143773  0.4750026      </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Local fixed effects:</span></span>
+<span><span class="co">#&gt;                         Min  1st Quartile     Median  3rd Quartile         Max </span></span>
+<span><span class="co">#&gt;     Intercept     -2.956253     -0.125587   0.143338      0.405493    3.572753 </span></span>
+<span><span class="co">#&gt;       d.Water   -157.647881    -14.198803  -2.423598      6.753992  169.499432 </span></span>
+<span><span class="co">#&gt;  d.Commercial  -1229.561779     -9.364932  -1.297365     13.221426  355.622525 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  Rsquared </span></span>
-<span><span class="co">#&gt;  0.921381 </span></span>
+<span><span class="co">#&gt;  rsquared       0.921337 </span></span>
+<span><span class="co">#&gt;    logLik   47101.028127 </span></span>
+<span><span class="co">#&gt;       AIC  -93562.186582 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Scaled residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -0.507865  -0.045573  -0.002432  0.041901  0.859673 </span></span>
+<span><span class="co">#&gt;  -0.507137  -0.045648  -0.002332  0.041843  0.859992 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -239,19 +253,19 @@ information.</p>
 <p>Some other methods are provided.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept d.PrimarySchool d.ShoppingMall BuildingArea  Floor.High group</span></span>
-<span><span class="co">#&gt; 1  8.884834     -0.04424340   -0.077268083  -0.02069085 -0.03352510     1</span></span>
-<span><span class="co">#&gt; 2  8.870427     -0.05093882   -0.118210808  -0.02069085  0.02936480     2</span></span>
-<span><span class="co">#&gt; 3  9.166970     -0.05483916   -0.019135931  -0.02069085 -0.01001839     3</span></span>
-<span><span class="co">#&gt; 4  9.375207     -0.04850985    0.004227169  -0.02069085  0.02493700     4</span></span>
-<span><span class="co">#&gt; 5  8.836228     -0.04083049   -0.130147898  -0.02069085  0.01395447     5</span></span>
-<span><span class="co">#&gt; 6  9.378261     -0.05746188    0.007812618  -0.02069085  0.07232532     6</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intercept    d.Water d.Commercial BuildingArea   Floor.High</span></span>
+<span><span class="co">#&gt; 1  10.03093 -0.6959796    -5.542168  -0.02073159 -0.009766081</span></span>
+<span><span class="co">#&gt; 2   9.95649 -1.2036938    -4.599027  -0.02073159  0.032570342</span></span>
+<span><span class="co">#&gt; 3  10.19179 -2.6167090    -6.640576  -0.02073159 -0.008295003</span></span>
+<span><span class="co">#&gt; 4  10.32102 -2.3586815    -7.352020  -0.02073159  0.025201766</span></span>
+<span><span class="co">#&gt; 5  10.00403 -1.6968718    -4.245220  -0.02073159  0.019346672</span></span>
+<span><span class="co">#&gt; 6  10.36764 -4.1144536    -6.600430  -0.02073159  0.072659049</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 9.517168 9.515041 9.517307 9.517246 9.527987 9.518763</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 9.494168 9.492037 9.494307 9.494246 9.505008 9.495766</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.05864031 -0.15930254 -0.08190522  0.05627794  0.12979187  0.14373532</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.03564015 -0.13629818 -0.05890533  0.07927795  0.15277073  0.16673234</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -261,9 +275,9 @@ information.</p>
 <h3 id="model-comparison">Model comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
 </h3>
 <ul>
-<li>Article <a href="NAarticles/introduction.html"><em>HGWR Model and
-How to Use It</em></a> in this site compares HGWR with GWR and HLM on
-the simulation data.</li>
+<li>Article <a href="https://hpdell.github.io/hgwrr/articles/introduction.html" class="external-link"><em>HGWR
+Model and How to Use It</em></a> in this site compares HGWR with GWR and
+HLM on the simulation data.</li>
 <li>This <a href="https://doi.org/10.4230/LIPIcs.GIScience.2023.39" class="external-link">short paper</a>
 compares HGWR, GWR, MGWR, and HLM with a simulation data. All the codes
 are shown in this <a href="https://hpdell.github.io/GIScience-Materials/posts/HGWR/" class="external-link">site</a>.</li>
