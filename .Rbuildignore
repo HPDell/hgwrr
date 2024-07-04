@@ -4,6 +4,7 @@
 \.devcontainer
 \.gitignore
 \.o
+\.so
 src/libhgwr/CMakeLists\.txt
 src/libhgwr/Doxygen
 src/libhgwr/Doxygen\.zh-Hans
