@@ -125,7 +125,7 @@ head(residuals(m_sf))
 
 ## Model comparison
 
-- Article [*HGWR Model and How to Use It*](`r paste0(strsplit(packageDescription("hgwrr")[["URL"]], ",\\n")[[1]][2], "articles/introduction.html")`) in this site compares HGWR with GWR and HLM on the simulation data.
+- Article [*HGWR Model and How to Use It*](`r paste0(strsplit(packageDescription("hgwrr")[["URL"]], ", ")[[1]][2], "articles/introduction.html")`) in this site compares HGWR with GWR and HLM on the simulation data.
 - This [short paper](https://doi.org/10.4230/LIPIcs.GIScience.2023.39) compares HGWR, GWR, MGWR, and HLM with a simulation data. All the codes are shown in this [site](https://hpdell.github.io/GIScience-Materials/posts/HGWR/).
 
 ## Mathematical basis
