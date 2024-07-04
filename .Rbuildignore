@@ -21,3 +21,4 @@ _cache$
 ^\.github$
 ^vignettes/articles$
 ^README\.md$
+^cran-comments\.md$
