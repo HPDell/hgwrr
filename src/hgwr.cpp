@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace Rcpp;
+using namespace hgwr;
 
 // [[Rcpp::export]]
 List hgwr_bfml(
@@ -30,10 +31,11 @@ List hgwr_bfml(
     arma::vec my = myas(y);
     arma::mat mu = myas(u);
     arma::uvec mgroup = arma::conv_to<arma::uvec>::from(myas(group)) - 1;
-    GWRKernelType mkernel = GWRKernelType(size_t(kernel));
-    HLMGWRArgs args(mg, mx, mz, my, mu, mgroup, bw, mkernel);
-    HLMGWROptions options(alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type);
-    HLMGWRParams hgwr_result = backfitting_maximum_likelihood(args, options, prcout);
+    auto mkernel = HGWR::KernelType(size_t(kernel));
+    HGWR::Options options { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type };
+    HGWR algorithm(mg, mx, mz, my, mu, mgroup, mkernel, bw, options);
+    algorithm.set_printer(&prcout);
+    auto hgwr_result = algorithm.fit();
 
     return List::create(
         Named("gamma") = mywrap(hgwr_result.gamma),
@@ -41,6 +43,9 @@ List hgwr_bfml(
         Named("mu") = mywrap(hgwr_result.mu),
         Named("D") = mywrap(hgwr_result.D),
         Named("sigma") = hgwr_result.sigma,
-        Named("bw") = hgwr_result.bw
+        Named("bw") = hgwr_result.bw,
+        Named("logLik") = algorithm.get_loglik(),
+        Named("trS") = mywrap(algorithm.get_trS()),
+        Named("var_beta") = mywrap(algorithm.get_var_beta())
     );
 }

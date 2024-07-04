@@ -11,6 +11,22 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// spatial_hetero_perm
+List spatial_hetero_perm(const NumericMatrix& rx, const NumericMatrix& ruv, int poly, int resample, double bw, int kernel);
+RcppExport SEXP _hgwrr_spatial_hetero_perm(SEXP rxSEXP, SEXP ruvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type rx(rxSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type ruv(ruvSEXP);
+    Rcpp::traits::input_parameter< int >::type poly(polySEXP);
+    Rcpp::traits::input_parameter< int >::type resample(resampleSEXP);
+    Rcpp::traits::input_parameter< double >::type bw(bwSEXP);
+    Rcpp::traits::input_parameter< int >::type kernel(kernelSEXP);
+    rcpp_result_gen = Rcpp::wrap(spatial_hetero_perm(rx, ruv, poly, resample, bw, kernel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // hgwr_bfml
 List hgwr_bfml(const NumericMatrix& g, const NumericMatrix& x, const NumericMatrix& z, const NumericVector& y, const NumericMatrix& u, const NumericVector& group, double bw, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, size_t verbose);
 RcppExport SEXP _hgwrr_hgwr_bfml(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP kernelSEXP, SEXP alphaSEXP, SEXP eps_iterSEXP, SEXP eps_gradientSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP ml_typeSEXP, SEXP verboseSEXP) {
@@ -38,6 +54,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_hgwrr_spatial_hetero_perm", (DL_FUNC) &_hgwrr_spatial_hetero_perm, 6},
     {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 15},
     {NULL, NULL, 0}
 };

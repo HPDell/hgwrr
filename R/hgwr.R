@@ -117,7 +117,7 @@ hgwr.sf <- function(
     group <- data[[parse.formula(formula)$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
-    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)
+    group_coords <- aggregate(data_coords, by = list(group_index), FUN = mean)[,-1]
     mc0 <- mc <- match.call(expand.dots = TRUE)
     mc[[1]] <- as.name("hgwr_fit")
     mc[["data"]] <- data
@@ -202,22 +202,20 @@ hgwr_fit <- function(
         as.integer(max_iters), as.integer(max_retries),
         as.integer(ml_type), as.integer(verbose)
     )
-    gamma <- hgwr_result$gamma
-    beta <- t(hgwr_result$beta)
-    mu <- hgwr_result$mu
-    D <- hgwr_result$D
-    sigma <- hgwr_result$sigma
     if (optim_bw)
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
     result <- list(
-        gamma = gamma,
-        beta = beta,
-        mu = mu,
-        D = D,
-        sigma = sigma,
+        gamma = hgwr_result$gamma,
+        beta = hgwr_result$beta,
+        mu = hgwr_result$mu,
+        D = hgwr_result$D,
+        sigma = hgwr_result$sigma,
         bw = bw_value,
+        logLik = hgwr_result$logLik,
+        trS = hgwr_result$trS,
+        var_beta = hgwr_result$var_beta,
         effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
@@ -234,7 +232,8 @@ hgwr_fit <- function(
             z = z,
             group = group_index
         ),
-        groups = group_unique
+        groups = group_unique,
+        coords = coords
     )
     class(result) <- "hgwrm"
     result
@@ -249,19 +248,35 @@ hgwr_fit <- function(
 #'
 #' @seealso [hgwr()], [summary.hgwrm()], [fitted.hgwrm()] and [residuals.hgwrm()].
 #' 
-#' @export 
-#' 
+#' @export
 coef.hgwrm <- function(object, ...) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
     gamma <- object$gamma
-    beta <- matrix(object$beta, nrow = length(object$groups), ncol = ncol(object$beta), byrow = T)
+    beta <- matrix(object$beta, nrow = length(object$groups), ncol = length(object$beta), byrow = T)
     mu <- object$mu
-    intercept <- gamma[,1] + mu[,1] + beta[,1]
+    intercept <- matrix(0, length(object$groups), 1)
+    if (object$intercept$local) {
+        intercept <- intercept + gamma[,1]
+        gamma <- gamma[,-1]
+    }
+    if (object$intercept$fixed) {
+        intercept <- intercept + beta[,1]
+        beta <- beta[,-1]
+    }
+    if (object$intercept$random) {
+        intercept <- intercept + mu[,1]
+        mu <- mu[,-1]
+    }
     effects <- object$effects
-    coef <- as.data.frame(cbind(intercept, gamma[,-1], beta[,-1], mu[,-1], object$groups))
-    colnames(coef) <- c("Intercept", effects$local.fixed, effects$global.fixed, effects$random, effects$group)
+    coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
+    coef_names <- c(effects$local.fixed, effects$global.fixed, effects$random)
+    if (any(unlist(object$intercept))) {
+        colnames(coef) <- c("Intercept", coef_names)
+    } else {
+        colnames(coef) <- coef_names
+    }
     coef
 }
 
@@ -280,7 +295,7 @@ fitted.hgwrm <- function(object, ...) {
     }
     xf <- object$frame.parsed
     rowSums(xf$g * object$gamma)[xf$group] +
-        as.vector(xf$x %*% t(object$beta)) +
+        as.vector(xf$x %*% object$beta) +
         rowSums(xf$z * object$mu[xf$group,])
 }
 
@@ -305,6 +320,11 @@ residuals.hgwrm <- function(object, ...) {
 #'
 #' @param object An `hgwrm` object returned from [hgwr()].
 #' @param \dots Other arguments passed from other functions.
+#' @param test_hetero Logical/list value.
+#' Whether to test the spatial heterogeneity of local fixed effects.
+#' If it is set to `FALSE`, the test will not be executed.
+#' If it is set to `TRUE`, the test will be executed with default parameters (see details below).
+#' It accepts a list to enable the test with specified parameters.
 #'
 #' @return A list containing summary informations of this `hgwrm` object
 #' with the following fields.
@@ -314,12 +334,18 @@ residuals.hgwrm <- function(object, ...) {
 #'  \item{\code{random.corr}}{The correlation matrix of random effects.}
 #'  \item{\code{residuals}}{The residual vector.}
 #' }
-#'
-#' @seealso [hgwr()].
 #' 
+#' @details The parameters used to perform test of spatial heterogeneity are
+#' \describe{
+#'  \item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: `10`.}
+#'  \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: `2`.}
+#'  \item{\code{resample}}{Total resampling times. Default: `5000`.}
+#' }
+#' 
+#' @importFrom stats AIC logLik pt sd
+#' @seealso [hgwr()].
 #' @export 
-#'
-summary.hgwrm <- function(object, ...) {
+summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
@@ -327,14 +353,60 @@ summary.hgwrm <- function(object, ...) {
     res <- as.list(object)
 
     ### Diagnostics
+    #### R-squared
     y <- object$frame[[object$effects$response]]
     tss <- sum((y - mean(y))^2)
     x_residuals <- residuals.hgwrm(object)
     rss <- sum(x_residuals^2)
     rsquared <- 1 - rss / tss
+    #### AIC
+    logLik_object <- stats::logLik(object)
+    aic <- stats::AIC(logLik_object)
+    #### Record results
     res$diagnostic <- list(
-        rsquared = rsquared
+        rsquared = rsquared,
+        logLik = object$logLik,
+        AIC = aic
     )
+
+    ### Significance test
+    significance <- list()
+    #### Beta
+    enp <- attr(logLik_object, "df")
+    edf <- length(y) - enp
+    se_beta <- sqrt(object$var_beta)
+    t_beta <- abs(object$beta) / se_beta
+    p_beta <- (1 - stats::pt(t_beta, edf)) * 2
+    significance$beta <- data.frame(
+        est = object$beta,
+        sd = se_beta,
+        tv = t_beta,
+        pv = p_beta
+    )
+    #### Gamma
+    if (test_hetero == TRUE || is.list(test_hetero)) {
+        bw <- 10L
+        resample <- 5000L
+        poly <- 2L
+        if (is.list(test_hetero)) {
+            bw <- ifelse("bw" %in% names(test_hetero), test_hetero$bw, bw)
+            resample <- ifelse("resample" %in% names(test_hetero), test_hetero$resample, resample)
+            poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
+        }
+        mean_gamma <- colMeans(object$gamma)
+        sd_gamma <- apply(object$gamma, 2, stats::sd)
+        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw)
+        pv <- sapply(seq_along(t_gamma$t0), function(i) {
+            with(t_gamma, mean(t[,i] > t0[i]))
+        })
+        significance$gamma <- data.frame(
+            mean = mean_gamma,
+            sd = sd_gamma,
+            pv = pv
+        )
+    }
+    #### Save results
+    res$significance <- significance
 
     ### Random effects
     random_corr_cov <- object$sigma * object$sigma * object$D
@@ -350,118 +422,6 @@ summary.hgwrm <- function(object, ...) {
     ### return
     class(res) <- "summary.hgwrm"
     res
-}
-
-#' Print a character matrix as a table.
-#'
-#' @param x A character matrix.
-#' @param col.sep Column seperator. Default to `""`.
-#' @param header.sep Header seperator. Default to `"-"`.
-#' @param row.begin Character at the beginning of each row.
-#' Default to `col.sep`.
-#' @param row.end Character at the ending of each row.
-#' Default to `col.sep`.
-#' @param table.style Name of pre-defined style.
-#' Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.
-#' @param \dots Additional style control arguments.
-#'
-#' @return No return.
-#'
-#' @details
-#' When `table.style` is specified, `col.sep`, `header.sep`, `row.begin`
-#' and `row.end` would not take effects.
-#' Because this function will automatically set their values.
-#' For each possible value of `table.style`, its corresponding style settings
-#' are shown in the following table.
-#' \tabular{llll}{
-#'                   \tab \strong{\code{plain}} \tab \strong{\code{md}} \tab \strong{\code{latex}} \cr
-#' \code{col.sep}    \tab \code{""}             \tab \code{"|"}         \tab \code{"&"}            \cr
-#' \code{header.sep} \tab \code{""}             \tab \code{"-"}         \tab \code{""}             \cr
-#' \code{row.begin}  \tab \code{""}             \tab \code{"|"}         \tab \code{""}             \cr
-#' \code{row.end}    \tab \code{""}             \tab \code{"|"}         \tab \code{"\\\\"}
-#' }
-#'
-#' In this function, characters are right padded by spaces.
-#'
-#' @seealso [print.hgwrm()], [summary.hgwrm()].
-#' 
-#' @export 
-#' 
-print.table.md <- function(x, col.sep = "", header.sep = "",
-                           row.begin = "", row.end = "",
-                           table.style = c("plain", "md", "latex"), ...) {
-    if (!missing(table.style)) {
-        table.style <- match.arg(table.style)
-        if (table.style == "md") {
-            col.sep <- "|"
-            header.sep <- "-"
-            row.begin <- "|"
-            row.end <- "|"
-        } else if (table.style == "latex") {
-            col.sep <- "&"
-            header.sep <- ""
-            row.begin <- ""
-            row.end <- "\\\\"
-        } else if (table.style == "plain") {
-            col.sep <- ""
-            header.sep <- ""
-            row.begin <- ""
-            row.end <- ""
-        } else {
-           stop("Unknown table.style.")
-        }
-    }
-    if (nchar(header.sep) > 1) {
-       stop("Currently only 1 character header.sep is supported.")
-    }
-    ### Print table
-    x.length <- apply(x, c(1, 2), nchar)
-    x.length.max <- apply(x.length, 2, max)
-    x.fmt <- sprintf("%%%ds", x.length.max)
-    for(c in 1:ncol(x)) {
-        if(x.length.max[c] > 0)
-            cat(ifelse(c == 1, row.begin, col.sep),
-                sprintf(x.fmt[c], x[1, c]), "")
-    }
-    cat(paste0(row.end, "\n"))
-    if (nchar(header.sep) > 0) {
-        for(c in 1:ncol(x)) {
-            if(x.length.max[c] > 0) {
-                header.sep.full <- paste(rep("-", x.length.max[c]),
-                                         collapse = "")
-                cat(ifelse(c == 1, row.begin, col.sep),
-                    sprintf(header.sep.full), "")
-            }
-        }
-        cat(paste0(row.end, "\n"))
-    }
-    for (r in 2:nrow(x)) {
-        for (c in 1:ncol(x)) {
-            if(x.length.max[c] > 0)
-                cat(ifelse(c == 1, row.begin, col.sep),
-                    sprintf(x.fmt[c], x[r, c]), "")
-        }
-        cat(paste0(row.end, "\n"))
-    }
-}
-
-#' Convert a numeric matrix to character matrix according to a format string.
-#'
-#' @param m A numeric matrix.
-#' @param fmt Format string. Passing to [base::sprintf()].
-#'
-#' @seealso [base::sprintf()], [print.hgwrm()], [print.summary.hgwrm()].
-#' 
-#' @export 
-#' 
-matrix2char <- function(m, fmt = "%.6f") {
-    mc <- NULL
-    if ("array" %in% class(m)) {
-        mc <- apply(m, seq(length(dim(m))), function(x) { sprintf(fmt, x) })
-    } else {
-        mc <- sprintf(fmt, m)
-    }
-    mc
 }
 
 #' Print description of a `hgwrm` object.
@@ -508,7 +468,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-------------------", fill = T)
     beta_str <- rbind(
         effects$global.fixed,
-        matrix2char(x$beta)
+        matrix2char(t(x$beta))
     )
     print.table.md(beta_str, ...)
     cat("\n")
@@ -586,14 +546,50 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
 
+    ### Parameter Estimates
+    cat("Parameter estimates", fill = T)
+    cat("-------------------", fill = T)
+    cat("Fixed effects:", fill = T)
+    gfe <- x$effects$global.fixed
+    if (x$intercept$fixed) {
+        gfe <- c("Intercept", gfe)
+    }
+    pv_gfe <- x$significance$beta$pv
+    stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
+    print.table.md(rbind(
+        c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
+        as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
+    ), ...)
+    cat("\n")
+    cat("Local fixed effects:", fill = T)
+    lfe <- x$effects$local.fixed
+    if (x$intercept$local) {
+        lfe <- c("Intercept", lfe)
+    }
+    gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
+    gamma_stats_name <- c("Min", "1st Quartile", "Median", "3rd Quartile", "Max")
+    if (!is.null(x$significance$gamma)) {
+        pv_lfe <- x$significance$gamma$pv
+        gamma_stats <- cbind(
+            gamma_stats,
+            pv = matrix2char(pv_lfe),
+            stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
+        )
+        gamma_stats_name <- c(gamma_stats_name, "Pr(>|t|)", "")
+    }
+    gamma_str <- rbind(
+        c("", gamma_stats_name),
+        cbind(lfe, gamma_stats)
+    )
+    print.table.md(gamma_str, ...)
+    cat("\n")
+
     ### Diagnostics
     cat("Diagnostics", fill = T)
     cat("-----------", fill = T)
-    rsquared <- x$diagnostic$rsquared
-    diagnostic_mat <- matrix(c(rsquared), nrow = 1, ncol = 1)
-    diagnostic_chr <- rbind(
-        c("Rsquared"),
-        matrix2char(diagnostic_mat, decimal.fmt)
+    diagnostic_chr <- cbind(
+        names(x$diagnostic),
+        matrix2char(unlist(x$diagnostic), decimal.fmt)
     )
     print.table.md(diagnostic_chr, ...)
     cat("\n")
@@ -613,4 +609,31 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-----------------", fill = T)
     cat("Number of Obs:", nrow(x$frame), fill = T)
     cat("       Groups:", x$effects$group, ",", nrow(x$mu), fill = T)
+}
+
+#' Log likelihood function
+#' 
+#' @param object An `hgwrm` object.
+#' @param \dots Additional arguments.
+#' 
+#' @return An `logLik` instance used for S3 method `logLik()`.
+#' 
+#' @method logLik hgwrm
+#' @export 
+logLik.hgwrm <- function(object, ...) {
+    if (!inherits(object, "hgwrm")) {
+        stop("It's not an hgwrm object.")
+    }
+    n <- object$frame.parsed$y
+    p <- length(object$beta)
+    q <- ncol(object$mu)
+    enp_gwr <- 2 * object$trS[1] - object$trS[2]
+    enp_hlm <- p + q * (q + 1) / 2 + 1
+    enp <- enp_gwr + enp_hlm
+    val <- object$logLik
+    attr(val, "df") <- enp
+    attr(val, "nall") <- n
+    attr(val, "nobs") <- n
+    class(val) <- "logLik"
+    val
 }

@@ -4,12 +4,18 @@
 \alias{summary.hgwrm}
 \title{Summary an \code{hgwrm} object.}
 \usage{
-\method{summary}{hgwrm}(object, ...)
+\method{summary}{hgwrm}(object, ..., test_hetero = FALSE)
 }
 \arguments{
 \item{object}{An \code{hgwrm} object returned from \code{\link[=hgwr]{hgwr()}}.}
 
 \item{\dots}{Other arguments passed from other functions.}
+
+\item{test_hetero}{Logical/list value.
+Whether to test the spatial heterogeneity of local fixed effects.
+If it is set to \code{FALSE}, the test will not be executed.
+If it is set to \code{TRUE}, the test will be executed with default parameters (see details below).
+It accepts a list to enable the test with specified parameters.}
 }
 \value{
 A list containing summary informations of this \code{hgwrm} object
@@ -23,6 +29,14 @@ with the following fields.
 }
 \description{
 Summary an \code{hgwrm} object.
+}
+\details{
+The parameters used to perform test of spatial heterogeneity are
+\describe{
+\item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: \code{10}.}
+\item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: \code{2}.}
+\item{\code{resample}}{Total resampling times. Default: \code{5000}.}
+}
 }
 \seealso{
 \code{\link[=hgwr]{hgwr()}}.
