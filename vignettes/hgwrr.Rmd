@@ -69,7 +69,8 @@ Here is an example.
 data(wuhan.hp)
 m_sf <- hgwr(
   formula = Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High | group),
-  data = wuhan.hp
+  data = wuhan.hp,
+  bw = 299
 )
 ```
 
