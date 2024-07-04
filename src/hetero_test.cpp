@@ -1,3 +1,4 @@
+#include <Rcpp.h>
 #include <armadillo>
 #include "utils.h"
 
