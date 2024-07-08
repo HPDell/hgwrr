@@ -1,5 +1,5 @@
-#include <Rcpp.h>
-#include <armadillo>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 #include "utils.h"
 
 using namespace std;
@@ -48,15 +48,13 @@ mat denreg_poly(
 
 // [[Rcpp::export]]
 List spatial_hetero_perm(
-    const NumericMatrix& rx,
-    const NumericMatrix& ruv,
+    const arma::mat& x,
+    const arma::mat& uv,
     int poly = 2,
     int resample = 5000,
     double bw = 10,
     int kernel = 0
 ) {
-    mat x = myas(rx);
-    mat uv = myas(ruv);
     mat r0 = denreg_poly(x, uv, poly, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
     mat stats(resample, x.n_cols);
@@ -66,7 +64,7 @@ List spatial_hetero_perm(
         stats.row(i) = var(ri, 0, 0);
     }
     return Rcpp::List::create(
-        Rcpp::Named("t") = mywrap(stats),
-        Rcpp::Named("t0") = mywrap(stat0)
+        Rcpp::Named("t") = wrap(stats),
+        Rcpp::Named("t0") = wrap(stat0)
     );
 }

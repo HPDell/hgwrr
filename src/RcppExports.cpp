@@ -12,33 +12,33 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // spatial_hetero_perm
-List spatial_hetero_perm(const NumericMatrix& rx, const NumericMatrix& ruv, int poly, int resample, double bw, int kernel);
-RcppExport SEXP _hgwrr_spatial_hetero_perm(SEXP rxSEXP, SEXP ruvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP) {
+List spatial_hetero_perm(const arma::mat& x, const arma::mat& uv, int poly, int resample, double bw, int kernel);
+RcppExport SEXP _hgwrr_spatial_hetero_perm(SEXP xSEXP, SEXP uvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type rx(rxSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type ruv(ruvSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type uv(uvSEXP);
     Rcpp::traits::input_parameter< int >::type poly(polySEXP);
     Rcpp::traits::input_parameter< int >::type resample(resampleSEXP);
     Rcpp::traits::input_parameter< double >::type bw(bwSEXP);
     Rcpp::traits::input_parameter< int >::type kernel(kernelSEXP);
-    rcpp_result_gen = Rcpp::wrap(spatial_hetero_perm(rx, ruv, poly, resample, bw, kernel));
+    rcpp_result_gen = Rcpp::wrap(spatial_hetero_perm(x, uv, poly, resample, bw, kernel));
     return rcpp_result_gen;
 END_RCPP
 }
 // hgwr_bfml
-List hgwr_bfml(const NumericMatrix& g, const NumericMatrix& x, const NumericMatrix& z, const NumericVector& y, const NumericMatrix& u, const NumericVector& group, double bw, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, size_t verbose);
+List hgwr_bfml(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, double bw, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, size_t verbose);
 RcppExport SEXP _hgwrr_hgwr_bfml(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP kernelSEXP, SEXP alphaSEXP, SEXP eps_iterSEXP, SEXP eps_gradientSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP ml_typeSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type group(groupSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type group(groupSEXP);
     Rcpp::traits::input_parameter< double >::type bw(bwSEXP);
     Rcpp::traits::input_parameter< size_t >::type kernel(kernelSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
