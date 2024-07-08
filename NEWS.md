@@ -8,7 +8,7 @@
 
 # Version 0.3.0
 
-- Feature: bandwith optimisation with CV criterion
+- Feature: bandwidth optimisation with CV criterion
 - Update: `wuhan.hp` data
 - Fix: fill parameter to `cat` function
 

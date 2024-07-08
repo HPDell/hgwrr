@@ -148,7 +148,7 @@ hgwr.data.frame <- function(
     mev
 }
 
-#' @describeIn hgwr Fit a HGWR mdoel
+#' @describeIn hgwr Fit a HGWR model
 #' @export 
 hgwr_fit <- function(
     formula, data, coords, bw = "CV",
@@ -284,7 +284,7 @@ coef.hgwrm <- function(object, ...) {
     coef
 }
 
-#' Get fitted reponse.
+#' Get fitted response.
 #'
 #' @inheritParams coef.hgwrm
 #'
