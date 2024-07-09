@@ -14,8 +14,8 @@
 \item{...}{
   Arguments passed on to \code{\link[=print.table.md]{print.table.md}}
   \describe{
-    \item{\code{col.sep}}{Column seperator. Default to \code{""}.}
-    \item{\code{header.sep}}{Header seperator. Default to \code{"-"}.}
+    \item{\code{col.sep}}{Column separator. Default to \code{""}.}
+    \item{\code{header.sep}}{Header separator. Default to \code{"-"}.}
     \item{\code{row.begin}}{Character at the beginning of each row.
 Default to \code{col.sep}.}
     \item{\code{row.end}}{Character at the ending of each row.

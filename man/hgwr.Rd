@@ -168,7 +168,7 @@ Note that random effects can only be specified once!
 }
 \section{Functions}{
 \itemize{
-\item \code{hgwr_fit()}: Fit a HGWR mdoel
+\item \code{hgwr_fit()}: Fit a HGWR model
 
 }}
 \examples{

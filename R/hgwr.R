@@ -148,7 +148,7 @@ hgwr.data.frame <- function(
     mev
 }
 
-#' @describeIn hgwr Fit a HGWR mdoel
+#' @describeIn hgwr Fit a HGWR model
 #' @export 
 hgwr_fit <- function(
     formula, data, coords, bw = "CV",
@@ -185,7 +185,7 @@ hgwr_fit <- function(
 
     ### Get bandwidth value
     if (is.character(bw) && bw == "CV") {
-        bw_value <- 0.0
+        bw_value <- NA_real_
         optim_bw <- TRUE
     } else if (is.numeric(bw) || is.integer(bw)) {
         bw_value <- bw
@@ -196,12 +196,16 @@ hgwr_fit <- function(
     }
 
     ### Call C
-    hgwr_result <- hgwr_bfml(
-        g, x, z, y, as.matrix(coords), group_index, bw_value, kernel_index,
-        alpha, eps_iter, eps_gradient,
-        as.integer(max_iters), as.integer(max_retries),
-        as.integer(ml_type), as.integer(verbose)
-    )
+    hgwr_result <- tryCatch({
+        hgwr_bfml(
+            g, x, z, y, as.matrix(coords), group_index, bw_value, kernel_index,
+            alpha, eps_iter, eps_gradient,
+            as.integer(max_iters), as.integer(max_retries),
+            as.integer(ml_type), as.integer(verbose)
+        )
+    }, error = function(e) {
+        stop("Error occurred when estimating HGWR parameters.")
+    })
     if (optim_bw)
         bw_value <- hgwr_result$bw
 
@@ -280,7 +284,7 @@ coef.hgwrm <- function(object, ...) {
     coef
 }
 
-#' Get fitted reponse.
+#' Get fitted response.
 #'
 #' @inheritParams coef.hgwrm
 #'

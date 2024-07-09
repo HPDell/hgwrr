@@ -42,7 +42,7 @@ hgwr(
 )
 ```
 
-The following is explaintion of some important parameters.
+The following is explanation of some important parameters.
 
 ### `formula`
 
@@ -69,7 +69,8 @@ Here is an example.
 data(wuhan.hp)
 m_sf <- hgwr(
   formula = Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High | group),
-  data = wuhan.hp
+  data = wuhan.hp,
+  bw = 299
 )
 ```
 

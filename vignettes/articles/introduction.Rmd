@@ -127,9 +127,9 @@ The first five arguments are mandatory.
   Currently it can only be adaptive bandwidth.
 
 Other arguments are optional which is used to control the backfitting maximum likelihood algorithm.
-On most occassions the default values are fine.
+On most occasions the default values are fine.
 If the default values cause some problems and you want change some of them,
-please check the documentation of function `hgwr()` for more infomation.
+please check the documentation of function `hgwr()` for more information.
 
 ## Example: A Small Simulated Data Set
 
@@ -210,7 +210,7 @@ The `summary()` function will give some statistical information about this model
 summary(ms_hgwr)
 ```
 
-On the current stage, only pesudo $R^2$ is available.
+On the current stage, only pseudo $R^2$ is available.
 In the future, more diagnostic information will be provided in this package.
 
 ## Example: Large Scale Simulated Data
@@ -219,7 +219,7 @@ In the former example, there are only `r nrow(multisampling$data)` observations 
 They are not adequate enough to get precises estimations.
 Here, we are going to use a large scale simulated data set to show the performance of HGWR model.
 As the true value of coefficients are already known (stored in variable `msl_beta`),
-closeness between estimated and true values is an appliable performance metric.
+closeness between estimated and true values is an practical performance metric.
 
 The data set is provided [here](./data/example2.rda).
 Its structure is similar to data `multisampling`.
@@ -288,7 +288,7 @@ msl_hgwr_err
 
 As a comparison, we can also calibrate a GWR model and HLM model and
 have a look at their fitting performance.
-THe GWR model can be calibrated with the following codes.
+The GWR model can be calibrated with the following codes.
 
 ```{r msl-gwr, cache=T}
 enable_parallel = Sys.info()['sysname'] != 'Darwin'
@@ -404,7 +404,7 @@ and the table gives information about all available variables.
 | *Floor.Low*       | 1 if a property is on a low floor, otherwise 0.          | Sample | Structural    |           |
 | *Decoration.Fine* | 1 if a property is well decorated, otherwise 0.          | Sample | Structural    |           |
 | *PlateTower*      | 1 if a property is of the plate-tower type, otherwise 0. | Sample | Structural    |           |
-| *Steel*           | 1 if a property is of ‘steel’ structure, otherwise 0.    | Sample | Structural    |           |
+| *Steel*           | 1 if a property is of 'steel' structure, otherwise 0.    | Sample | Structural    |           |
 | *BuildingArea*    | Building area in square metres.                          | Sample | Structural    | Yes       |
 | *Fee*             | Management fee per square meter per month.               | Group  | Neighbourhood | Yes       |
 | *d.Commercial*    | Distance to the nearest commercial area.                 | Group  | Locational    | Yes       |
@@ -505,7 +505,7 @@ wh_basemap +
           palette = "-RdBu", legend.col.reverse = T)
 ```
 
-And we can also convery a global Moran test on the residuals to to find well estimated points.
+And we can also convey a global Moran test on the residuals to to find well estimated points.
 
 ```{r}
 library(spdep)

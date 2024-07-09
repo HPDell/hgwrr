@@ -1,11 +1,14 @@
-# Version 0.3.1
+# Version 0.4.0
 
+- Feature: support use `L()` to specify local fixed effects
 - Feature: support `sf` objects
 - Feature: enable set no intercept
+- Feature: report more diagnostic information
 - Update: `wuhan.hp` data
 
 # Version 0.3.0
 
+- Feature: bandwidth optimisation with CV criterion
 - Update: `wuhan.hp` data
 - Fix: fill parameter to `cat` function
 
@@ -32,7 +35,7 @@
 # Version 0.2.0
 
 - Feature: R interface to set kernel
-- Fix: incompactible generic function definations
+- Fix: incompatible generic function definitions
 - Fix: other R check warnings
 
 # Version 0.1.0

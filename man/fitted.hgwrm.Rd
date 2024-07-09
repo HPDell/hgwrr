@@ -2,7 +2,7 @@
 % Please edit documentation in R/hgwr.R
 \name{fitted.hgwrm}
 \alias{fitted.hgwrm}
-\title{Get fitted reponse.}
+\title{Get fitted response.}
 \usage{
 \method{fitted}{hgwrm}(object, ...)
 }
@@ -15,7 +15,7 @@
 A vector consists of fitted response values.
 }
 \description{
-Get fitted reponse.
+Get fitted response.
 }
 \seealso{
 \code{\link[=hgwr]{hgwr()}}, \code{\link[=summary.hgwrm]{summary.hgwrm()}}, \code{\link[=coef.hgwrm]{coef.hgwrm()}} and \code{\link[=residuals.hgwrm]{residuals.hgwrm()}}.

@@ -17,9 +17,9 @@
 \arguments{
 \item{x}{A character matrix.}
 
-\item{col.sep}{Column seperator. Default to \code{""}.}
+\item{col.sep}{Column separator. Default to \code{""}.}
 
-\item{header.sep}{Header seperator. Default to \code{"-"}.}
+\item{header.sep}{Header separator. Default to \code{"-"}.}
 
 \item{row.begin}{Character at the beginning of each row.
 Default to \code{col.sep}.}

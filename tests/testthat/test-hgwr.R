@@ -70,13 +70,24 @@ test_that("hgwr s3 methods", {
 })
 
 test_that("hgwr data.frame coords check", {
-  data(multisampling)
   expect_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = multisampling$data,
     bw = 10,
     alpha = 1e-8
   ))
+})
+
+test_that("hgwr bandwidth optimisation", {
+  expect_no_error({
+    hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
 })
 
 test_that("hgwr summary with spatial heterogeneity test", {

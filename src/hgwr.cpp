@@ -1,5 +1,5 @@
-#include <Rcpp.h>
-#include <armadillo>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 #include "hlmgwr.h"
 #include "utils.h"
 
@@ -9,12 +9,12 @@ using namespace hgwr;
 
 // [[Rcpp::export]]
 List hgwr_bfml(
-    const NumericMatrix& g,
-    const NumericMatrix& x,
-    const NumericMatrix& z,
-    const NumericVector& y,
-    const NumericMatrix& u,
-    const NumericVector& group,
+    const arma::mat& g,
+    const arma::mat& x,
+    const arma::mat& z,
+    const arma::vec& y,
+    const arma::mat& u,
+    const arma::vec& group,
     double bw,
     size_t kernel,
     double alpha,
@@ -25,27 +25,25 @@ List hgwr_bfml(
     size_t ml_type,
     size_t verbose
 ) {
-    arma::mat mg = myas(g);
-    arma::mat mx = myas(x);
-    arma::mat mz = myas(z);
-    arma::vec my = myas(y);
-    arma::mat mu = myas(u);
-    arma::uvec mgroup = arma::conv_to<arma::uvec>::from(myas(group)) - 1;
+    arma::uvec mgroup = arma::conv_to<arma::uvec>::from(group) - 1;
     auto mkernel = HGWR::KernelType(size_t(kernel));
     HGWR::Options options { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type };
-    HGWR algorithm(mg, mx, mz, my, mu, mgroup, mkernel, bw, options);
+    HGWR algorithm(g, x, z, y, u, mgroup, mkernel, options);
+    if (bw < R_NaReal) {
+        algorithm.set_bw(bw);
+    }
     algorithm.set_printer(&prcout);
     auto hgwr_result = algorithm.fit();
 
     return List::create(
-        Named("gamma") = mywrap(hgwr_result.gamma),
-        Named("beta") = mywrap(hgwr_result.beta),
-        Named("mu") = mywrap(hgwr_result.mu),
-        Named("D") = mywrap(hgwr_result.D),
+        Named("gamma") = hgwr_result.gamma,
+        Named("beta") = hgwr_result.beta,
+        Named("mu") = hgwr_result.mu,
+        Named("D") = hgwr_result.D,
         Named("sigma") = hgwr_result.sigma,
         Named("bw") = hgwr_result.bw,
         Named("logLik") = algorithm.get_loglik(),
-        Named("trS") = mywrap(algorithm.get_trS()),
-        Named("var_beta") = mywrap(algorithm.get_var_beta())
+        Named("trS") = algorithm.get_trS(),
+        Named("var_beta") = algorithm.get_var_beta()
     );
 }

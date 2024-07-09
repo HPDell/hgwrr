@@ -11,7 +11,7 @@
 #' @name hgwrr-package
 #' @details \packageDESCRIPTION{hgwrr}
 #' @author Yigong Hu, Richard Harris, Richard Timmerman 
-#' @note Acknowledgements: We gratefully acknowledge support from China Scholarship Council.
+#' @note Acknowledgement: We gratefully acknowledge support from China Scholarship Council.
 #' @references Hu, Y., Lu, B., Ge, Y., Dong, G., 2022.
 #' Uncovering spatial heterogeneity in real estate prices via
 #' combined hierarchical linear model and geographically weighted regression.
