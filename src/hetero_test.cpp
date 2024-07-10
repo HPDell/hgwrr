@@ -1,5 +1,6 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#include "hlmgwr.h"
 #include "utils.h"
 
 using namespace std;
@@ -8,14 +9,9 @@ using namespace arma;
 
 vec kernel_bisquare_ada(const mat& uv, double bw, uword focus) {
     mat duv = uv.each_row() - uv.row(focus);
-    vec d2 = sum(duv % duv, 1);
-    vec ds = sort(d2);
-    // vec dsd = join_cols(vec({ 0 }), diff(ds));
-    // vec dsc = ds(find(dsd > 0));
-    // double b = uword(bw) <= dsc.n_elem ? dsc(uword(bw) - 1) : dsc(dsc.n_elem - 1);
-    double b = ds(uword(bw) - 1);
-    double b2 = b * b;
-    vec wi = (1 - d2 / b2) % (1 - d2 / b2) % (d2 <= b2);
+    vec d = sqrt(sum(duv % duv, 1));
+    double b = hgwr::HGWR::actual_bw(d, bw);
+    vec wi = (1 - (d % d) / (b * b)) % (1 - (d % d) / (b * b)) % (d <= b);
     vec w = wi / sum(wi);
     return w;
 }
