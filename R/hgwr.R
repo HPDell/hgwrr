@@ -151,7 +151,7 @@ hgwr.data.frame <- function(
 #' @describeIn hgwr Fit a HGWR model
 #' @export 
 hgwr_fit <- function(
-    formula, data, coords, bw = "CV",
+    formula, data, coords, bw = c("CV", "AIC"),
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
@@ -184,21 +184,25 @@ hgwr_fit <- function(
     if (model_desc$intercept$local) g <- cbind(1, g)
 
     ### Get bandwidth value
-    if (is.character(bw) && bw == "CV") {
+    if (is.character(bw)) {
+        bw <- match.arg(bw)
         bw_value <- NA_real_
         optim_bw <- TRUE
+        bw_criterion <- switch(bw, "CV" = 0L, "AIC" = 1L)
     } else if (is.numeric(bw) || is.integer(bw)) {
         bw_value <- bw
         optim_bw <- FALSE
+        bw_criterion <- -1L
     } else {
         bw_value <- Inf
-        optim_bw <- FALSE
+        optim_bw <- TRUE
+        bw_criterion <- 0L
     }
 
     ### Call C
     hgwr_result <- tryCatch({
         hgwr_bfml(
-            g, x, z, y, as.matrix(coords), group_index, bw_value, kernel_index,
+            g, x, z, y, as.matrix(coords), group_index, bw_value, bw_criterion, kernel_index,
             alpha, eps_iter, eps_gradient,
             as.integer(max_iters), as.integer(max_retries),
             as.integer(ml_type), as.integer(verbose)
@@ -631,7 +635,7 @@ logLik.hgwrm <- function(object, ...) {
     n <- object$frame.parsed$y
     p <- length(object$beta)
     q <- ncol(object$mu)
-    enp_gwr <- 2 * object$trS[1] - object$trS[2]
+    enp_gwr <- object$trS[1]
     enp_hlm <- p + q * (q + 1) / 2 + 1
     enp <- enp_gwr + enp_hlm
     val <- object$logLik

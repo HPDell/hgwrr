@@ -57,7 +57,7 @@ hgwr_fit(
   formula,
   data,
   coords,
-  bw = "CV",
+  bw = c("CV", "AIC"),
   kernel = c("gaussian", "bisquared"),
   alpha = 0.01,
   eps_iter = 1e-06,

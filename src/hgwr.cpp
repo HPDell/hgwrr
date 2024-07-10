@@ -16,6 +16,7 @@ List hgwr_bfml(
     const arma::mat& u,
     const arma::vec& group,
     double bw,
+    int bw_optim,
     size_t kernel,
     double alpha,
     double eps_iter,
@@ -29,8 +30,11 @@ List hgwr_bfml(
     auto mkernel = HGWR::KernelType(size_t(kernel));
     HGWR::Options options { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type };
     HGWR algorithm(g, x, z, y, u, mgroup, mkernel, options);
-    if (bw < R_NaReal) {
+    if (bw_optim < 0) {
         algorithm.set_bw(bw);
+    } else {
+        algorithm.set_bw_optim(true);
+        algorithm.set_bw_criterion_type(HGWR::BwOptimCriterionType(bw_optim));
     }
     algorithm.set_printer(&prcout);
     auto hgwr_result = algorithm.fit();
