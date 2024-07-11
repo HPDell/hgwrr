@@ -5,7 +5,7 @@ spatial_hetero_perm <- function(x, uv, poly = 2L, resample = 5000L, bw = 10, ker
     .Call(`_hgwrr_spatial_hetero_perm`, x, uv, poly, resample, bw, kernel)
 }
 
-hgwr_bfml <- function(g, x, z, y, u, group, bw, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, verbose) {
-    .Call(`_hgwrr_hgwr_bfml`, g, x, z, y, u, group, bw, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, verbose)
+hgwr_bfml <- function(g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, verbose) {
+    .Call(`_hgwrr_hgwr_bfml`, g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, verbose)
 }
 

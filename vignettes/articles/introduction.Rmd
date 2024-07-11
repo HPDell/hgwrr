@@ -435,13 +435,10 @@ Then we can calibrate a HGWR model with the following codes.
 
 ```{r whhp-hgwr, cache=T}
 whhp_hgwr <- hgwr(
-  formula = Price ~ L(d.Water + d.Commercial + d.PrimarySchool + d.ShoppingMall +
-            d.Kindergarten + Fee) + BuildingArea + (Floor.High | group),
+  formula = Price ~ L(d.Water + d.Commercial + d.Kindergarten + d.PrimarySchool) +
+            Fee + BuildingArea + d.ShoppingMall + (Floor.High | group),
   data = wuhan.hp,
-  bw = "CV",
-  kernel = "bisquared",
-  eps_gradient = 1e-16,
-  eps_iter = 1e-16
+  bw = "CV"
 )
 whhp_hgwr
 ```
