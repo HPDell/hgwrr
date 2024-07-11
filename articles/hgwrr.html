@@ -60,7 +60,7 @@
       <h1>hgwrr</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/vignettes/hgwrr.Rmd" class="external-link"><code>vignettes/hgwrr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.4-0/vignettes/hgwrr.Rmd" class="external-link"><code>vignettes/hgwrr.Rmd</code></a></small>
       <div class="d-none name"><code>hgwrr.Rmd</code></div>
     </div>
 
@@ -177,22 +177,22 @@ estimates of the effects.</p>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt;  Intercept  BuildingArea </span></span>
-<span><span class="co">#&gt;   9.994755     -0.020968 </span></span>
+<span><span class="co">#&gt;  10.008232     -0.020732 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
+<span><span class="co">#&gt; Local Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Bandwidth: 299 (nearest neighbours)</span></span>
-<span><span class="co">#&gt;   Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;     Intercept   0.175369      0.196626   0.210871      0.232110   0.259585 </span></span>
-<span><span class="co">#&gt;       d.Water  -4.886988     -4.012870  -3.414540     -3.107456  -2.669797 </span></span>
-<span><span class="co">#&gt;  d.Commercial  -6.276879     -5.679922  -4.914284     -3.869335  -3.443802 </span></span>
+<span><span class="co">#&gt;   Coefficient           Min  1st Quartile     Median  3rd Quartile         Max </span></span>
+<span><span class="co">#&gt;     Intercept     -2.956253     -0.125587   0.143338      0.405493    3.572753 </span></span>
+<span><span class="co">#&gt;       d.Water   -157.647881    -14.198803  -2.423598      6.753992  169.499432 </span></span>
+<span><span class="co">#&gt;  d.Commercial  -1229.561779     -9.364932  -1.297365     13.221426  355.622525 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Sample-level Random Effects</span></span>
+<span><span class="co">#&gt; Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups        Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  0.162322           </span></span>
-<span><span class="co">#&gt;            Floor.High  0.092892  0.129826 </span></span>
-<span><span class="co">#&gt;  Residual              0.081678           </span></span>
+<span><span class="co">#&gt;     group   Intercept  0.093518           </span></span>
+<span><span class="co">#&gt;            Floor.High  0.084110  0.051649 </span></span>
+<span><span class="co">#&gt;  Residual              0.081659           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -209,38 +209,29 @@ information.</p>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
 <span><span class="co">#&gt;    Data: wuhan.hp</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Parameter Estimates</span></span>
+<span><span class="co">#&gt; Parameter estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
-<span><span class="co">#&gt;                  Estimated     Sd. Err       t.val   Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;     Intercept   9.99475535  0.15204573  65.7351916  0.0000000  *** </span></span>
-<span><span class="co">#&gt;  BuildingArea  -0.02096779  0.02929819   0.7156683  0.4742047      </span></span>
+<span><span class="co">#&gt;                  Estimated    Sd. Err       t.val   Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;     Intercept  10.00823152  0.1393714  71.8097948  0.0000000  *** </span></span>
+<span><span class="co">#&gt;  BuildingArea  -0.02073159  0.0290205   0.7143773  0.4750026      </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Group-level spatially weighted effects:</span></span>
-<span><span class="co">#&gt;                      Min     1st Q.     Median     3rd Q.        Max </span></span>
-<span><span class="co">#&gt;     Intercept   0.175369   0.196626   0.210871   0.232110   0.259585 </span></span>
-<span><span class="co">#&gt;       d.Water  -4.886988  -4.012870  -3.414540  -3.107456  -2.669797 </span></span>
-<span><span class="co">#&gt;  d.Commercial  -6.276879  -5.679922  -4.914284  -3.869335  -3.443802 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bandwidth: 299 (nearest neighbours)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Sample-level random effects:</span></span>
-<span><span class="co">#&gt;    Groups        Name       Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  -0.000205  0.162322           </span></span>
-<span><span class="co">#&gt;            Floor.High  -0.000902  0.092892  0.129826 </span></span>
-<span><span class="co">#&gt;  Residual               0.000000  0.081678           </span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Local fixed effects:</span></span>
+<span><span class="co">#&gt;                         Min  1st Quartile     Median  3rd Quartile         Max </span></span>
+<span><span class="co">#&gt;     Intercept     -2.956253     -0.125587   0.143338      0.405493    3.572753 </span></span>
+<span><span class="co">#&gt;       d.Water   -157.647881    -14.198803  -2.423598      6.753992  169.499432 </span></span>
+<span><span class="co">#&gt;  d.Commercial  -1229.561779     -9.364932  -1.297365     13.221426  355.622525 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  rsquared       0.921490 </span></span>
-<span><span class="co">#&gt;    logLik   46623.454725 </span></span>
-<span><span class="co">#&gt;       AIC  -93223.878713 </span></span>
+<span><span class="co">#&gt;  rsquared       0.921337 </span></span>
+<span><span class="co">#&gt;    logLik   47101.028127 </span></span>
+<span><span class="co">#&gt;       AIC  -93562.186582 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Scaled Residuals</span></span>
+<span><span class="co">#&gt; Scaled residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -0.507543  -0.045789  -0.002598  0.041794  0.860090 </span></span>
+<span><span class="co">#&gt;  -0.507137  -0.045648  -0.002332  0.041843  0.859992 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -249,17 +240,17 @@ information.</p>
 <p>Some other methods are provided.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept   d.Water d.Commercial BuildingArea   Floor.High</span></span>
-<span><span class="co">#&gt; 1  10.07727 -2.969487    -5.059577  -0.02096779 -0.012553169</span></span>
-<span><span class="co">#&gt; 2  10.04817 -2.807213    -5.544708  -0.02096779  0.032427536</span></span>
-<span><span class="co">#&gt; 3  10.10562 -2.755161    -5.632809  -0.02096779 -0.007553805</span></span>
-<span><span class="co">#&gt; 4  10.18814 -2.761285    -5.633962  -0.02096779  0.027083404</span></span>
-<span><span class="co">#&gt; 5  10.12569 -2.771950    -5.637094  -0.02096779  0.017849167</span></span>
-<span><span class="co">#&gt; 6  10.22437 -2.737470    -5.669203  -0.02096779  0.074661846</span></span>
+<span><span class="co">#&gt;   Intercept    d.Water d.Commercial BuildingArea   Floor.High</span></span>
+<span><span class="co">#&gt; 1  10.03093 -0.6959796    -5.542168  -0.02073159 -0.009766081</span></span>
+<span><span class="co">#&gt; 2   9.95649 -1.2036938    -4.599027  -0.02073159  0.032570342</span></span>
+<span><span class="co">#&gt; 3  10.19179 -2.6167090    -6.640576  -0.02073159 -0.008295003</span></span>
+<span><span class="co">#&gt; 4  10.32102 -2.3586815    -7.352020  -0.02073159  0.025201766</span></span>
+<span><span class="co">#&gt; 5  10.00403 -1.6968718    -4.245220  -0.02073159  0.019346672</span></span>
+<span><span class="co">#&gt; 6  10.36764 -4.1144536    -6.600430  -0.02073159  0.072659049</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 9.495507 9.493352 9.495648 9.495586 9.506471 9.497123</span></span>
+<span><span class="co">#&gt; [1] 9.494168 9.492037 9.494307 9.494246 9.505008 9.495766</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.03697941 -0.13761317 -0.06024619  0.07793779  0.15130796  0.16537487</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.03564015 -0.13629818 -0.05890533  0.07927795  0.15277073  0.16673234</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
