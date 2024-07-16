@@ -3,6 +3,7 @@
 #include <optional>
 #include "hlmgwr.h"
 #include "utils.h"
+#include "progress.hpp"
 
 using namespace std;
 using namespace Rcpp;
@@ -97,15 +98,24 @@ List spatial_hetero_perm(
         if (verbose > 0) Rcout << "* Testing without pre-calculated spatial weights" << "\n";
     }
     mat r0 = precalc_dw ? denreg_poly(x, uv, sw, poly, bw, kernel) : denreg_poly(x, uv, poly, bw, kernel);
+    // mat r0 = denreg_poly(x, uv, poly, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
     mat stats(resample, x.n_cols);
+    ProgressBar p(resample);
+    p.display();
     for (size_t i = 0; i < resample; i++) {
-        mat xi = shuffle(x, 0);
+        mat xi(size(x));
+        for (size_t c = 0; c < x.n_cols; c++)
+        {
+            xi.col(c) = shuffle(x.col(c));
+        }
         mat ri = precalc_dw ? denreg_poly(xi, uv, sw, poly, bw, kernel) : denreg_poly(xi, uv, poly, bw, kernel);
+        // mat ri = denreg_poly(xi, uv, poly, bw, kernel);
         stats.row(i) = var(ri, 0, 0);
+        p.tic();
     }
     return Rcpp::List::create(
-        Rcpp::Named("t") = wrap(stats),
-        Rcpp::Named("t0") = wrap(stat0)
+        Rcpp::Named("t") = stats,
+        Rcpp::Named("t0") = stat0
     );
 }
