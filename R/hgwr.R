@@ -333,6 +333,8 @@ residuals.hgwrm <- function(object, ...) {
 #' If it is set to `FALSE`, the test will not be executed.
 #' If it is set to `TRUE`, the test will be executed with default parameters (see details below).
 #' It accepts a list to enable the test with specified parameters.
+#' @param verbose An Integer value to control whether additional messages
+#' during testing spatial heterogeneity should be reported.
 #'
 #' @return A list containing summary informations of this `hgwrm` object
 #' with the following fields.
@@ -353,7 +355,7 @@ residuals.hgwrm <- function(object, ...) {
 #' @importFrom stats AIC logLik pt sd
 #' @seealso [hgwr()].
 #' @export 
-summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
+summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
@@ -403,7 +405,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
         }
         mean_gamma <- colMeans(object$gamma)
         sd_gamma <- apply(object$gamma, 2, stats::sd)
-        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw)
+        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw, verbose = as.integer(verbose))
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })

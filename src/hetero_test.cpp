@@ -76,14 +76,15 @@ List spatial_hetero_perm(
     int poly = 2,
     int resample = 5000,
     double bw = 10,
-    int kernel = 0
+    int kernel = 0,
+    int verbose = 0
 ) {
     bool precalc_dw = false;
     mat sw(0, 0);
     uword n = uv.n_rows;
     if (n < 10000) {
         precalc_dw = true;
-        Rcout << "* Calculating spatial weights in advance" << "\n";
+        if (verbose > 0) Rcout << "* Calculating spatial weights in advance" << "\n";
         sw = mat(n, n, arma::fill::zeros);
         for (uword i = 0; i < n; i++)
         {
@@ -91,9 +92,9 @@ List spatial_hetero_perm(
             vec d = sqrt(sum(duv % duv, 1));
             sw.col(i) = kernel_bisquare_ada(d, bw, i);
         }
-        Rcout << "* Testing with pre-calculated spatial weights" << "\n";
+        if (verbose > 0) Rcout << "* Testing with pre-calculated spatial weights" << "\n";
     } else {
-        Rcout << "* Testing without pre-calculated spatial weights" << "\n";
+        if (verbose > 0) Rcout << "* Testing without pre-calculated spatial weights" << "\n";
     }
     mat r0 = precalc_dw ? denreg_poly(x, uv, sw, poly, bw, kernel) : denreg_poly(x, uv, poly, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
