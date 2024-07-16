@@ -4,7 +4,7 @@
 \alias{summary.hgwrm}
 \title{Summary an \code{hgwrm} object.}
 \usage{
-\method{summary}{hgwrm}(object, ..., test_hetero = FALSE)
+\method{summary}{hgwrm}(object, ..., test_hetero = FALSE, verbose = 0)
 }
 \arguments{
 \item{object}{An \code{hgwrm} object returned from \code{\link[=hgwr]{hgwr()}}.}
@@ -16,6 +16,9 @@ Whether to test the spatial heterogeneity of local fixed effects.
 If it is set to \code{FALSE}, the test will not be executed.
 If it is set to \code{TRUE}, the test will be executed with default parameters (see details below).
 It accepts a list to enable the test with specified parameters.}
+
+\item{verbose}{An Integer value to control whether additional messages
+during testing spatial heterogeneity should be reported.}
 }
 \value{
 A list containing summary informations of this \code{hgwrm} object
