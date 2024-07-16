@@ -60,7 +60,7 @@
       <h1>HGWR Model and How to Use It</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.4-0/vignettes/articles/introduction.Rmd" class="external-link"><code>vignettes/articles/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/vignettes/articles/introduction.Rmd" class="external-link"><code>vignettes/articles/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
     </div>
 
@@ -263,22 +263,22 @@ this</p>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   2.799593  0.966264 </span></span>
+<span><span class="co">#&gt;   2.844509  0.966059 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Local Fixed Effects</span></span>
+<span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Bandwidth: 10 (nearest neighbours)</span></span>
 <span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;    Intercept  -2.228035     -1.317095  -1.033530     -0.619987  -0.253209 </span></span>
-<span><span class="co">#&gt;           g1   3.480131      5.185006   7.250047      8.885822  12.724435 </span></span>
-<span><span class="co">#&gt;           g2  -1.961020      0.705599   1.579516      1.813527   2.433680 </span></span>
+<span><span class="co">#&gt;    Intercept  -1.197344     -1.117052  -0.906456     -0.677988  -0.493596 </span></span>
+<span><span class="co">#&gt;           g1   5.969397      6.328338   7.136143      7.447083   8.481628 </span></span>
+<span><span class="co">#&gt;           g2  -0.683021      0.043467   0.887209      1.174541   1.521918 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Random Effects</span></span>
+<span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.915502           </span></span>
-<span><span class="co">#&gt;                   z1  1.915502  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.915502           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.921255           </span></span>
+<span><span class="co">#&gt;                   z1  1.921255  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.921255           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -291,23 +291,23 @@ them.</p>
 <p>Then we can have a look on the coefficient estimations.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      Intercept        g1         g2        x1          z1</span></span>
-<span><span class="co">#&gt; 1   0.93385638  8.074955  0.6487483 0.9662643 -0.18966113</span></span>
-<span><span class="co">#&gt; 2   3.30745400  5.400803  2.4336796 0.9662643  0.28877007</span></span>
-<span><span class="co">#&gt; 3   0.23831357 11.472459  1.9442979 0.9662643  1.27150265</span></span>
-<span><span class="co">#&gt; 4   0.65359277 12.724435  2.2062389 0.9662643 -0.60214983</span></span>
-<span><span class="co">#&gt; 5   5.57630919  9.696690 -1.9610205 0.9662643 -1.46447768</span></span>
-<span><span class="co">#&gt; 6   0.65428868  6.433915  1.6049687 0.9662643  0.69741499</span></span>
-<span><span class="co">#&gt; 7   2.62549195  7.407097 -0.3772551 0.9662643 -1.46294707</span></span>
-<span><span class="co">#&gt; 8   2.72323483  6.080247 -0.3258765 0.9662643  0.31965644</span></span>
-<span><span class="co">#&gt; 9   1.24151261  4.039173  1.3998260 0.9662643  0.60607552</span></span>
-<span><span class="co">#&gt; 10  1.27667669  4.858916  1.6169819 0.9662643 -0.85469492</span></span>
-<span><span class="co">#&gt; 11  0.99708496  7.974344  1.6461838 0.9662643  0.31322119</span></span>
-<span><span class="co">#&gt; 12  0.45572242  7.890203  0.9570675 0.9662643 -0.41674645</span></span>
-<span><span class="co">#&gt; 13 -0.02945445 11.318737  1.9535270 0.9662643  1.57921427</span></span>
-<span><span class="co">#&gt; 14  2.92685486  3.480131  1.5540641 0.9662643  0.01043573</span></span>
-<span><span class="co">#&gt; 15  1.73000966  7.092998  1.6827564 0.9662643  0.04844664</span></span>
-<span><span class="co">#&gt; 16  2.27010850  4.969209  0.7624488 0.9662643 -0.04341256</span></span></code></pre></div>
+<span><span class="co">#&gt;    Intercept       g1          g2        x1          z1</span></span>
+<span><span class="co">#&gt; 1  0.8709247 7.718650  0.04654332 0.9660594 -0.19316953</span></span>
+<span><span class="co">#&gt; 2  3.3999054 6.554636  1.33431861 0.9660594  0.28646830</span></span>
+<span><span class="co">#&gt; 3  0.8304537 7.420539  0.79849908 0.9660594  1.27063639</span></span>
+<span><span class="co">#&gt; 4  2.4940515 7.395640  0.86517318 0.9660594 -0.59984180</span></span>
+<span><span class="co">#&gt; 5  5.9621920 8.481628 -0.68302067 0.9660594 -1.46606958</span></span>
+<span><span class="co">#&gt; 6  0.5926539 6.235741  1.26283083 0.9660594  0.69526966</span></span>
+<span><span class="co">#&gt; 7  2.6324153 7.650960 -0.02458224 0.9660594 -1.46161629</span></span>
+<span><span class="co">#&gt; 8  3.2007075 7.274534 -0.09758977 0.9660594  0.32008996</span></span>
+<span><span class="co">#&gt; 9  1.0336835 5.969397  0.95359748 0.9660594  0.60679673</span></span>
+<span><span class="co">#&gt; 10 1.2721665 6.004158  1.52191830 0.9660594 -0.85534304</span></span>
+<span><span class="co">#&gt; 11 1.1170536 6.997752  1.08577440 0.9660594  0.31273932</span></span>
+<span><span class="co">#&gt; 12 0.4284034 7.473628  0.04039086 0.9660594 -0.41973900</span></span>
+<span><span class="co">#&gt; 13 0.3190390 7.308281  0.90924577 0.9660594  1.57629379</span></span>
+<span><span class="co">#&gt; 14 3.1444830 5.975806  1.10442026 0.9660594  0.01154764</span></span>
+<span><span class="co">#&gt; 15 1.8158363 6.420936  1.24466257 0.9660594  0.04762966</span></span>
+<span><span class="co">#&gt; 16 2.2918536 6.734675  0.26179176 0.9660594 -0.04494147</span></span></code></pre></div>
 <p>With <strong>ggplot2</strong> or other packages, we can create some
 figures.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -338,12 +338,12 @@ to visualize.</p>
 <span>  residuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        real    fitted  residuals</span></span>
-<span><span class="co">#&gt; 1 1.2311965 2.6518081 -1.4206116</span></span>
-<span><span class="co">#&gt; 2 2.7154442 2.5782940  0.1371502</span></span>
-<span><span class="co">#&gt; 3 1.9980754 3.8966063 -1.8985309</span></span>
-<span><span class="co">#&gt; 4 3.7671728 0.8759693  2.8912035</span></span>
-<span><span class="co">#&gt; 5 4.4938533 3.9339569  0.5598964</span></span>
-<span><span class="co">#&gt; 6 0.7256683 2.6422741 -1.9166058</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 1.2311965 2.6579997 -1.4268032</span></span>
+<span><span class="co">#&gt; 2 2.7154442 2.5880209  0.1274234</span></span>
+<span><span class="co">#&gt; 3 1.9980754 3.9085913 -1.9105159</span></span>
+<span><span class="co">#&gt; 4 3.7671728 0.8866327  2.8805402</span></span>
+<span><span class="co">#&gt; 5 4.4938533 3.9384761  0.5553772</span></span>
+<span><span class="co">#&gt; 6 0.7256683 2.6547957 -1.9291274</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function will give some statistical
 information about this model.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -354,29 +354,38 @@ information about this model.</p>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
 <span><span class="co">#&gt;    Data: multisampling$data</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Parameter estimates</span></span>
+<span><span class="co">#&gt; Parameter Estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;  Intercept  2.7995933  0.25449128  11.00074         0  *** </span></span>
-<span><span class="co">#&gt;         x1  0.9662643  0.04676336  20.66285         0  *** </span></span>
+<span><span class="co">#&gt;  Intercept  2.8445086  0.25449128  11.17723         0  *** </span></span>
+<span><span class="co">#&gt;         x1  0.9660594  0.04676336  20.65847         0  *** </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Local fixed effects:</span></span>
-<span><span class="co">#&gt;                   Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;  Intercept  -2.228035     -1.317095  -1.033530     -0.619987  -0.253209 </span></span>
-<span><span class="co">#&gt;         g1   3.480131      5.185006   7.250047      8.885822  12.724435 </span></span>
-<span><span class="co">#&gt;         g2  -1.961020      0.705599   1.579516      1.813527   2.433680 </span></span>
+<span><span class="co">#&gt; Group-level spatially weighted effects:</span></span>
+<span><span class="co">#&gt;                   Min     1st Q.     Median     3rd Q.        Max </span></span>
+<span><span class="co">#&gt;  Intercept  -1.197344  -1.117052  -0.906456  -0.677988  -0.493596 </span></span>
+<span><span class="co">#&gt;         g1   5.969397   6.328338   7.136143   7.447083   8.481628 </span></span>
+<span><span class="co">#&gt;         g2  -0.683021   0.043467   0.887209   1.174541   1.521918 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Bandwidth: 10 (nearest neighbours)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Sample-level random effects:</span></span>
+<span><span class="co">#&gt;    Groups       Name      Mean  Std.Dev.      Corr </span></span>
+<span><span class="co">#&gt;     group  Intercept  0.000000  1.921255           </span></span>
+<span><span class="co">#&gt;                   z1  0.005422  1.921255  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             0.000000  1.921255           </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  rsquared  0.647098 </span></span>
+<span><span class="co">#&gt;  rsquared  0.647031 </span></span>
 <span><span class="co">#&gt;    logLik       NaN </span></span>
 <span><span class="co">#&gt;       AIC       NaN </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Scaled residuals</span></span>
+<span><span class="co">#&gt; Scaled Residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -5.447895  -1.220145  -0.067784  1.253786  5.313347 </span></span>
+<span><span class="co">#&gt;  -5.456449  -1.215641  -0.072241  1.246953  5.329316 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -452,22 +461,22 @@ get results.</p>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   1.860431  1.010716 </span></span>
+<span><span class="co">#&gt;   1.856041  1.010716 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Local Fixed Effects</span></span>
+<span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Bandwidth: 32 (nearest neighbours)</span></span>
-<span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
-<span><span class="co">#&gt;    Intercept  -0.379676     -0.189713  -0.065451      0.037251  0.342857 </span></span>
-<span><span class="co">#&gt;           g1  -0.950100      1.246555   3.516057      4.918352  9.096736 </span></span>
-<span><span class="co">#&gt;           g2  -5.627955     -2.006160  -0.209777      1.423969  5.951104 </span></span>
+<span><span class="co">#&gt;  Coefficient         Min  1st Quartile     Median  3rd Quartile        Max </span></span>
+<span><span class="co">#&gt;    Intercept   -0.828407     -0.220352  -0.054384      0.107088   0.634193 </span></span>
+<span><span class="co">#&gt;           g1   -3.110748      0.390257   3.637581      6.433589  12.076704 </span></span>
+<span><span class="co">#&gt;           g2  -10.971950     -2.457583  -0.439274      1.977123   8.306397 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Random Effects</span></span>
+<span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.990211           </span></span>
-<span><span class="co">#&gt;                   z1  1.990211  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.990211           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.989349           </span></span>
+<span><span class="co">#&gt;                   z1  1.989349  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.989349           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -512,8 +521,8 @@ useful to assess the fitting performance.</p>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_hgwr_err</span></span>
 <span><span class="co">#&gt;      Intercept       g1       g2        z1         x1</span></span>
-<span><span class="co">#&gt; MAE  0.3889714 2.404063 2.318941 0.2025508 0.01071636</span></span>
-<span><span class="co">#&gt; RMSE 0.6205027 4.308327 3.526644 0.2577121 0.01071636</span></span></code></pre></div>
+<span><span class="co">#&gt; MAE  0.3589281 2.367257 2.266689 0.2025208 0.01071645</span></span>
+<span><span class="co">#&gt; RMSE 0.4906000 3.644679 2.976845 0.2576828 0.01071645</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="comparison-of-hgwr-gwr-and-hlm">Comparison of HGWR, GWR and HLM<a class="anchor" aria-label="anchor" href="#comparison-of-hgwr-gwr-and-hlm"></a>
@@ -802,45 +811,41 @@ fixed effects and Floor.High as random effects. Then we can calibrate a
 HGWR model with the following codes.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">whhp_hgwr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hgwr.html">hgwr</a></span><span class="op">(</span></span>
-<span>  formula <span class="op">=</span> <span class="va">Price</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">d.Water</span> <span class="op">+</span> <span class="va">d.Commercial</span> <span class="op">+</span> <span class="va">d.PrimarySchool</span> <span class="op">+</span> <span class="va">d.ShoppingMall</span> <span class="op">+</span></span>
-<span>            <span class="va">d.Kindergarten</span> <span class="op">+</span> <span class="va">Fee</span><span class="op">)</span> <span class="op">+</span> <span class="va">BuildingArea</span> <span class="op">+</span> <span class="op">(</span><span class="va">Floor.High</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">Price</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">d.Water</span> <span class="op">+</span> <span class="va">d.Commercial</span> <span class="op">+</span> <span class="va">d.Kindergarten</span> <span class="op">+</span> <span class="va">d.PrimarySchool</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="va">Fee</span> <span class="op">+</span> <span class="va">BuildingArea</span> <span class="op">+</span> <span class="va">d.ShoppingMall</span> <span class="op">+</span> <span class="op">(</span><span class="va">Floor.High</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">wuhan.hp</span>,</span>
-<span>  bw <span class="op">=</span> <span class="st">"CV"</span>,</span>
-<span>  kernel <span class="op">=</span> <span class="st">"bisquared"</span>,</span>
-<span>  eps_gradient <span class="op">=</span> <span class="fl">1e-16</span>,</span>
-<span>  eps_iter <span class="op">=</span> <span class="fl">1e-16</span></span>
+<span>  bw <span class="op">=</span> <span class="st">"CV"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">whhp_hgwr</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
-<span><span class="co">#&gt; Formula: Price ~ L(d.Water + d.Commercial + d.PrimarySchool + d.ShoppingMall +  </span></span>
-<span><span class="co">#&gt;     d.Kindergarten + Fee) + BuildingArea + (Floor.High | group)</span></span>
+<span><span class="co">#&gt; Formula: </span></span>
+<span><span class="co">#&gt; Price ~ L(d.Water + d.Commercial + d.Kindergarten + d.PrimarySchool) +  </span></span>
+<span><span class="co">#&gt;     Fee + BuildingArea + d.ShoppingMall + (Floor.High | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
 <span><span class="co">#&gt;    Data: wuhan.hp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
-<span><span class="co">#&gt;  Intercept  BuildingArea </span></span>
-<span><span class="co">#&gt;   9.960508     -0.019362 </span></span>
+<span><span class="co">#&gt;  Intercept       Fee  BuildingArea  d.ShoppingMall </span></span>
+<span><span class="co">#&gt;   9.905824  0.176803     -0.020361       -0.002869 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Local Fixed Effects</span></span>
+<span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
-<span><span class="co">#&gt; Bandwidth: 11 (nearest neighbours)</span></span>
-<span><span class="co">#&gt;      Coefficient         Min  1st Quartile     Median  3rd Quartile         Max </span></span>
-<span><span class="co">#&gt;        Intercept  -13.346680     -0.419515  -0.042454      0.272587    1.415287 </span></span>
-<span><span class="co">#&gt;          d.Water  -28.236327     -6.964851  -2.026500      1.984415   36.145796 </span></span>
-<span><span class="co">#&gt;     d.Commercial  -35.593032     -6.013430  -2.749182      2.004890  105.401695 </span></span>
-<span><span class="co">#&gt;  d.PrimarySchool   -0.115972     -0.048653  -0.028902     -0.002975    0.179394 </span></span>
-<span><span class="co">#&gt;   d.ShoppingMall   -0.190489     -0.041997  -0.005965      0.022623    0.092288 </span></span>
-<span><span class="co">#&gt;   d.Kindergarten   -3.099271     -0.025477   0.001189      0.015357    0.153621 </span></span>
-<span><span class="co">#&gt;              Fee   -0.041300      0.106958   0.145695      0.189100    0.391003 </span></span>
+<span><span class="co">#&gt; Bandwidth: 562 (nearest neighbours)</span></span>
+<span><span class="co">#&gt;      Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
+<span><span class="co">#&gt;        Intercept  -0.258396     -0.220366  -0.199159     -0.163161  -0.139260 </span></span>
+<span><span class="co">#&gt;          d.Water  -2.455760     -2.132149  -1.918272     -1.767411  -1.485202 </span></span>
+<span><span class="co">#&gt;     d.Commercial  -4.637501     -4.456311  -4.275113     -3.973160  -3.840602 </span></span>
+<span><span class="co">#&gt;   d.Kindergarten  -0.035458     -0.031036  -0.027930     -0.025192  -0.021800 </span></span>
+<span><span class="co">#&gt;  d.PrimarySchool  -0.041803     -0.040628  -0.039498     -0.038174  -0.037094 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Random Effects</span></span>
+<span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
 <span><span class="co">#&gt;    Groups        Name  Std.Dev.       Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  0.090731            </span></span>
-<span><span class="co">#&gt;            Floor.High  0.079590  -0.042422 </span></span>
-<span><span class="co">#&gt;  Residual              0.081492            </span></span>
+<span><span class="co">#&gt;     group   Intercept  0.151359            </span></span>
+<span><span class="co">#&gt;            Floor.High  0.079724  -0.022868 </span></span>
+<span><span class="co">#&gt;  Residual              0.081436            </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -920,11 +925,11 @@ find well estimated points.</p>
 <span><span class="co">#&gt; data:  whhp_hgwr_res$res.abs.mean  </span></span>
 <span><span class="co">#&gt; weights: whhp_hgwr_res_listw    </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Moran I statistic standard deviate = 6.4585, p-value = 5.287e-11</span></span>
+<span><span class="co">#&gt; Moran I statistic standard deviate = 6.3045, p-value = 1.446e-10</span></span>
 <span><span class="co">#&gt; alternative hypothesis: greater</span></span>
 <span><span class="co">#&gt; sample estimates:</span></span>
 <span><span class="co">#&gt; Moran I statistic       Expectation          Variance </span></span>
-<span><span class="co">#&gt;      0.0667378905     -0.0012903226      0.0001109463</span></span></code></pre></div>
+<span><span class="co">#&gt;      0.0651142512     -0.0012903226      0.0001109424</span></span></code></pre></div>
 <p>From the p-value and Moran’s I value, we can find that although it is
 suggested to reject the null hypothesis, the global spatial
 autocorrelation is too weak to take any effects. Additionally, a local

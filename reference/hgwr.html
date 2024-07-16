@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Hierarchical and Geographically Weighted Regression</h1>
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.4-0/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
       <div class="d-none name"><code>hgwr.Rd</code></div>
     </div>
 
@@ -96,7 +96,7 @@
 <span>  <span class="va">formula</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">coords</span>,</span>
-<span>  bw <span class="op">=</span> <span class="st">"CV"</span>,</span>
+<span>  bw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CV"</span>, <span class="st">"AIC"</span><span class="op">)</span>,</span>
 <span>  kernel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gaussian"</span>, <span class="st">"bisquared"</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>  eps_iter <span class="op">=</span> <span class="fl">1e-06</span>,</span>
@@ -287,22 +287,22 @@ Note that random effects can only be specified once!</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Global Fixed Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept        x1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.799593  0.966264 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.844509  0.966059 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Local Fixed Effects</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Group-level Spatially Weighted Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Intercept  -2.228035     -1.317095  -1.033530     -0.619987  -0.253209 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           g1   3.480131      5.185006   7.250047      8.885822  12.724435 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           g2  -1.961020      0.705599   1.579516      1.813527   2.433680 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intercept  -1.197344     -1.117052  -0.906456     -0.677988  -0.493596 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g1   5.969397      6.328338   7.136143      7.447083   8.481628 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g2  -0.683021      0.043467   0.887209      1.174541   1.521918 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Random Effects</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sample-level Random Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.915502           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.915502  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.915502           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
