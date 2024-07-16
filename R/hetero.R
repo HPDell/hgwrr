@@ -28,7 +28,6 @@ spatial_hetero_test <- function(
 #' @export 
 print.shgt <- function(x, ...) {
     cat("Spatial Heterogeneity Test\n", fill = T)
-    cat("\n", fill = T)
     show_tbl <- data.frame(
         t0 = as.vector(x$t0),
         t = colMeans(x$t),
