@@ -20,7 +20,7 @@ public:
 
     void display()
     {
-        if (mIsDisplay) Rcpp::Rcout << "|0% |20% |40% |60% |80% |100%\n";
+        if (mIsDisplay) Rcpp::Rcout << "| 20%| 40%| 60%| 80%| 100%|\n";
     }
 
     void tic()
@@ -28,11 +28,32 @@ public:
         mCurrent++;
         size_t percent = mCurrent * 100 / mTotal;
         if (mIsDisplay && percent > mPercentOld) {
-            size_t nbars = percent / 4;
-            size_t nspaces = 25 - nbars;
-            std::string bar(nbars, '*'), space(nspaces, ' ');
-            Rcpp::Rcout << bar << space << string("\r");
-            if (percent == 100) Rcpp::Rcout << string("\n");
+            if (percent == 100) {
+                Rcpp::Rcout << '|' << string(25, '*') << '|' << '\n';
+            } else {
+                size_t nbars = percent / 4;
+                size_t vcur = percent % 4;
+                string cur = " ";
+                switch (vcur)
+                {
+                case 1:
+                    cur = "•";
+                    break;
+                case 2:
+                    cur = "-";
+                    /* code */
+                    break;
+                case 3:
+                    cur = "+";
+                    /* code */
+                    break;
+                default:
+                    break;
+                }
+                size_t nspaces = 25 - nbars - 1;
+                string bar(nbars, '*'), space(nspaces, ' ');
+                Rcpp::Rcout << '|' << bar << cur << space << '|' << string("\r");
+            }
             mPercentOld = percent;
         }
     }

@@ -101,7 +101,7 @@ List spatial_hetero_perm(
     // mat r0 = denreg_poly(x, uv, poly, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
     mat stats(resample, x.n_cols);
-    ProgressBar p(resample);
+    ProgressBar p(resample, verbose > 0);
     p.display();
     for (size_t i = 0; i < resample; i++) {
         mat xi(size(x));
