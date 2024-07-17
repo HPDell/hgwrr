@@ -6,6 +6,9 @@
 \usage{
 \method{print}{shgt}(x, ...)
 }
+\arguments{
+\item{x}{A \code{shgt} object.}
+}
 \description{
 Print the result of spatial heterogeneity test
 }

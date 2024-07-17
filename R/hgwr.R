@@ -350,7 +350,20 @@ residuals.hgwrm <- function(object, ...) {
 #'  \item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: `10`.}
 #'  \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: `2`.}
 #'  \item{\code{resample}}{Total resampling times. Default: `5000`.}
+#'  \item{\code{kernel}}{The kernel function used in the local polynomial estimation. Options are `"gaussian"` and `"bisquared"`. Default: `"bisquared"`.}
 #' }
+#' 
+#' @examples 
+#' data(multisampling)
+#' m <- hgwr(
+#'  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+#'  data = multisampling$data,
+#'  coords = multisampling$coords,
+#'  bw = 10
+#' )
+#' summary(m)
+#' summary(m, test_hetero = T)
+#' summary(m, test_hetero = list(kernel = "gaussian"))
 #' 
 #' @importFrom stats AIC logLik pt sd
 #' @seealso [hgwr()].
