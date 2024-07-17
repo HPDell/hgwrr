@@ -12,8 +12,8 @@ using namespace arma;
 vec kernel_bisquare_ada(const vec& d, double bw, uword focus) {
     double b = hgwr::HGWR::actual_bw(d, bw);
     vec wi = (1 - (d % d) / (b * b)) % (1 - (d % d) / (b * b)) % (d <= b);
-    vec w = wi / sum(wi);
-    return w;
+    // vec w = wi / sum(wi);
+    return wi;
 }
 
 mat denreg_poly(
