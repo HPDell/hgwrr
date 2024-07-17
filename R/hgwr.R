@@ -394,7 +394,13 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         pv = p_beta
     )
     #### Gamma
-    if (test_hetero == TRUE || is.list(test_hetero)) {
+    is_test_hetero <- FALSE
+    if (length(test_hetero) == 1 && is.logical(test_hetero) && test_hetero == TRUE) {
+        is_test_hetero <- TRUE
+    } else if (is.list(test_hetero)) {
+        is_test_hetero <- TRUE
+    }
+    if (is_test_hetero) {
         bw <- 10L
         resample <- 5000L
         poly <- 2L
