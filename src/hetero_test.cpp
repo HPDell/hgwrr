@@ -74,11 +74,10 @@ List spatial_hetero_perm(
     bool precalc_dw = false;
     uword ndp = uv.n_rows, dim = uv.n_cols, ncL = dim * poly + 1;
     cube L(ncL, ndp, ndp);
-    uword n = uv.n_rows;
-    if (n < 4096) {
+    if (ndp < 4096) {
         precalc_dw = true;
         if (verbose > 0) Rcout << "* Calculating spatial weights in advance" << "\n";
-        for (uword i = 0; i < n; i++)
+        for (uword i = 0; i < ndp; i++)
         {
             mat duv = uv.each_row() - uv.row(i);
             vec d = sqrt(sum(duv % duv, 1));
@@ -88,15 +87,13 @@ List spatial_hetero_perm(
                 U.cols(p * dim + 1, p * dim + dim) = pow(duv, p + 1);
             }
             mat Utw = trans(U.each_col() % wi);
-            mat UtwU_inv = inv(Utw * U);
-            L.slice(i) = UtwU_inv * Utw;
+            L.slice(i) = inv(Utw * U) * Utw;
         }
         if (verbose > 0) Rcout << "* Testing with pre-calculated spatial weights" << "\n";
     } else {
         if (verbose > 0) Rcout << "* Testing without pre-calculated spatial weights" << "\n";
     }
     mat r0 = precalc_dw ? denreg_poly(x, uv, L, poly, bw, kernel) : denreg_poly(x, uv, poly, bw, kernel);
-    // mat r0 = denreg_poly(x, uv, poly, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
     mat stats(resample, x.n_cols);
     ProgressBar p(resample, verbose > 0);
@@ -108,7 +105,6 @@ List spatial_hetero_perm(
             xi.col(c) = shuffle(x.col(c));
         }
         mat ri = precalc_dw ? denreg_poly(xi, uv, L, poly, bw, kernel) : denreg_poly(xi, uv, poly, bw, kernel);
-        // mat ri = denreg_poly(xi, uv, poly, bw, kernel);
         stats.row(i) = var(ri, 0, 0);
         p.tic();
     }
