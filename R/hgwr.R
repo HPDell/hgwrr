@@ -591,7 +591,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             gamma_sd = as.vector(x$significance$gamma$sd),
             t0 = as.vector(x$significance$gamma$t0),
             t.min = apply(x$significance$gamma$t, 2, min),
-            t.mean = colMeans(x$significance$gamma$t),
             t.max = apply(x$significance$gamma$t, 2, max),
             pv = pv_lfe
         ))
@@ -599,7 +598,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             gamma_stats,
             stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
         )
-        gamma_stats_name <- c("Estimated", "Std. Dev.", "t0", "Min. t", "Mean t", "Max. t", "Pr(>|t|)", "")
+        gamma_stats_name <- c("Mean Est.", "Std. Dev.", "t0", "Min. t", "Max. t", "Pr(t>t0)", "")
     } else {
         gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
         gamma_stats_name <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
