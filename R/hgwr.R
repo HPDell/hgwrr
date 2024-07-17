@@ -409,9 +409,11 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })
-        significance$gamma <- data.frame(
+        significance$gamma <- list(
             mean = mean_gamma,
             sd = sd_gamma,
+            t = t_gamma$t,
+            t0 = t_gamma$t0,
             pv = pv
         )
     }
@@ -576,16 +578,25 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (x$intercept$local) {
         lfe <- c("Intercept", lfe)
     }
-    gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
-    gamma_stats_name <- c("Min", "1st Q.", "Median", "3rd Q.", "Max")
     if (!is.null(x$significance$gamma)) {
         pv_lfe <- x$significance$gamma$pv
+        gamma_stats <- matrix2char(cbind(
+            gamma_mean = as.vector(x$significance$gamma$mean),
+            gamma_sd = as.vector(x$significance$gamma$sd),
+            t0 = as.vector(x$significance$gamma$t0),
+            t.min = apply(x$significance$gamma$t, 2, min),
+            t.mean = colMeans(x$significance$gamma$t),
+            t.max = apply(x$significance$gamma$t, 2, max),
+            pv = pv_lfe
+        ))
         gamma_stats <- cbind(
             gamma_stats,
-            pv = matrix2char(pv_lfe),
             stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
         )
-        gamma_stats_name <- c(gamma_stats_name, "Pr(>|t|)", "")
+        gamma_stats_name <- c("Estimated", "Std. Dev.", "t0", "Min. t", "Mean t", "Max. t", "Pr(>|t|)", "")
+    } else {
+        gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
+        gamma_stats_name <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
     }
     gamma_str <- rbind(
         c("", gamma_stats_name),
