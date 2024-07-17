@@ -404,14 +404,26 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         bw <- 10L
         resample <- 5000L
         poly <- 2L
+        kernel <- "bisquared"
         if (is.list(test_hetero)) {
             bw <- ifelse("bw" %in% names(test_hetero), test_hetero$bw, bw)
             resample <- ifelse("resample" %in% names(test_hetero), test_hetero$resample, resample)
             poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
+            kernel <- ifelse("kernel" %in% names(test_hetero), test_hetero$kernel, kernel)
         }
+        kernel <- match.arg(kernel, c("gaussian", "bisquared"))
+        kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
         mean_gamma <- colMeans(object$gamma)
         sd_gamma <- apply(object$gamma, 2, stats::sd)
-        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw, verbose = as.integer(verbose))
+        t_gamma <- spatial_hetero_perm(
+            object$gamma,
+            as.matrix(object$coords),
+            poly = poly,
+            resample = resample,
+            bw = bw,
+            kernel = kernel_id,
+            verbose = as.integer(verbose)
+        )
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })

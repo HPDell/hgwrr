@@ -8,10 +8,13 @@ spatial_hetero_test <- function(
     resample = 5000,
     poly = 2,
     bw = 10,
+    kernel = c("bisquared", "gaussian"),
     verbose = 0
 ) {
+    kernel <- match.arg(kernel)
+    kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
     var_names <- colnames(x)
-    tv <- spatial_hetero_perm(x, coords, poly, resample, bw, 0, verbose)
+    tv <- spatial_hetero_perm(x, coords, poly, resample, bw, kernel_id, verbose)
     pv <- sapply(seq_along(tv$t0), function(i) {
         with(tv, mean(t[,i] > t0[i]))
     })
