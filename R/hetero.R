@@ -42,7 +42,7 @@ spatial_hetero_test <- function(
     kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
     tv <- spatial_hetero_perm(x, coords, poly, resample, bw, kernel_id, verbose)
     pv <- sapply(seq_along(tv$t0), function(i) {
-        with(tv, mean(t[,i] > t0[i]))
+        with(tv, mean(abs(t[,i]) > abs(t0[i])))
     })
     res <- tv
     res$vars <- var_names
@@ -63,9 +63,9 @@ print.shgt <- function(x, ...) {
     }
     cat("Spatial Heterogeneity Test\n", fill = T)
     show_tbl <- data.frame(
-        t0 = as.vector(x$t0),
-        t = colMeans(x$t),
-        P = x$p,
+        t0 = matrix2char(as.vector(x$t0)),
+        t = apply(x$t, 2, function(r) paste0("[", matrix2char(min(r)), ",", matrix2char(max(r)), "]")),
+        P = matrix2char(x$p),
         stars = sapply(x$p, pv2stars)
     )
     colnames(show_tbl) <- c("t0", "Avg. t", "Pr(t>t0)", "")
