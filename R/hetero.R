@@ -68,7 +68,7 @@ print.shgt <- function(x, ...) {
         P = matrix2char(x$p),
         stars = sapply(x$p, pv2stars)
     )
-    colnames(show_tbl) <- c("t0", "Avg. t", "Pr(t>t0)", "")
+    colnames(show_tbl) <- c("t0", "t", "Pr(t>t0)", "")
     rownames(show_tbl) <- x$vars
     print(show_tbl)
     cat("\n", fill = T)
