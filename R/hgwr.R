@@ -216,6 +216,7 @@ hgwr_fit <- function(
     ### Prepare Return Result
     result <- list(
         gamma = hgwr_result$gamma,
+        gamma_se = hgwr_result$gamma_se,
         beta = hgwr_result$beta,
         mu = hgwr_result$mu,
         D = hgwr_result$D,
