@@ -40,15 +40,7 @@ umat poly_alpha(uword k, uword p) {
     return all_alpha.rows(find((sum_alpha > 0) && (sum_alpha <= k)));
 }
 
-mat poly_items(const mat& x, const mat& alpha, uword p) {
-    umat ialpha = linspace<uvec>(0, p, p + 1);
-    umat all_alpha = ialpha;
-    uword k = x.n_cols;
-    for (size_t i = 1; i < k; i++)
-    {
-        all_alpha = cart_prod(all_alpha, ialpha);
-    }
-    uvec sum_alpha = sum(all_alpha, 1);
+mat poly_items(const mat& x, const mat& alpha) {
     mat fact_alpha = alpha;
     fact_alpha.transform([](uword i){ return factor(i); });
     vec div = prod(fact_alpha, 1);
@@ -64,14 +56,13 @@ mat denreg_poly(
     const mat& x,
     const mat& uv,
     const mat& alpha,
-    size_t poly = 2,
     double bw = 10,
     int kernel = 0
 ) {
     mat g(arma::size(x));
     for (uword i = 0; i < x.n_rows; i++) {
         mat duv = (uv.each_row() - uv.row(i));
-        mat U = poly_items(duv, alpha, poly);
+        mat U = poly_items(duv, alpha);
         vec d = sqrt(sum(duv % duv, 1));
         double b = HGWR::actual_bw(d, bw);
         mat wi = (*(KERNEL + kernel))(d % d, b * b);
@@ -121,7 +112,7 @@ List spatial_hetero_perm(
         for (uword i = 0; i < ndp; i++)
         {
             mat duv = uv.each_row() - uv.row(i);
-            mat U = poly_items(duv, alpha, poly);
+            mat U = poly_items(duv, alpha);
             vec d = sqrt(sum(duv % duv, 1));
             double b = HGWR::actual_bw(d, bw);
             mat wi = (*(KERNEL + kernel))(d % d, b * b);
@@ -132,7 +123,7 @@ List spatial_hetero_perm(
     } else {
         if (verbose > 0) Rcout << "* Testing without pre-calculated spatial weights" << "\n";
     }
-    mat r0 = precalc_dw ? denreg_poly(x, uv, L) : denreg_poly(x, uv, alpha, poly, bw, kernel);
+    mat r0 = precalc_dw ? denreg_poly(x, uv, L) : denreg_poly(x, uv, alpha, bw, kernel);
     rowvec stat0 = var(r0, 0, 0);
     mat stats(resample, x.n_cols);
     ProgressBar p(resample, verbose > 0);
@@ -143,7 +134,7 @@ List spatial_hetero_perm(
         {
             xi.col(c) = shuffle(x.col(c));
         }
-        mat ri = precalc_dw ? denreg_poly(xi, uv, L) : denreg_poly(xi, uv, alpha, poly, bw, kernel);
+        mat ri = precalc_dw ? denreg_poly(xi, uv, L) : denreg_poly(xi, uv, alpha, bw, kernel);
         stats.row(i) = var(ri, 0, 0);
         p.tic();
     }
