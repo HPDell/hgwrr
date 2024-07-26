@@ -10,7 +10,7 @@ test_that("Multisampling", {
         alpha = 1e-8
     )})
     expect_no_error({
-        summary(m, test_hetero = T)
+        summary(m, test_hetero = TRUE)
     })
     expect_no_error({
         summary(m, test_hetero = list(kernel = "gaussian"))

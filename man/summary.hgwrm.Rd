@@ -51,7 +51,7 @@ m <- hgwr(
  bw = 10
 )
 summary(m)
-summary(m, test_hetero = T)
+summary(m, test_hetero = TRUE)
 summary(m, test_hetero = list(kernel = "gaussian"))
 
 }
