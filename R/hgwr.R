@@ -434,6 +434,8 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
             kernel = kernel_id,
             verbose = as.integer(verbose)
         )
+        t_gamma$t <- sqrt(t_gamma$t)
+        t_gamma$t0 <- sqrt(t_gamma$t0)
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })
