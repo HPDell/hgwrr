@@ -399,7 +399,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
     )
     #### Gamma different from 0
     t_gamma <- object$gamma / object$gamma_se
-    p_gamma <- stats::pt(-abs(m$gamma / m$gamma_se), m$edf) * 2
+    p_gamma <- stats::pt(-abs(object$gamma / object$gamma_se), object$edf) * 2
     significance$gamma <- list(
         tv = t_gamma,
         pv = p_gamma
