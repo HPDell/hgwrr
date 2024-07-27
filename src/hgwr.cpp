@@ -46,8 +46,11 @@ List hgwr_bfml(
         Named("D") = hgwr_result.D,
         Named("sigma") = hgwr_result.sigma,
         Named("bw") = hgwr_result.bw,
+        Named("gamma_se") = algorithm.get_gamma_se(),
         Named("logLik") = algorithm.get_loglik(),
         Named("trS") = algorithm.get_trS(),
-        Named("var_beta") = algorithm.get_var_beta()
+        Named("var_beta") = algorithm.get_var_beta(),
+        Named("edf") = algorithm.edf(),
+        Named("enp") = algorithm.enp()
     );
 }
