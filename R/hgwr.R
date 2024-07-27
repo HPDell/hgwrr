@@ -214,17 +214,8 @@ hgwr_fit <- function(
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
-    result <- list(
-        gamma = hgwr_result$gamma,
-        gamma_se = hgwr_result$gamma_se,
-        beta = hgwr_result$beta,
-        mu = hgwr_result$mu,
-        D = hgwr_result$D,
-        sigma = hgwr_result$sigma,
-        bw = bw_value,
-        logLik = hgwr_result$logLik,
-        trS = hgwr_result$trS,
-        var_beta = hgwr_result$var_beta,
+    result <- c(
+        hgwr_result,
         effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
@@ -244,6 +235,7 @@ hgwr_fit <- function(
         groups = group_unique,
         coords = coords
     )
+    result$bw <- bw_value
     class(result) <- "hgwrm"
     result
 }
@@ -396,8 +388,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
     ### Significance test
     significance <- list()
     #### Beta
-    enp <- attr(logLik_object, "df")
-    edf <- length(y) - enp
+    edf <- object$edf
     se_beta <- sqrt(object$var_beta)
     t_beta <- abs(object$beta) / se_beta
     p_beta <- (1 - stats::pt(t_beta, edf)) * 2
@@ -714,7 +705,7 @@ logLik.hgwrm <- function(object, ...) {
     enp_hlm <- p + q * (q + 1) / 2 + 1
     enp <- enp_gwr + enp_hlm
     val <- object$logLik
-    attr(val, "df") <- enp
+    attr(val, "df") <- object$enp
     attr(val, "nall") <- n
     attr(val, "nobs") <- n
     class(val) <- "logLik"
