@@ -214,9 +214,8 @@ hgwr_fit <- function(
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
-    result <- c(
-        hgwr_result,
-        effects = list(
+    result <- c(hgwr_result, list(
+            effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
             random = model_desc$random.effects,
@@ -234,7 +233,7 @@ hgwr_fit <- function(
         ),
         groups = group_unique,
         coords = coords
-    )
+    ))
     result$bw <- bw_value
     class(result) <- "hgwrm"
     result
@@ -398,7 +397,14 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         tv = t_beta,
         pv = p_beta
     )
-    #### Gamma
+    #### Gamma different from 0
+    t_gamma <- object$gamma / object$gamma_se
+    p_gamma <- stats::pt(-abs(m$gamma / m$gamma_se), m$edf) * 2
+    significance$gamma <- list(
+        tv = t_gamma,
+        pv = p_gamma
+    )
+    #### Gamma spatial heterogeneity
     is_test_hetero <- FALSE
     if (length(test_hetero) == 1 && is.logical(test_hetero) && test_hetero == TRUE) {
         is_test_hetero <- TRUE
@@ -418,7 +424,6 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         }
         kernel <- match.arg(kernel, c("gaussian", "bisquared"))
         kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
-        mean_gamma <- colMeans(object$gamma)
         sd_gamma <- apply(object$gamma, 2, stats::sd)
         t_gamma <- spatial_hetero_perm(
             object$gamma,
@@ -432,8 +437,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })
-        significance$gamma <- list(
-            mean = mean_gamma,
+        significance$gamma$hetero <- list(
             sd = sd_gamma,
             t = t_gamma$t,
             t0 = t_gamma$t0,
@@ -596,39 +600,56 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
     ), ...)
     cat("\n")
-    cat("Group-level spatially weighted effects:", fill = T)
+    cat("GLSW effects:", fill = T)
     lfe <- x$effects$local.fixed
     if (x$intercept$local) {
         lfe <- c("Intercept", lfe)
     }
-    if (!is.null(x$significance$gamma)) {
-        pv_lfe <- x$significance$gamma$pv
-        gamma_stats <- matrix2char(cbind(
-            gamma_mean = as.vector(x$significance$gamma$mean),
-            gamma_sd = as.vector(x$significance$gamma$sd),
-            t0 = as.vector(x$significance$gamma$t0),
-            t.min = apply(x$significance$gamma$t, 2, min),
-            t.max = apply(x$significance$gamma$t, 2, max),
-            pv = pv_lfe
-        ))
-        gamma_stats <- cbind(
-            gamma_stats,
-            stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
-        )
-        gamma_stats_name <- c("Mean Est.", "Std. Dev.", "t0", "Min. t", "Max. t", "Pr(t>t0)", "")
-    } else {
-        gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
-        gamma_stats_name <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
-    }
+    s_gamma <- t(apply(x$significance$gamma$pv, 2, function(p) { c(
+        "***" = mean(p < 0.001),
+        "**" = mean(p >= 0.001 & p < 0.01),
+        "*" = mean(p >= 0.01 & p < 0.05),
+        "." = mean(p >= 0.05 & p < 0.1)
+    ) })) * 100
+    rownames(s_gamma) <- lfe
+    gamma_stats <- cbind(
+        gamma_mean <- matrix2char(as.vector(colMeans(x$gamma))),
+        gamma_se_mean <- matrix2char(as.vector(colMeans(x$gamma_se))),
+        matrix2char(s_gamma, fmt = "%.1f%%")
+    )
+    gamma_stats_name <- c("Mean Est.", "Mean Sd.", colnames(s_gamma))
     gamma_str <- rbind(
         c("", gamma_stats_name),
         cbind(lfe, gamma_stats)
     )
     print.table.md(gamma_str, ...)
     cat("\n")
+    if (!is.null(x$significance$gamma$hetero)) {
+        cat("GLSW effect spatial heterogeneity:", fill = T)
+        h_gamma <- x$significance$gamma$hetero
+        pv_hetero <- h_gamma$pv
+        hetero_stats <- matrix2char(cbind(
+            gamma_sd = as.vector(h_gamma$sd),
+            t0 = as.vector(h_gamma$t0),
+            t.min = apply(h_gamma$t, 2, min),
+            t.max = apply(h_gamma$t, 2, max),
+            pv = pv_hetero
+        ))
+        hetero_stats <- cbind(
+            hetero_stats,
+            stars = vapply(pv_hetero, pv2stars, rep(" ", n = length(pv_hetero)))
+        )
+        hetero_stats_name <- c("Sd. Est.", "t0", "Min. t", "Max. t", "Pr(t>t0)", "")
+        hetero_str <- rbind(
+            c("", hetero_stats_name),
+            cbind(lfe, hetero_stats)
+        )
+        print.table.md(hetero_str, ...)
+        cat("\n")
+    }
     cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
     cat("\n")
-    cat("Sample-level random effects:", fill = T)
+    cat("SLR effects:", fill = T)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr
     random_corr_str <- matrix2char(random_corr)
