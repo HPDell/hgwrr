@@ -1,4 +1,4 @@
-# Version 0.4.1
+# Version 0.5.0
 
 - Feature: `spatial_hetero_test()` function for testing spatial heterogeneity
 - Feature: show progress bar when testing spatial heterogeneity of GLSW effects
