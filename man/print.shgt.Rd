@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{A \code{shgt} object.}
+
+\item{\dots}{Other unused arguments.}
 }
 \description{
 Print the result of spatial heterogeneity test

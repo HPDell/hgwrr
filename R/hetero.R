@@ -54,6 +54,7 @@ spatial_hetero_test <- function(
 #' Print the result of spatial heterogeneity test
 #' 
 #' @param x A `shgt` object.
+#' @param \dots Other unused arguments.
 #' 
 #' @method print shgt
 #' @export 
