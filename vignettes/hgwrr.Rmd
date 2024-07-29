@@ -105,21 +105,27 @@ Currently, there are only two choices: `"gaussian"` and `"bisquared"`.
 The output of returned object of `hgwr()` shows the estimates of the effects.
 
 ```{r}
-m_sf
+m_df
 ```
 
 And the `summary()` method shows some diagnostic information.
 
 ```{r}
-summary(m_sf)
+summary(m_df)
+```
+
+The significance level of spatial heterogeneity in GLSW effects can be tested with the following codes.
+
+```{r}
+summary(m_df, test_hetero = T)
 ```
 
 Some other methods are provided.
 
 ```{r}
-head(coef(m_sf))
-head(fitted(m_sf))
-head(residuals(m_sf))
+head(coef(m_df))
+head(fitted(m_df))
+head(residuals(m_df))
 ```
 
 # Further reading

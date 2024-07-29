@@ -1,3 +1,12 @@
+# Version 0.5.0
+
+- Feature: `spatial_hetero_test()` function for testing spatial heterogeneity
+- Feature: show progress bar when testing spatial heterogeneity of GLSW effects
+- Feature: support Gaussian kernel function when testing spatial heterogeneity
+- Improve: efficiency of testing spatial heterogeneity
+- Fix: bandwidth optimisation issues
+- Fix: output message of summary of `hgwrm` objects
+
 # Version 0.4.0
 
 - Feature: support use `L()` to specify local fixed effects

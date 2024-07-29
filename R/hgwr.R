@@ -214,17 +214,8 @@ hgwr_fit <- function(
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
-    result <- list(
-        gamma = hgwr_result$gamma,
-        beta = hgwr_result$beta,
-        mu = hgwr_result$mu,
-        D = hgwr_result$D,
-        sigma = hgwr_result$sigma,
-        bw = bw_value,
-        logLik = hgwr_result$logLik,
-        trS = hgwr_result$trS,
-        var_beta = hgwr_result$var_beta,
-        effects = list(
+    result <- c(hgwr_result, list(
+            effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
             random = model_desc$random.effects,
@@ -242,7 +233,8 @@ hgwr_fit <- function(
         ),
         groups = group_unique,
         coords = coords
-    )
+    ))
+    result$bw <- bw_value
     class(result) <- "hgwrm"
     result
 }
@@ -333,6 +325,8 @@ residuals.hgwrm <- function(object, ...) {
 #' If it is set to `FALSE`, the test will not be executed.
 #' If it is set to `TRUE`, the test will be executed with default parameters (see details below).
 #' It accepts a list to enable the test with specified parameters.
+#' @param verbose An Integer value to control whether additional messages
+#' during testing spatial heterogeneity should be reported.
 #'
 #' @return A list containing summary informations of this `hgwrm` object
 #' with the following fields.
@@ -348,12 +342,25 @@ residuals.hgwrm <- function(object, ...) {
 #'  \item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: `10`.}
 #'  \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: `2`.}
 #'  \item{\code{resample}}{Total resampling times. Default: `5000`.}
+#'  \item{\code{kernel}}{The kernel function used in the local polynomial estimation. Options are `"gaussian"` and `"bisquared"`. Default: `"bisquared"`.}
 #' }
+#' 
+#' @examples 
+#' data(multisampling)
+#' m <- hgwr(
+#'  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+#'  data = multisampling$data,
+#'  coords = multisampling$coords,
+#'  bw = 10
+#' )
+#' summary(m)
+#' summary(m, test_hetero = TRUE)
+#' summary(m, test_hetero = list(kernel = "gaussian"))
 #' 
 #' @importFrom stats AIC logLik pt sd
 #' @seealso [hgwr()].
 #' @export 
-summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
+summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
     if (!inherits(object, "hgwrm")) {
         stop("It's not a hgwrm object.")
     }
@@ -380,8 +387,7 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
     ### Significance test
     significance <- list()
     #### Beta
-    enp <- attr(logLik_object, "df")
-    edf <- length(y) - enp
+    edf <- object$edf
     se_beta <- sqrt(object$var_beta)
     t_beta <- abs(object$beta) / se_beta
     p_beta <- (1 - stats::pt(t_beta, edf)) * 2
@@ -391,25 +397,52 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE) {
         tv = t_beta,
         pv = p_beta
     )
-    #### Gamma
-    if (test_hetero == TRUE || is.list(test_hetero)) {
+    #### Gamma different from 0
+    t_gamma <- object$gamma / object$gamma_se
+    p_gamma <- stats::pt(-abs(object$gamma / object$gamma_se), object$edf) * 2
+    significance$gamma <- list(
+        tv = t_gamma,
+        pv = p_gamma
+    )
+    #### Gamma spatial heterogeneity
+    is_test_hetero <- FALSE
+    if (length(test_hetero) == 1 && is.logical(test_hetero) && test_hetero == TRUE) {
+        is_test_hetero <- TRUE
+    } else if (is.list(test_hetero)) {
+        is_test_hetero <- TRUE
+    }
+    if (is_test_hetero) {
         bw <- 10L
         resample <- 5000L
         poly <- 2L
+        kernel <- "bisquared"
         if (is.list(test_hetero)) {
             bw <- ifelse("bw" %in% names(test_hetero), test_hetero$bw, bw)
             resample <- ifelse("resample" %in% names(test_hetero), test_hetero$resample, resample)
             poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
+            kernel <- ifelse("kernel" %in% names(test_hetero), test_hetero$kernel, kernel)
         }
-        mean_gamma <- colMeans(object$gamma)
+        kernel <- match.arg(kernel, c("gaussian", "bisquared"))
+        kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
         sd_gamma <- apply(object$gamma, 2, stats::sd)
-        t_gamma <- spatial_hetero_perm(object$gamma, as.matrix(object$coords), poly = poly, resample = resample, bw = bw)
+        t_gamma <- spatial_hetero_perm(
+            object$gamma,
+            as.matrix(object$coords),
+            poly = poly,
+            resample = resample,
+            bw = bw,
+            kernel = kernel_id,
+            verbose = as.integer(verbose)
+        )
+        t_gamma$t <- sqrt(t_gamma$t)
+        t_gamma$t0 <- sqrt(t_gamma$t0)
         pv <- sapply(seq_along(t_gamma$t0), function(i) {
             with(t_gamma, mean(t[,i] > t0[i]))
         })
-        significance$gamma <- data.frame(
-            mean = mean_gamma,
+        significance$gamma$hetero <- list(
             sd = sd_gamma,
+            t = t_gamma$t,
+            t0 = t_gamma$t0,
             pv = pv
         )
     }
@@ -569,31 +602,56 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
     ), ...)
     cat("\n")
-    cat("Group-level spatially weighted effects:", fill = T)
+    cat("GLSW effects:", fill = T)
     lfe <- x$effects$local.fixed
     if (x$intercept$local) {
         lfe <- c("Intercept", lfe)
     }
-    gamma_stats <- matrix2char(t(apply(x$gamma, 2, fivenum)))
-    gamma_stats_name <- c("Min", "1st Q.", "Median", "3rd Q.", "Max")
-    if (!is.null(x$significance$gamma)) {
-        pv_lfe <- x$significance$gamma$pv
-        gamma_stats <- cbind(
-            gamma_stats,
-            pv = matrix2char(pv_lfe),
-            stars = vapply(pv_lfe, pv2stars, rep(" ", n = length(pv_lfe)))
-        )
-        gamma_stats_name <- c(gamma_stats_name, "Pr(>|t|)", "")
-    }
+    s_gamma <- t(apply(x$significance$gamma$pv, 2, function(p) { c(
+        "***" = mean(p < 0.001),
+        "**" = mean(p >= 0.001 & p < 0.01),
+        "*" = mean(p >= 0.01 & p < 0.05),
+        "." = mean(p >= 0.05 & p < 0.1)
+    ) })) * 100
+    rownames(s_gamma) <- lfe
+    gamma_stats <- cbind(
+        gamma_mean <- matrix2char(as.vector(colMeans(x$gamma))),
+        gamma_se_mean <- matrix2char(as.vector(colMeans(x$gamma_se))),
+        matrix2char(s_gamma, fmt = "%.1f%%")
+    )
+    gamma_stats_name <- c("Mean Est.", "Mean Sd.", colnames(s_gamma))
     gamma_str <- rbind(
         c("", gamma_stats_name),
         cbind(lfe, gamma_stats)
     )
     print.table.md(gamma_str, ...)
     cat("\n")
+    if (!is.null(x$significance$gamma$hetero)) {
+        cat("GLSW effect spatial heterogeneity:", fill = T)
+        h_gamma <- x$significance$gamma$hetero
+        pv_hetero <- h_gamma$pv
+        hetero_stats <- matrix2char(cbind(
+            gamma_sd = as.vector(h_gamma$sd),
+            t0 = as.vector(h_gamma$t0),
+            t.min = apply(h_gamma$t, 2, min),
+            t.max = apply(h_gamma$t, 2, max),
+            pv = pv_hetero
+        ))
+        hetero_stats <- cbind(
+            hetero_stats,
+            stars = vapply(pv_hetero, pv2stars, rep(" ", n = length(pv_hetero)))
+        )
+        hetero_stats_name <- c("Sd. Est.", "t0", "Min. t", "Max. t", "Pr(t>t0)", "")
+        hetero_str <- rbind(
+            c("", hetero_stats_name),
+            cbind(lfe, hetero_stats)
+        )
+        print.table.md(hetero_str, ...)
+        cat("\n")
+    }
     cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
     cat("\n")
-    cat("Sample-level random effects:", fill = T)
+    cat("SLR effects:", fill = T)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr
     random_corr_str <- matrix2char(random_corr)
@@ -670,7 +728,7 @@ logLik.hgwrm <- function(object, ...) {
     enp_hlm <- p + q * (q + 1) / 2 + 1
     enp <- enp_gwr + enp_hlm
     val <- object$logLik
-    attr(val, "df") <- enp
+    attr(val, "df") <- object$enp
     attr(val, "nall") <- n
     attr(val, "nobs") <- n
     class(val) <- "logLik"

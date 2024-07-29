@@ -4,7 +4,7 @@
 \alias{summary.hgwrm}
 \title{Summary an \code{hgwrm} object.}
 \usage{
-\method{summary}{hgwrm}(object, ..., test_hetero = FALSE)
+\method{summary}{hgwrm}(object, ..., test_hetero = FALSE, verbose = 0)
 }
 \arguments{
 \item{object}{An \code{hgwrm} object returned from \code{\link[=hgwr]{hgwr()}}.}
@@ -16,6 +16,9 @@ Whether to test the spatial heterogeneity of local fixed effects.
 If it is set to \code{FALSE}, the test will not be executed.
 If it is set to \code{TRUE}, the test will be executed with default parameters (see details below).
 It accepts a list to enable the test with specified parameters.}
+
+\item{verbose}{An Integer value to control whether additional messages
+during testing spatial heterogeneity should be reported.}
 }
 \value{
 A list containing summary informations of this \code{hgwrm} object
@@ -36,7 +39,21 @@ The parameters used to perform test of spatial heterogeneity are
 \item{\code{bw}}{Bandwidth (unit: number of nearest neighbours) used to make spatial kernel density estimation. Default: \code{10}.}
 \item{\code{poly}}{The number of polynomial terms used in the local polynomial estimation. Default: \code{2}.}
 \item{\code{resample}}{Total resampling times. Default: \code{5000}.}
+\item{\code{kernel}}{The kernel function used in the local polynomial estimation. Options are \code{"gaussian"} and \code{"bisquared"}. Default: \code{"bisquared"}.}
 }
+}
+\examples{
+data(multisampling)
+m <- hgwr(
+ formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+ data = multisampling$data,
+ coords = multisampling$coords,
+ bw = 10
+)
+summary(m)
+summary(m, test_hetero = TRUE)
+summary(m, test_hetero = list(kernel = "gaussian"))
+
 }
 \seealso{
 \code{\link[=hgwr]{hgwr()}}.
