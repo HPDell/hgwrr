@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
       <h1>hgwrr</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/vignettes/hgwrr.Rmd" class="external-link"><code>vignettes/hgwrr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.5-0/vignettes/hgwrr.Rmd" class="external-link"><code>vignettes/hgwrr.Rmd</code></a></small>
       <div class="d-none name"><code>hgwrr.Rmd</code></div>
     </div>
 
@@ -166,100 +166,151 @@ GLSW effects. Currently, there are only two choices:
 <p>The output of returned object of <code><a href="../reference/hgwr.html">hgwr()</a></code> shows the
 estimates of the effects.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m_sf</span></span>
+<code class="sourceCode R"><span><span class="va">m_df</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
-<span><span class="co">#&gt; Formula: Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High |  </span></span>
-<span><span class="co">#&gt;     group)</span></span>
+<span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
-<span><span class="co">#&gt;    Data: wuhan.hp</span></span>
+<span><span class="co">#&gt;    Data: multisampling$data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Global Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
-<span><span class="co">#&gt;  Intercept  BuildingArea </span></span>
-<span><span class="co">#&gt;   9.994755     -0.020968 </span></span>
+<span><span class="co">#&gt;  Intercept        x1 </span></span>
+<span><span class="co">#&gt;   4.057598  0.966088 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
-<span><span class="co">#&gt; Bandwidth: 299 (nearest neighbours)</span></span>
-<span><span class="co">#&gt;   Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;     Intercept   0.175369      0.196626   0.210871      0.232110   0.259585 </span></span>
-<span><span class="co">#&gt;       d.Water  -4.886988     -4.012870  -3.414540     -3.107456  -2.669797 </span></span>
-<span><span class="co">#&gt;  d.Commercial  -6.276879     -5.679922  -4.914284     -3.869335  -3.443802 </span></span>
+<span><span class="co">#&gt; Bandwidth: 9.000016 (nearest neighbours)</span></span>
+<span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
+<span><span class="co">#&gt;    Intercept  -2.477395     -2.355703  -2.121756     -1.877999  -1.692284 </span></span>
+<span><span class="co">#&gt;           g1   5.557560      6.303393   7.248665      7.500396   8.628861 </span></span>
+<span><span class="co">#&gt;           g2  -0.868120      0.069715   0.958127      1.318092   1.551972 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; --------------</span></span>
-<span><span class="co">#&gt;    Groups        Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  0.162322           </span></span>
-<span><span class="co">#&gt;            Floor.High  0.092892  0.129826 </span></span>
-<span><span class="co">#&gt;  Residual              0.081678           </span></span>
+<span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.920528           </span></span>
+<span><span class="co">#&gt;                   z1  1.920528  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.920528           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 19599</span></span>
-<span><span class="co">#&gt;        Groups: group , 776</span></span></code></pre></div>
+<span><span class="co">#&gt; Number of Obs: 484</span></span>
+<span><span class="co">#&gt;        Groups: group , 16</span></span></code></pre></div>
 <p>And the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method shows some diagnostic
 information.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
-<span><span class="co">#&gt; Formula: Price ~ L(d.Water + d.Commercial) + BuildingArea + (Floor.High |  </span></span>
-<span><span class="co">#&gt;     group)</span></span>
+<span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
-<span><span class="co">#&gt;    Data: wuhan.hp</span></span>
+<span><span class="co">#&gt;    Data: multisampling$data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Parameter Estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
-<span><span class="co">#&gt;                  Estimated     Sd. Err       t.val   Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;     Intercept   9.99475535  0.15204573  65.7351916  0.0000000  *** </span></span>
-<span><span class="co">#&gt;  BuildingArea  -0.02096779  0.02929819   0.7156683  0.4742047      </span></span>
+<span><span class="co">#&gt;             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;  Intercept  4.0575982  0.25449128  15.94396         0  *** </span></span>
+<span><span class="co">#&gt;         x1  0.9660875  0.04676336  20.65907         0  *** </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Group-level spatially weighted effects:</span></span>
-<span><span class="co">#&gt;                      Min     1st Q.     Median     3rd Q.        Max </span></span>
-<span><span class="co">#&gt;     Intercept   0.175369   0.196626   0.210871   0.232110   0.259585 </span></span>
-<span><span class="co">#&gt;       d.Water  -4.886988  -4.012870  -3.414540  -3.107456  -2.669797 </span></span>
-<span><span class="co">#&gt;  d.Commercial  -6.276879  -5.679922  -4.914284  -3.869335  -3.443802 </span></span>
+<span><span class="co">#&gt; GLSW effects:</span></span>
+<span><span class="co">#&gt;             Mean Est.  Mean Sd.    ***     **      *      . </span></span>
+<span><span class="co">#&gt;  Intercept  -2.103489  0.565900  75.0%  25.0%   0.0%   0.0% </span></span>
+<span><span class="co">#&gt;         g1   6.948511  3.266527   0.0%   6.2%  62.5%  31.2% </span></span>
+<span><span class="co">#&gt;         g2   0.719551  3.296013   0.0%   0.0%   0.0%   0.0% </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bandwidth: 299 (nearest neighbours)</span></span>
+<span><span class="co">#&gt; Bandwidth: 9.000016 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Sample-level random effects:</span></span>
-<span><span class="co">#&gt;    Groups        Name       Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group   Intercept  -0.000205  0.162322           </span></span>
-<span><span class="co">#&gt;            Floor.High  -0.000902  0.092892  0.129826 </span></span>
-<span><span class="co">#&gt;  Residual               0.000000  0.081678           </span></span>
+<span><span class="co">#&gt; SLR effects:</span></span>
+<span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
+<span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
+<span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual              0.000000  1.920528           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  rsquared       0.921490 </span></span>
-<span><span class="co">#&gt;    logLik   46623.454725 </span></span>
-<span><span class="co">#&gt;       AIC  -93223.878713 </span></span>
+<span><span class="co">#&gt;  rsquared  0.647039 </span></span>
+<span><span class="co">#&gt;    logLik       NaN </span></span>
+<span><span class="co">#&gt;       AIC       NaN </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Scaled Residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -0.507543  -0.045789  -0.002598  0.041794  0.860090 </span></span>
+<span><span class="co">#&gt;  -5.454886  -1.216360  -0.073301  1.247373  5.327542 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 19599</span></span>
-<span><span class="co">#&gt;        Groups: group , 776</span></span></code></pre></div>
-<p>Some other methods are provided.</p>
+<span><span class="co">#&gt; Number of Obs: 484</span></span>
+<span><span class="co">#&gt;        Groups: group , 16</span></span></code></pre></div>
+<p>The significance level of spatial heterogeneity in GLSW effects can
+be tested with the following codes.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept   d.Water d.Commercial BuildingArea   Floor.High</span></span>
-<span><span class="co">#&gt; 1  10.07727 -2.969487    -5.059577  -0.02096779 -0.012553169</span></span>
-<span><span class="co">#&gt; 2  10.04817 -2.807213    -5.544708  -0.02096779  0.032427536</span></span>
-<span><span class="co">#&gt; 3  10.10562 -2.755161    -5.632809  -0.02096779 -0.007553805</span></span>
-<span><span class="co">#&gt; 4  10.18814 -2.761285    -5.633962  -0.02096779  0.027083404</span></span>
-<span><span class="co">#&gt; 5  10.12569 -2.771950    -5.637094  -0.02096779  0.017849167</span></span>
-<span><span class="co">#&gt; 6  10.22437 -2.737470    -5.669203  -0.02096779  0.074661846</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 9.495507 9.493352 9.495648 9.495586 9.506471 9.497123</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.03697941 -0.13761317 -0.06024619  0.07793779  0.15130796  0.16537487</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_df</span>, test_hetero <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
+<span><span class="co">#&gt; =========================================================</span></span>
+<span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
+<span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
+<span><span class="co">#&gt;    Data: multisampling$data</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates</span></span>
+<span><span class="co">#&gt; -------------------</span></span>
+<span><span class="co">#&gt; Fixed effects:</span></span>
+<span><span class="co">#&gt;             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;  Intercept  4.0575982  0.25449128  15.94396         0  *** </span></span>
+<span><span class="co">#&gt;         x1  0.9660875  0.04676336  20.65907         0  *** </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; GLSW effects:</span></span>
+<span><span class="co">#&gt;             Mean Est.  Mean Sd.    ***     **      *      . </span></span>
+<span><span class="co">#&gt;  Intercept  -2.103489  0.565900  75.0%  25.0%   0.0%   0.0% </span></span>
+<span><span class="co">#&gt;         g1   6.948511  3.266527   0.0%   6.2%  62.5%  31.2% </span></span>
+<span><span class="co">#&gt;         g2   0.719551  3.296013   0.0%   0.0%   0.0%   0.0% </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; GLSW effect spatial heterogeneity:</span></span>
+<span><span class="co">#&gt;             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span></span>
+<span><span class="co">#&gt;  Intercept  0.268012  0.253645  0.031230  0.247266  0.000000  *** </span></span>
+<span><span class="co">#&gt;         g1  0.854396  0.809485  0.166221  0.805451  0.000000  *** </span></span>
+<span><span class="co">#&gt;         g2  0.722266  0.691518  0.142386  0.673427  0.000000  *** </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Bandwidth: 9.000016 (nearest neighbours)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SLR effects:</span></span>
+<span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
+<span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
+<span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual              0.000000  1.920528           </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Diagnostics</span></span>
+<span><span class="co">#&gt; -----------</span></span>
+<span><span class="co">#&gt;  rsquared  0.647039 </span></span>
+<span><span class="co">#&gt;    logLik       NaN </span></span>
+<span><span class="co">#&gt;       AIC       NaN </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Scaled Residuals</span></span>
+<span><span class="co">#&gt; ----------------</span></span>
+<span><span class="co">#&gt;        Min         1Q     Median        3Q       Max </span></span>
+<span><span class="co">#&gt;  -5.454886  -1.216360  -0.073301  1.247373  5.327542 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Other Information</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; Number of Obs: 484</span></span>
+<span><span class="co">#&gt;        Groups: group , 16</span></span></code></pre></div>
+<p>Some other methods are provided.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Intercept       g1          g2        x1         z1</span></span>
+<span><span class="co">#&gt; 1 0.8738330 7.721070  0.06175177 0.9660875 -0.1931416</span></span>
+<span><span class="co">#&gt; 2 3.3857847 6.335641  1.52880953 0.9660875  0.2870040</span></span>
+<span><span class="co">#&gt; 3 0.8175705 7.476406  0.84953498 0.9660875  1.2706663</span></span>
+<span><span class="co">#&gt; 4 2.4934172 7.398369  0.86755061 0.9660875 -0.5998743</span></span>
+<span><span class="co">#&gt; 5 5.9128656 8.628861 -0.86811997 0.9660875 -1.4658340</span></span>
+<span><span class="co">#&gt; 6 0.6129129 6.271144  1.35855541 0.9660875  0.6958578</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2.6579678 2.5879538 3.9085387 0.8865106 3.9384948 2.6547040</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">m_df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -1.4267714  0.1274905 -1.9104633  2.8806623  0.5553585 -1.9290357</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Print summary of an <code>hgwrm</code> object.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.5-0/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
       <div class="d-none name"><code>print.summary.hgwrm.Rd</code></div>
     </div>
 
@@ -113,15 +113,15 @@ Possible values are <code>"plain"</code>, <code>"md"</code> or <code>"latex"</co
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  2.8445086  0.25449128  11.17723         0  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         x1  0.9660594  0.04676336  20.65847         0  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Group-level spatially weighted effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   Min     1st Q.     Median     3rd Q.        Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -1.197344  -1.117052  -0.906456  -0.677988  -0.493596 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   5.969397   6.328338   7.136143   7.447083   8.481628 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2  -0.683021   0.043467   0.887209   1.174541   1.521918 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.881645  0.557562  0.0%  0.0%  25.0%  18.8% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.208388  0.0%  6.2%  62.5%  31.2% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.249016  0.0%  0.0%   0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sample-level random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>

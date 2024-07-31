@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Summary an <code>hgwrm</code> object.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.5-0/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
       <div class="d-none name"><code>summary.hgwrm.Rd</code></div>
     </div>
 
@@ -45,7 +45,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'hgwrm'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, test_hetero <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, test_hetero <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +66,11 @@ Whether to test the spatial heterogeneity of local fixed effects.
 If it is set to <code>FALSE</code>, the test will not be executed.
 If it is set to <code>TRUE</code>, the test will be executed with default parameters (see details below).
 It accepts a list to enable the test with specified parameters.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>An Integer value to control whether additional messages
+during testing spatial heterogeneity should be reported.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -96,6 +101,9 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 <dt><code>resample</code></dt>
 <dd><p>Total resampling times. Default: <code>5000</code>.</p></dd>
 
+<dt><code>kernel</code></dt>
+<dd><p>The kernel function used in the local polynomial estimation. Options are <code>"gaussian"</code> and <code>"bisquared"</code>. Default: <code>"bisquared"</code>.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
@@ -103,6 +111,162 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
     <div class="dont-index"><p><code><a href="hgwr.html">hgwr()</a></code>.</p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="hgwr.html">hgwr</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span> coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
+<span class="r-in"><span> bw <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  2.8445086  0.25449128  11.17723         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1  0.9660594  0.04676336  20.65847         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.881645  0.557562  0.0%  0.0%  25.0%  18.8% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.208388  0.0%  6.2%  62.5%  31.2% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.249016  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.647031 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q     Median        3Q       Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.456449  -1.215641  -0.072241  1.246953  5.329316 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span>, test_hetero <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  2.8445086  0.25449128  11.17723         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1  0.9660594  0.04676336  20.65847         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.881645  0.557562  0.0%  0.0%  25.0%  18.8% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.208388  0.0%  6.2%  62.5%  31.2% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.249016  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effect spatial heterogeneity:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  0.241211  0.230216  0.035692  0.228627  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1  0.736901  0.716578  0.109344  0.694086  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2  0.645812  0.622871  0.118444  0.606161  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.647031 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q     Median        3Q       Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.456449  -1.215641  -0.072241  1.246953  5.329316 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span>, test_hetero <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>kernel <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  2.8445086  0.25449128  11.17723         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1  0.9660594  0.04676336  20.65847         0  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.881645  0.557562  0.0%  0.0%  25.0%  18.8% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.208388  0.0%  6.2%  62.5%  31.2% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.249016  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effect spatial heterogeneity:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  0.241211  0.239693  0.127825  0.244467  0.002600   ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1  0.736901  0.732991  0.403952  0.738807  0.001000   ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2  0.645812  0.644046  0.352540  0.651728  0.000400  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.000000  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.647031 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q     Median        3Q       Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.456449  -1.215641  -0.072241  1.246953  5.329316 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
