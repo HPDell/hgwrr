@@ -578,6 +578,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (!inherits(x, "summary.hgwrm")) {
         stop("It's not a summary.hgwrm object.")
     }
+    args = list(...)
+    is_md = ifelse(!is.null(args$table.style), args$table.style == "md", FALSE)
 
     ### Call information
     cat("Hierarchical and geographically weighted regression model", fill = T)
@@ -597,6 +599,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     }
     pv_gfe <- x$significance$beta$pv
     stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
+    if (is_md) cat("\n")
     print.table.md(rbind(
         c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
@@ -626,6 +629,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("", gamma_stats_name),
         cbind(lfe, gamma_stats)
     )
+    if (is_md) cat("\n")
     print.table.md(gamma_str, ...)
     cat("\n")
     if (!is.null(x$f_test)) {
@@ -636,6 +640,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             c("", "F value", "Num. D.F.", "Den. D.F.", "Pr(>F)", ""),
             cbind(lfe, matrix2char(f_test_res), f_test_stars)
         )
+        if (is_md) cat("\n")
         print.table.md(f_test_str, ...)
         cat("\n")
     }
@@ -659,6 +664,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             c("", hetero_stats_name),
             cbind(lfe, hetero_stats)
         )
+        if (is_md) cat("\n")
         print.table.md(hetero_str, ...)
         cat("\n")
     }
@@ -689,6 +695,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         cbind(random_dev_str, random_corr_str),
         random_residual_str
     )
+    if (is_md) cat("\n")
     print.table.md(random_str, ...)
     cat("\n", fill = T)
 
@@ -699,6 +706,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         names(x$diagnostic),
         matrix2char(unlist(x$diagnostic), decimal.fmt)
     )
+    if (is_md) cat("\n")
     print.table.md(diagnostic_chr, ...)
     cat("\n")
 
@@ -711,6 +719,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("Min", "1Q", "Median", "3Q", "Max"),
         matrix2char(residual_fivenum_mat, decimal.fmt)
     )
+    if (is_md) cat("\n")
     print.table.md(residual_fivenum_chr, ...)
     cat("\n")
     cat("Other Information", fill = T)
