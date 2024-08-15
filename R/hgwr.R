@@ -636,7 +636,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             c("", "F value", "Num. D.F.", "Den. D.F.", "Pr(>F)", ""),
             cbind(lfe, matrix2char(f_test_res), f_test_stars)
         )
-        print.table.md(f_test_str)
+        print.table.md(f_test_str, ...)
         cat("\n")
     }
     if (!is.null(x$significance$gamma$hetero)) {
