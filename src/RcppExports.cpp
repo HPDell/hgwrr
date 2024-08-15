@@ -29,8 +29,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // hgwr_bfml
-List hgwr_bfml(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, double bw, int bw_optim, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, size_t verbose);
-RcppExport SEXP _hgwrr_hgwr_bfml(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP bw_optimSEXP, SEXP kernelSEXP, SEXP alphaSEXP, SEXP eps_iterSEXP, SEXP eps_gradientSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP ml_typeSEXP, SEXP verboseSEXP) {
+List hgwr_bfml(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, double bw, int bw_optim, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, bool f_test, size_t verbose);
+RcppExport SEXP _hgwrr_hgwr_bfml(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP bw_optimSEXP, SEXP kernelSEXP, SEXP alphaSEXP, SEXP eps_iterSEXP, SEXP eps_gradientSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP ml_typeSEXP, SEXP f_testSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,15 +49,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< size_t >::type max_iters(max_itersSEXP);
     Rcpp::traits::input_parameter< size_t >::type max_retries(max_retriesSEXP);
     Rcpp::traits::input_parameter< size_t >::type ml_type(ml_typeSEXP);
+    Rcpp::traits::input_parameter< bool >::type f_test(f_testSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(hgwr_bfml(g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, verbose));
+    rcpp_result_gen = Rcpp::wrap(hgwr_bfml(g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hgwrr_spatial_hetero_perm", (DL_FUNC) &_hgwrr_spatial_hetero_perm, 7},
-    {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 16},
+    {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 17},
     {NULL, NULL, 0}
 };
 

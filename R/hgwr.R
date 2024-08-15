@@ -92,7 +92,7 @@ hgwr <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     UseMethod("hgwr", data)
 }
@@ -109,7 +109,7 @@ hgwr.sf <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     ### Generate group-level coordinates by taking means
     data_coords <- sf::st_coordinates(sf::st_centroid(data))
@@ -139,7 +139,7 @@ hgwr.data.frame <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     mc0 <- mc <- match.call(expand.dots = TRUE)
     mc[[1]] <- as.name("hgwr_fit")
@@ -155,7 +155,7 @@ hgwr_fit <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     ### Extract variables
     kernel <- match.arg(kernel)
@@ -205,7 +205,7 @@ hgwr_fit <- function(
             g, x, z, y, as.matrix(coords), group_index, bw_value, bw_criterion, kernel_index,
             alpha, eps_iter, eps_gradient,
             as.integer(max_iters), as.integer(max_retries),
-            as.integer(ml_type), as.integer(verbose)
+            as.integer(ml_type), f_test, as.integer(verbose)
         )
     }, error = function(e) {
         stop("Error occurred when estimating HGWR parameters.")
@@ -602,6 +602,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
     ), ...)
     cat("\n")
+    cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
+    cat("\n")
     cat("GLSW effects:", fill = T)
     lfe <- x$effects$local.fixed
     if (x$intercept$local) {
@@ -626,6 +628,17 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     )
     print.table.md(gamma_str, ...)
     cat("\n")
+    if (!is.null(x$f_test)) {
+        cat("GLSW effect F test:", fill = T)
+        f_test_res <- do.call(rbind, x$f_test)
+        f_test_stars <-  vapply(f_test_res[,4], FUN = pv2stars, rep(" ", n = nrow(f_test_res)))
+        f_test_str <- rbind(
+            c("", "F value", "Num. D.F.", "Den. D.F.", "Pr(>F)", ""),
+            cbind(lfe, matrix2char(f_test_res), f_test_stars)
+        )
+        print.table.md(f_test_str)
+        cat("\n")
+    }
     if (!is.null(x$significance$gamma$hetero)) {
         cat("GLSW effect spatial heterogeneity:", fill = T)
         h_gamma <- x$significance$gamma$hetero
@@ -649,8 +662,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         print.table.md(hetero_str, ...)
         cat("\n")
     }
-    cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
-    cat("\n")
     cat("SLR effects:", fill = T)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr
