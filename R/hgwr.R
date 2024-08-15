@@ -602,6 +602,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
     ), ...)
     cat("\n")
+    cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
+    cat("\n")
     cat("GLSW effects:", fill = T)
     lfe <- x$effects$local.fixed
     if (x$intercept$local) {
@@ -626,6 +628,17 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     )
     print.table.md(gamma_str, ...)
     cat("\n")
+    if (!is.null(x$f_test)) {
+        cat("GLSW effect F test:", fill = T)
+        f_test_res <- do.call(rbind, x$f_test)
+        f_test_stars <-  vapply(f_test_res[,4], FUN = pv2stars, rep(" ", n = nrow(f_test_res)))
+        f_test_str <- rbind(
+            c("", "F value", "Num. D.F.", "Den. D.F.", "Pr(>F)", ""),
+            cbind(lfe, matrix2char(f_test_res), f_test_stars)
+        )
+        print.table.md(f_test_str)
+        cat("\n")
+    }
     if (!is.null(x$significance$gamma$hetero)) {
         cat("GLSW effect spatial heterogeneity:", fill = T)
         h_gamma <- x$significance$gamma$hetero
@@ -649,8 +662,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         print.table.md(hetero_str, ...)
         cat("\n")
     }
-    cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
-    cat("\n")
     cat("SLR effects:", fill = T)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr

@@ -58,7 +58,7 @@ List hgwr_bfml(
     if (f_test)
     {
         auto ftest_result = algorithm.test_glsw();
-        results["ftest"] = ftest_result;
+        results["f_test"] = ftest_result;
     }
 
     return results;
