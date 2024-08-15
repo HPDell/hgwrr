@@ -92,7 +92,7 @@ hgwr <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     UseMethod("hgwr", data)
 }
@@ -109,7 +109,7 @@ hgwr.sf <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     ### Generate group-level coordinates by taking means
     data_coords <- sf::st_coordinates(sf::st_centroid(data))
@@ -139,7 +139,7 @@ hgwr.data.frame <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     mc0 <- mc <- match.call(expand.dots = TRUE)
     mc[[1]] <- as.name("hgwr_fit")
@@ -155,7 +155,7 @@ hgwr_fit <- function(
     kernel = c("gaussian", "bisquared"),
     alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
     max_iters = 1e6, max_retries = 1e6,
-    ml_type = c("D_Only", "D_Beta"), verbose = 0
+    ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
     ### Extract variables
     kernel <- match.arg(kernel)
@@ -205,7 +205,7 @@ hgwr_fit <- function(
             g, x, z, y, as.matrix(coords), group_index, bw_value, bw_criterion, kernel_index,
             alpha, eps_iter, eps_gradient,
             as.integer(max_iters), as.integer(max_retries),
-            as.integer(ml_type), as.integer(verbose)
+            as.integer(ml_type), f_test, as.integer(verbose)
         )
     }, error = function(e) {
         stop("Error occurred when estimating HGWR parameters.")

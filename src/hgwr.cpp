@@ -24,6 +24,7 @@ List hgwr_bfml(
     size_t max_iters,
     size_t max_retries,
     size_t ml_type,
+    bool f_test,
     size_t verbose
 ) {
     arma::uvec mgroup = arma::conv_to<arma::uvec>::from(group) - 1;
@@ -37,9 +38,9 @@ List hgwr_bfml(
         algorithm.set_bw_criterion_type(HGWR::BwOptimCriterionType(bw_optim));
     }
     algorithm.set_printer(&prcout);
-    auto hgwr_result = algorithm.fit();
+    auto hgwr_result = algorithm.fit(f_test);
 
-    return List::create(
+    auto results = List::create(
         Named("gamma") = hgwr_result.gamma,
         Named("beta") = hgwr_result.beta,
         Named("mu") = hgwr_result.mu,
@@ -53,4 +54,12 @@ List hgwr_bfml(
         Named("edf") = algorithm.edf(),
         Named("enp") = algorithm.enp()
     );
+
+    if (f_test)
+    {
+        auto ftest_result = algorithm.test_glsw();
+        results["ftest"] = ftest_result;
+    }
+
+    return results;
 }
