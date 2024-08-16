@@ -49,6 +49,7 @@ print.table.md <- function(
             header.sep <- ifelse(missing(header.sep), "-", header.sep)
             row.begin <- ifelse(missing(row.begin), "|", row.begin)
             row.end <- ifelse(missing(row.end), "|", row.end)
+            table.before <- ifelse(missing(table.before), "", table.before)
         } else if (table.style == "latex") {
             col.sep <- ifelse(missing(col.sep), "&", col.sep)
             header.sep <- ifelse(missing(header.sep), "", header.sep)
