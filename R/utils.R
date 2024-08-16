@@ -39,6 +39,19 @@ print.table.md <- function(
     table.style = c("plain", "md", "latex", "booktabs"),
     ...
 ) {
+    ### Special characters
+    if (!missing(table.style)) {
+        if (table.style == "md") {
+            x <- apply(x, c(1, 2), function(t) {
+                gsub("([\\|*])", "\\\\\\1", t)
+            })
+        } else if (table.style == "latex" || table.style == "booktabs") {
+            x <- apply(x, c(1, 2), function(t) {
+                gsub("([&%])", "\\\\\\1", t)
+            })
+        }
+    }
+    ### Process formats
     x.length <- apply(x, c(1, 2), nchar)
     x.length.max <- apply(x.length, 2, max)
     x.fmt <- sprintf("%%%ds", x.length.max)
