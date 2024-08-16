@@ -506,34 +506,36 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (intercept$local) effects$local.fixed <- c("Intercept", effects$local.fixed)
     if (intercept$random) effects$random <- c("Intercept", effects$random)
     cat("Global Fixed Effects", fill = T)
-    cat("-------------------", fill = T)
+    cat("--------------------", fill = T)
     beta_str <- rbind(
         effects$global.fixed,
-        matrix2char(t(x$beta))
+        matrix2char(t(x$beta), decimal.fmt)
     )
     print.table.md(beta_str, ...)
     cat("\n")
     cat("Group-level Spatially Weighted Effects", fill = T)
-    cat("-------------------", fill = T)
+    cat("--------------------------------------", fill = T)
     cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)
+    cat("\n")
+    cat("Coefficient estimates:", fill = T)
     gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
     gamma_str <- rbind(
         c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-        cbind(effects$local.fixed, matrix2char(gamma_fivenum))
+        cbind(effects$local.fixed, matrix2char(gamma_fivenum, decimal.fmt))
     )
     print.table.md(gamma_str, ...)
     cat("\n")
     cat("Sample-level Random Effects", fill = T)
-    cat("--------------", fill = T)
+    cat("---------------------------", fill = T)
     x <- summary.hgwrm(x)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr
-    random_corr_str <- matrix2char(random_corr)
+    random_corr_str <- matrix2char(random_corr, decimal.fmt)
     random_corr_str[!lower.tri(random_corr)] <- ""
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
     random_dev_str <- cbind(
-        "", effects$random, matrix2char(matrix(random_stddev, ncol = 1))
+        "", effects$random, matrix2char(matrix(random_stddev, ncol = 1), decimal.fmt)
     )
     random_dev_str[1, 1] <- effects$group
     random_dev_str <- rbind(
@@ -599,7 +601,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     }
     pv_gfe <- x$significance$beta$pv
     stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
-    if (is_md) cat("\n")
     print.table.md(rbind(
         c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
         as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
@@ -620,8 +621,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     ) })) * 100
     rownames(s_gamma) <- lfe
     gamma_stats <- cbind(
-        gamma_mean <- matrix2char(as.vector(colMeans(x$gamma))),
-        gamma_se_mean <- matrix2char(as.vector(colMeans(x$gamma_se))),
+        gamma_mean <- matrix2char(as.vector(colMeans(x$gamma)), decimal.fmt),
+        gamma_se_mean <- matrix2char(as.vector(colMeans(x$gamma_se)), decimal.fmt),
         matrix2char(s_gamma, fmt = "%.1f%%")
     )
     gamma_stats_name <- c("Mean Est.", "Mean Sd.", colnames(s_gamma))
@@ -629,7 +630,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("", gamma_stats_name),
         cbind(lfe, gamma_stats)
     )
-    if (is_md) cat("\n")
     print.table.md(gamma_str, ...)
     cat("\n")
     if (!is.null(x$f_test)) {
@@ -638,9 +638,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         f_test_stars <-  vapply(f_test_res[,4], FUN = pv2stars, rep(" ", n = nrow(f_test_res)))
         f_test_str <- rbind(
             c("", "F value", "Num. D.F.", "Den. D.F.", "Pr(>F)", ""),
-            cbind(lfe, matrix2char(f_test_res), f_test_stars)
+            cbind(lfe, matrix2char(f_test_res, decimal.fmt), f_test_stars)
         )
-        if (is_md) cat("\n")
         print.table.md(f_test_str, ...)
         cat("\n")
     }
@@ -654,7 +653,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             t.min = apply(h_gamma$t, 2, min),
             t.max = apply(h_gamma$t, 2, max),
             pv = pv_hetero
-        ))
+        ), decimal.fmt)
         hetero_stats <- cbind(
             hetero_stats,
             stars = vapply(pv_hetero, pv2stars, rep(" ", n = length(pv_hetero)))
@@ -664,14 +663,13 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
             c("", hetero_stats_name),
             cbind(lfe, hetero_stats)
         )
-        if (is_md) cat("\n")
         print.table.md(hetero_str, ...)
         cat("\n")
     }
     cat("SLR effects:", fill = T)
     random_stddev <- x$random.stddev
     random_corr <- x$random.corr
-    random_corr_str <- matrix2char(random_corr)
+    random_corr_str <- matrix2char(random_corr, decimal.fmt)
     random_corr_str[!lower.tri(random_corr)] <- ""
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
@@ -680,7 +678,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         re <- c("Intercept", re)
     }
     random_dev_str <- cbind(
-        "", re, matrix2char(cbind(colMeans(x$mu), matrix(random_stddev, ncol = 1)))
+        "", re, matrix2char(cbind(colMeans(x$mu), matrix(random_stddev, ncol = 1)), decimal.fmt)
     )
     random_dev_str[1, 1] <- x$effects$group
     random_dev_str <- rbind(
@@ -695,7 +693,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         cbind(random_dev_str, random_corr_str),
         random_residual_str
     )
-    if (is_md) cat("\n")
     print.table.md(random_str, ...)
     cat("\n", fill = T)
 
@@ -706,7 +703,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         names(x$diagnostic),
         matrix2char(unlist(x$diagnostic), decimal.fmt)
     )
-    if (is_md) cat("\n")
     print.table.md(diagnostic_chr, ...)
     cat("\n")
 
@@ -719,7 +715,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("Min", "1Q", "Median", "3Q", "Max"),
         matrix2char(residual_fivenum_mat, decimal.fmt)
     )
-    if (is_md) cat("\n")
     print.table.md(residual_fivenum_chr, ...)
     cat("\n")
     cat("Other Information", fill = T)
