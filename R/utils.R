@@ -32,44 +32,55 @@
 #' In this function, characters are right padded by spaces.
 #'
 #' @seealso [print.hgwrm()], [summary.hgwrm()].
-print.table.md <- function(x, col.sep = "", header.sep = "",
-                           row.begin = "", row.end = "",
-                           table.style = c("plain", "md", "latex"), ...) {
+print.table.md <- function(
+    x, col.sep = "", header.sep = "",
+    row.begin = "", row.end = "",
+    table.before = NA_character_, table.after = NA_character_,
+    table.style = c("plain", "md", "latex", "booktabs"),
+    ...
+) {
+    x.length <- apply(x, c(1, 2), nchar)
+    x.length.max <- apply(x.length, 2, max)
+    x.fmt <- sprintf("%%%ds", x.length.max)
     if (!missing(table.style)) {
         table.style <- match.arg(table.style)
         if (table.style == "md") {
-            col.sep <- "|"
-            header.sep <- "-"
-            row.begin <- "|"
-            row.end <- "|"
+            col.sep <- ifelse(missing(col.sep), "|", col.sep)
+            header.sep <- ifelse(missing(header.sep), "-", header.sep)
+            row.begin <- ifelse(missing(row.begin), "|", row.begin)
+            row.end <- ifelse(missing(row.end), "|", row.end)
         } else if (table.style == "latex") {
-            col.sep <- "&"
-            header.sep <- ""
-            row.begin <- ""
-            row.end <- "\\\\"
+            col.sep <- ifelse(missing(col.sep), "&", col.sep)
+            header.sep <- ifelse(missing(header.sep), "", header.sep)
+            row.begin <- ifelse(missing(row.begin), "", row.begin)
+            row.end <- ifelse(missing(row.end), "\\\\", row.end)
+            table.before <- ifelse(missing(table.before), sprintf("\\begin{tabular}{%s}", paste(rep("l", times = ncol(x)), collapse = "")), table.before)
+            table.after <- ifelse(missing(table.after), "\\end{tabular}", table.after)
         } else if (table.style == "plain") {
-            col.sep <- ""
-            header.sep <- ""
-            row.begin <- ""
-            row.end <- ""
+            col.sep <- ifelse(missing(col.sep), "", col.sep)
+            header.sep <- ifelse(missing(header.sep), "", header.sep)
+            row.begin <- ifelse(missing(row.begin), "", row.begin)
+            row.end <- ifelse(missing(row.end), "", row.end)
+        } else if (table.style == "booktabs") {
+            col.sep <- ifelse(missing(col.sep), "&", col.sep)
+            header.sep <- ifelse(missing(header.sep), "\\midrule", header.sep)
+            row.begin <- ifelse(missing(row.begin), "", row.begin)
+            row.end <- ifelse(missing(row.end), "\\\\", row.end)
+            table.before <- ifelse(missing(table.before), sprintf("\\begin{tabular}{%s}\n\\toprule", paste(rep("l", times = ncol(x)), collapse = "")), table.before)
+            table.after <- ifelse(missing(table.after), "\\bottomrule\n\\end{tabular}", table.after)
         } else {
            stop("Unknown table.style.")
         }
     }
-    if (nchar(header.sep) > 1) {
-       stop("Currently only 1 character header.sep is supported.")
-    }
     ### Print table
-    x.length <- apply(x, c(1, 2), nchar)
-    x.length.max <- apply(x.length, 2, max)
-    x.fmt <- sprintf("%%%ds", x.length.max)
+    if (!is.na(table.before)) cat(table.before, fill = T)
     for(c in 1:ncol(x)) {
         if(x.length.max[c] > 0)
             cat(ifelse(c == 1, row.begin, col.sep),
                 sprintf(x.fmt[c], x[1, c]), "")
     }
     cat(paste0(row.end, "\n"))
-    if (nchar(header.sep) > 0) {
+    if (nchar(header.sep) == 1) {
         for(c in 1:ncol(x)) {
             if(x.length.max[c] > 0) {
                 header.sep.full <- paste(rep("-", x.length.max[c]),
@@ -79,6 +90,8 @@ print.table.md <- function(x, col.sep = "", header.sep = "",
             }
         }
         cat(paste0(row.end, "\n"))
+    } else if (nchar(header.sep) > 1) {
+        cat(paste0(header.sep, "\n"))
     }
     for (r in 2:nrow(x)) {
         for (c in 1:ncol(x)) {
@@ -88,6 +101,7 @@ print.table.md <- function(x, col.sep = "", header.sep = "",
         }
         cat(paste0(row.end, "\n"))
     }
+    if (!is.na(table.after)) cat(table.after, fill = T)
 }
 
 #' Convert a numeric matrix to character matrix according to a format string.
