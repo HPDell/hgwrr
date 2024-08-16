@@ -60,7 +60,7 @@
 #'  \item{\code{frame}}{The DataFrame object sent to this call.}
 #'  \item{\code{frame.parsed}}{Variables extracted from the data.}
 #'  \item{\code{groups}}{Unique group labels extracted from the data.}
-#'  \item{\code{f_test}}{A list of F test for GLSW effects. Only exists when `f_test=TRUE`. Each item contains the F value, degrees of freedom in the numerator, degrees of freedom in the denominator, and $p$ value of $F>F_\alpha$.}
+#'  \item{\code{f_test}}{A list of F test for GLSW effects. Only exists when `f_test=TRUE`. Each item contains the F value, degrees of freedom in the numerator, degrees of freedom in the denominator, and \eqn{p} value of \eqn{F>F_\alpha}.}
 #' }
 #' 
 #' @details  
