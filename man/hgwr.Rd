@@ -19,6 +19,7 @@ hgwr(
   max_iters = 1e+06,
   max_retries = 1e+06,
   ml_type = c("D_Only", "D_Beta"),
+  f_test = FALSE,
   verbose = 0
 )
 
@@ -34,6 +35,7 @@ hgwr(
   max_iters = 1e+06,
   max_retries = 1e+06,
   ml_type = c("D_Only", "D_Beta"),
+  f_test = FALSE,
   verbose = 0
 )
 
@@ -50,6 +52,7 @@ hgwr(
   max_iters = 1e+06,
   max_retries = 1e+06,
   ml_type = c("D_Only", "D_Beta"),
+  f_test = FALSE,
   verbose = 0
 )
 
@@ -65,6 +68,7 @@ hgwr_fit(
   max_iters = 1e+06,
   max_retries = 1e+06,
   ml_type = c("D_Only", "D_Beta"),
+  f_test = FALSE,
   verbose = 0
 )
 }
@@ -116,6 +120,10 @@ algorithm is used. Possible values are:
 \item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
 }}
 
+\item{f_test}{A logical value. Determine whether to do F test on GLSW effects.
+If \code{f_test=TURE}, there will be a \code{f_test} item in the returned object
+showing the F test for each GLSW effect.}
+
 \item{verbose}{An integer value. Determine the log level.
 Possible values are:
 \describe{
@@ -140,6 +148,7 @@ A list describing the model with following fields.
 \item{\code{frame}}{The DataFrame object sent to this call.}
 \item{\code{frame.parsed}}{Variables extracted from the data.}
 \item{\code{groups}}{Unique group labels extracted from the data.}
+\item{\code{f_test}}{A list of F test for GLSW effects. Only exists when \code{f_test=TRUE}. Each item contains the F value, degrees of freedom in the numerator, degrees of freedom in the denominator, and $p$ value of $F>F_\alpha$.}
 }
 }
 \description{
@@ -177,5 +186,14 @@ hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
      data = multisampling$data,
      coords = multisampling$coords,
      bw = 10)
+
+mod_Ftest <-hgwr(
+ formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+ data = multisampling$data,
+ coords = multisampling$coords,
+ bw = 10
+)
+summary(mod_Ftest)
+
 
 }

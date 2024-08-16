@@ -37,6 +37,9 @@
 #'  \item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
 #'  \item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
 #' }
+#' @param f_test A logical value. Determine whether to do F test on GLSW effects.
+#' If `f_test=TURE`, there will be a `f_test` item in the returned object
+#' showing the F test for each GLSW effect.
 #' @param verbose An integer value. Determine the log level.
 #' Possible values are:
 #' \describe{
@@ -57,6 +60,7 @@
 #'  \item{\code{frame}}{The DataFrame object sent to this call.}
 #'  \item{\code{frame.parsed}}{Variables extracted from the data.}
 #'  \item{\code{groups}}{Unique group labels extracted from the data.}
+#'  \item{\code{f_test}}{A list of F test for GLSW effects. Only exists when `f_test=TRUE`. Each item contains the F value, degrees of freedom in the numerator, degrees of freedom in the denominator, and $p$ value of $F>F_\alpha$.}
 #' }
 #' 
 #' @details  
@@ -83,6 +87,15 @@
 #'      data = multisampling$data,
 #'      coords = multisampling$coords,
 #'      bw = 10)
+#' 
+#' mod_Ftest <-hgwr(
+#'  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+#'  data = multisampling$data,
+#'  coords = multisampling$coords,
+#'  bw = 10
+#' )
+#' summary(mod_Ftest)
+#' 
 #' 
 #' @importFrom stats aggregate
 #' 
