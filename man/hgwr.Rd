@@ -138,10 +138,10 @@ It consists of coordinates for each group.}
 \value{
 A list describing the model with following fields.
 \describe{
-\item{\code{gamma}}{Coefficients of local fixed effects.}
-\item{\code{beta}}{Coefficients of global fixed effects.}
-\item{\code{mu}}{Coefficients of random effects.}
-\item{\code{D}}{Variance-covariance matrix of random effects.}
+\item{\code{gamma}}{Coefficients of group-level spatially weighted effects.}
+\item{\code{beta}}{Coefficients of fixed effects.}
+\item{\code{mu}}{Coefficients of sample-level random effects.}
+\item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
 \item{\code{sigma}}{Variance of errors.}
 \item{\code{effects}}{A list including names of all effects.}
 \item{\code{call}}{Calling of this function.}
@@ -152,7 +152,7 @@ A list describing the model with following fields.
 }
 }
 \description{
-A Hierarchical Linear Model (HLM) with local fixed effects.
+A Hierarchical Linear Model (HLM) with group-level geographically weighted effects.
 }
 \details{
 \subsection{Effect Specification in Formula}{
@@ -160,19 +160,19 @@ A Hierarchical Linear Model (HLM) with local fixed effects.
 In the HGWR model, there are three types of effects specified by the
 \code{formula} argument:
 \describe{
-\item{Local fixed effects}{Effects wrapped by functional symbol \code{L}.}
-\item{Random effects}{Effects specified outside the functional symbol \code{L} but to the left of symbol \code{|}.}
-\item{Global fixed effects}{Other effects}
+\item{Group-level spatially weighted (GLSW, aka. local fixed) effects}{Effects wrapped by functional symbol \code{L}.}
+\item{Sample-level random (SLR) effects}{Effects specified outside the functional symbol \code{L} but to the left of symbol \code{|}.}
+\item{Fixed effects}{Other effects}
 }
 For example, the following formula in the example of this function below is written as
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{y ~ L(g1 + g2) + x1 + (z1 | group)
 }\if{html}{\out{</div>}}
 
-where \code{g1} and \code{g2} are local fixed effects,
-\code{x1} is the global fixed effects,
-and \code{z1} is the random effects grouped by the group indicator \code{group}.
-Note that random effects can only be specified once!
+where \code{g1} and \code{g2} are GLSW effects,
+\code{x1} is the fixed effects,
+and \code{z1} is the SLR effects grouped by the group indicator \code{group}.
+Note that SLR effects can only be specified once!
 }
 }
 \section{Functions}{

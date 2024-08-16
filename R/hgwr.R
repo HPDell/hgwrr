@@ -1,6 +1,6 @@
 #' Hierarchical and Geographically Weighted Regression
 #'
-#' A Hierarchical Linear Model (HLM) with local fixed effects.
+#' A Hierarchical Linear Model (HLM) with group-level geographically weighted effects.
 #'
 #' @param formula A formula.
 #' Its structure is similar to \code{\link[lme4]{lmer}} function
@@ -50,10 +50,10 @@
 #'
 #' @return A list describing the model with following fields.
 #' \describe{
-#'  \item{\code{gamma}}{Coefficients of local fixed effects.}
-#'  \item{\code{beta}}{Coefficients of global fixed effects.}
-#'  \item{\code{mu}}{Coefficients of random effects.}
-#'  \item{\code{D}}{Variance-covariance matrix of random effects.}
+#'  \item{\code{gamma}}{Coefficients of group-level spatially weighted effects.}
+#'  \item{\code{beta}}{Coefficients of fixed effects.}
+#'  \item{\code{mu}}{Coefficients of sample-level random effects.}
+#'  \item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
 #'  \item{\code{sigma}}{Variance of errors.}
 #'  \item{\code{effects}}{A list including names of all effects.}
 #'  \item{\code{call}}{Calling of this function.}
@@ -68,18 +68,18 @@
 #' In the HGWR model, there are three types of effects specified by the
 #' `formula` argument:
 #' \describe{
-#'  \item{Local fixed effects}{Effects wrapped by functional symbol `L`.}
-#'  \item{Random effects}{Effects specified outside the functional symbol `L` but to the left of symbol `|`.}
-#'  \item{Global fixed effects}{Other effects}
+#'  \item{Group-level spatially weighted (GLSW, aka. local fixed) effects}{Effects wrapped by functional symbol `L`.}
+#'  \item{Sample-level random (SLR) effects}{Effects specified outside the functional symbol `L` but to the left of symbol `|`.}
+#'  \item{Fixed effects}{Other effects}
 #' }
 #' For example, the following formula in the example of this function below is written as
 #' ```r
 #' y ~ L(g1 + g2) + x1 + (z1 | group)
 #' ```
-#' where `g1` and `g2` are local fixed effects,
-#' `x1` is the global fixed effects,
-#' and `z1` is the random effects grouped by the group indicator `group`.
-#' Note that random effects can only be specified once!
+#' where `g1` and `g2` are GLSW effects,
+#' `x1` is the fixed effects,
+#' and `z1` is the SLR effects grouped by the group indicator `group`.
+#' Note that SLR effects can only be specified once!
 #'
 #' @examples
 #' data(multisampling)
@@ -334,7 +334,7 @@ residuals.hgwrm <- function(object, ...) {
 #' @param object An `hgwrm` object returned from [hgwr()].
 #' @param \dots Other arguments passed from other functions.
 #' @param test_hetero Logical/list value.
-#' Whether to test the spatial heterogeneity of local fixed effects.
+#' Whether to test the spatial heterogeneity of GLSW effects.
 #' If it is set to `FALSE`, the test will not be executed.
 #' If it is set to `TRUE`, the test will be executed with default parameters (see details below).
 #' It accepts a list to enable the test with specified parameters.
@@ -518,8 +518,8 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     if (intercept$fixed) effects$global.fixed <- c("Intercept", effects$global.fixed)
     if (intercept$local) effects$local.fixed <- c("Intercept", effects$local.fixed)
     if (intercept$random) effects$random <- c("Intercept", effects$random)
-    cat("Global Fixed Effects", fill = T)
-    cat("--------------------", fill = T)
+    cat("Fixed Effects", fill = T)
+    cat("-------------", fill = T)
     beta_str <- rbind(
         effects$global.fixed,
         matrix2char(t(x$beta), decimal.fmt)
