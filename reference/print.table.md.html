@@ -51,7 +51,9 @@
 <span>  header.sep <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  row.begin <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  row.end <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  table.style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plain"</span>, <span class="st">"md"</span>, <span class="st">"latex"</span><span class="op">)</span>,</span>
+<span>  table.before <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  table.after <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  table.style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plain"</span>, <span class="st">"md"</span>, <span class="st">"latex"</span>, <span class="st">"booktabs"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -69,7 +71,9 @@
 
 
 <dt id="arg-header-sep">header.sep<a class="anchor" aria-label="anchor" href="#arg-header-sep"></a></dt>
-<dd><p>Header separator. Default to <code>"-"</code>.</p></dd>
+<dd><p>Header separator. Default to <code>"-"</code>.
+If <code>header.sep</code> only contains one character, it will be repeated for each column.
+If it contains more than one character, it will be printed below the first row.</p></dd>
 
 
 <dt id="arg-row-begin">row.begin<a class="anchor" aria-label="anchor" href="#arg-row-begin"></a></dt>
@@ -82,9 +86,17 @@ Default to <code>col.sep</code>.</p></dd>
 Default to <code>col.sep</code>.</p></dd>
 
 
+<dt id="arg-table-before">table.before<a class="anchor" aria-label="anchor" href="#arg-table-before"></a></dt>
+<dd><p>Characters to be printed before the table.</p></dd>
+
+
+<dt id="arg-table-after">table.after<a class="anchor" aria-label="anchor" href="#arg-table-after"></a></dt>
+<dd><p>Characters to be printed after the table.</p></dd>
+
+
 <dt id="arg-table-style">table.style<a class="anchor" aria-label="anchor" href="#arg-table-style"></a></dt>
 <dd><p>Name of pre-defined style.
-Possible values are <code>"plain"</code>, <code>"md"</code> or <code>"latex"</code>. Default to <code>"plain"</code>.</p></dd>
+Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code>, or <code>"booktabs"</code>. Default to <code>"plain"</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

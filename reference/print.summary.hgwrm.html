@@ -65,7 +65,9 @@
 <dd><p>Column separator. Default to <code>""</code>.</p></dd>
 
     <dt><code>header.sep</code></dt>
-<dd><p>Header separator. Default to <code>"-"</code>.</p></dd>
+<dd><p>Header separator. Default to <code>"-"</code>.
+If <code>header.sep</code> only contains one character, it will be repeated for each column.
+If it contains more than one character, it will be printed below the first row.</p></dd>
 
     <dt><code>row.begin</code></dt>
 <dd><p>Character at the beginning of each row.
@@ -75,9 +77,15 @@ Default to <code>col.sep</code>.</p></dd>
 <dd><p>Character at the ending of each row.
 Default to <code>col.sep</code>.</p></dd>
 
+    <dt><code>table.before</code></dt>
+<dd><p>Characters to be printed before the table.</p></dd>
+
+    <dt><code>table.after</code></dt>
+<dd><p>Characters to be printed after the table.</p></dd>
+
     <dt><code>table.style</code></dt>
 <dd><p>Name of pre-defined style.
-Possible values are <code>"plain"</code>, <code>"md"</code> or <code>"latex"</code>. Default to <code>"plain"</code>.</p></dd>
+Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code>, or <code>"booktabs"</code>. Default to <code>"plain"</code>.</p></dd>
 
 
 </dl></dd>
