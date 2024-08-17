@@ -15,13 +15,17 @@
   Arguments passed on to \code{\link[=print.table.md]{print.table.md}}
   \describe{
     \item{\code{col.sep}}{Column separator. Default to \code{""}.}
-    \item{\code{header.sep}}{Header separator. Default to \code{"-"}.}
+    \item{\code{header.sep}}{Header separator. Default to \code{"-"}.
+If \code{header.sep} only contains one character, it will be repeated for each column.
+If it contains more than one character, it will be printed below the first row.}
     \item{\code{row.begin}}{Character at the beginning of each row.
 Default to \code{col.sep}.}
     \item{\code{row.end}}{Character at the ending of each row.
 Default to \code{col.sep}.}
+    \item{\code{table.before}}{Characters to be printed before the table.}
+    \item{\code{table.after}}{Characters to be printed after the table.}
     \item{\code{table.style}}{Name of pre-defined style.
-Possible values are \code{"plain"}, \code{"md"} or \code{"latex"}. Default to \code{"plain"}.}
+Possible values are \code{"plain"}, \code{"md"}, \code{"latex"}, or \code{"booktabs"}. Default to \code{"plain"}.}
   }}
 }
 \value{

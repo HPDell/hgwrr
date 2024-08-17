@@ -5,12 +5,16 @@
 #' @param x A character matrix.
 #' @param col.sep Column separator. Default to `""`.
 #' @param header.sep Header separator. Default to `"-"`.
+#' If `header.sep` only contains one character, it will be repeated for each column.
+#' If it contains more than one character, it will be printed below the first row.
 #' @param row.begin Character at the beginning of each row.
 #' Default to `col.sep`.
 #' @param row.end Character at the ending of each row.
 #' Default to `col.sep`.
+#' @param table.before Characters to be printed before the table.
+#' @param table.after Characters to be printed after the table.
 #' @param table.style Name of pre-defined style.
-#' Possible values are `"plain"`, `"md"` or `"latex"`. Default to `"plain"`.
+#' Possible values are `"plain"`, `"md"`, `"latex"`, or `"booktabs"`. Default to `"plain"`.
 #' @param \dots Additional style control arguments.
 #'
 #' @return No return.

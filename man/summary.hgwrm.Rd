@@ -12,7 +12,7 @@
 \item{\dots}{Other arguments passed from other functions.}
 
 \item{test_hetero}{Logical/list value.
-Whether to test the spatial heterogeneity of local fixed effects.
+Whether to test the spatial heterogeneity of GLSW effects.
 If it is set to \code{FALSE}, the test will not be executed.
 If it is set to \code{TRUE}, the test will be executed with default parameters (see details below).
 It accepts a list to enable the test with specified parameters.}

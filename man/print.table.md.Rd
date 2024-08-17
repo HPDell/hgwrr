@@ -10,7 +10,9 @@
   header.sep = "",
   row.begin = "",
   row.end = "",
-  table.style = c("plain", "md", "latex"),
+  table.before = NA_character_,
+  table.after = NA_character_,
+  table.style = c("plain", "md", "latex", "booktabs"),
   ...
 )
 }
@@ -19,7 +21,9 @@
 
 \item{col.sep}{Column separator. Default to \code{""}.}
 
-\item{header.sep}{Header separator. Default to \code{"-"}.}
+\item{header.sep}{Header separator. Default to \code{"-"}.
+If \code{header.sep} only contains one character, it will be repeated for each column.
+If it contains more than one character, it will be printed below the first row.}
 
 \item{row.begin}{Character at the beginning of each row.
 Default to \code{col.sep}.}
@@ -27,8 +31,12 @@ Default to \code{col.sep}.}
 \item{row.end}{Character at the ending of each row.
 Default to \code{col.sep}.}
 
+\item{table.before}{Characters to be printed before the table.}
+
+\item{table.after}{Characters to be printed after the table.}
+
 \item{table.style}{Name of pre-defined style.
-Possible values are \code{"plain"}, \code{"md"} or \code{"latex"}. Default to \code{"plain"}.}
+Possible values are \code{"plain"}, \code{"md"}, \code{"latex"}, or \code{"booktabs"}. Default to \code{"plain"}.}
 
 \item{\dots}{Additional style control arguments.}
 }
