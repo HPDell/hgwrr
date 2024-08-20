@@ -187,15 +187,35 @@ hgwr_fit <- function(
     group <- data[[model_desc$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
-    z <- as.matrix(make.dummy(data[model_desc$random.effects]))
-    if (model_desc$intercept$random) z <- cbind(1, z)
+    if (length(model_desc$random.effects) > 0) {
+        z <- as.matrix(make.dummy(data[model_desc$random.effects]))
+        if (is.numeric(model_desc$intercept$random)) {
+            z <- cbind(model_desc$intercept$random, z)
+        }
+    } else {
+        if (is.numeric(model_desc$intercept$random)) z <- matrix(rep(model_desc$intercept$random, times = nrow(data)), ncol = 1)
+        else stop("Please provide a SLR effect (including intercept) or use other models.")
+    }
     gfe <- model_desc$fixed.effects
     lfe <- model_desc$local.fixed.effects
-    x <- as.matrix(make.dummy(data[gfe]))
-    if (model_desc$intercept$fixed) x <- cbind(1, x)
-    g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
-    if (model_desc$intercept$local) g <- cbind(1, g)
-
+    if (length(model_desc$fixed.effects) > 0) {
+        x <- as.matrix(make.dummy(data[gfe]))
+        if (is.numeric(model_desc$intercept$fixed)) {
+            x <- cbind(model_desc$intercept$fixed, x)
+        }
+    } else {
+        if (is.numeric(model_desc$intercept$fixed)) x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
+        else stop("Please provide a fixed effect (including intercept) or use other models.")
+    }
+    if (length(model_desc$local.fixed.effects) > 0) {
+        g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
+        if (is.numeric(model_desc$intercept$local)) {
+            g <- cbind(model_desc$intercept$local, g)
+        }
+    } else {
+        if (is.numeric(model_desc$intercept$local)) g <- matrix(rep(model_desc$intercept$local, times = length(group_unique)), ncol = 1)
+        else stop("Please provide a GLSW effect (including intercept) or use other models.")
+    }
     ### Get bandwidth value
     if (is.character(bw)) {
         bw <- match.arg(bw)

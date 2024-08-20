@@ -72,19 +72,28 @@ parse.formula <- function(formula) {
             } else stop("Error in formula: unrecognized symbol.")
         } else {
             if (random_mode) {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$random = FALSE
+                if (inherits(cur, "numeric")) {
+                    if (cur == 0) model$intercept$random = FALSE
+                    else model$intercept$random = cur
+                }
                 else re <- c(re, cur)
                 if (length(stack) == random_start_length) {
                     random_mode <- FALSE
                 }
             } else if (local_mode) {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$local = FALSE
+                if (inherits(cur, "numeric")) {
+                    if (cur == 0) model$intercept$local = FALSE
+                    else model$intercept$local = cur
+                }
                 else le <- c(le, cur)
                 if (length(stack) == local_start_length) {
                     local_mode <- FALSE
                 }
             } else {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$fixed = FALSE
+                if (inherits(cur, "numeric")) {
+                    if (cur == 0) model$intercept$fixed = FALSE
+                    else model$intercept$fixed = cur
+                }
                 else fe <- c(fe, cur)
             }
         }
