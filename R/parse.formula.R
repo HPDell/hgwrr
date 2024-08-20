@@ -22,9 +22,9 @@
 parse.formula <- function(formula) {
     model <- list(
         intercept = list(
-            random = TRUE,
-            fixed = TRUE,
-            local = TRUE
+            random = 1,
+            fixed = 1,
+            local = 1
         )
     )
     root <- as.formula(formula)
@@ -73,8 +73,7 @@ parse.formula <- function(formula) {
         } else {
             if (random_mode) {
                 if (inherits(cur, "numeric")) {
-                    if (cur == 0) model$intercept$random = FALSE
-                    else model$intercept$random = cur
+                    model$intercept$random = cur
                 }
                 else re <- c(re, cur)
                 if (length(stack) == random_start_length) {
@@ -82,8 +81,7 @@ parse.formula <- function(formula) {
                 }
             } else if (local_mode) {
                 if (inherits(cur, "numeric")) {
-                    if (cur == 0) model$intercept$local = FALSE
-                    else model$intercept$local = cur
+                    model$intercept$local = cur
                 }
                 else le <- c(le, cur)
                 if (length(stack) == local_start_length) {
@@ -91,8 +89,7 @@ parse.formula <- function(formula) {
                 }
             } else {
                 if (inherits(cur, "numeric")) {
-                    if (cur == 0) model$intercept$fixed = FALSE
-                    else model$intercept$fixed = cur
+                    model$intercept$fixed = cur
                 }
                 else fe <- c(fe, cur)
             }
