@@ -187,15 +187,35 @@ hgwr_fit <- function(
     group <- data[[model_desc$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
-    z <- as.matrix(make.dummy(data[model_desc$random.effects]))
-    if (model_desc$intercept$random) z <- cbind(1, z)
+    if (length(model_desc$random.effects) > 0) {
+        z <- as.matrix(make.dummy(data[model_desc$random.effects]))
+        if (model_desc$intercept$random > 0) {
+            z <- cbind(model_desc$intercept$random, z)
+        }
+    } else {
+        if (model_desc$intercept$random > 0) z <- matrix(rep(model_desc$intercept$random, times = nrow(data)), ncol = 1)
+        else stop("Please provide a SLR effect (including intercept) or use other models.")
+    }
     gfe <- model_desc$fixed.effects
     lfe <- model_desc$local.fixed.effects
-    x <- as.matrix(make.dummy(data[gfe]))
-    if (model_desc$intercept$fixed) x <- cbind(1, x)
-    g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
-    if (model_desc$intercept$local) g <- cbind(1, g)
-
+    if (length(model_desc$fixed.effects) > 0) {
+        x <- as.matrix(make.dummy(data[gfe]))
+        if (model_desc$intercept$fixed > 0) {
+            x <- cbind(model_desc$intercept$fixed, x)
+        }
+    } else {
+        if (model_desc$intercept$fixed > 0) x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
+        else stop("Please provide a fixed effect (including intercept) or use other models.")
+    }
+    if (length(model_desc$local.fixed.effects) > 0) {
+        g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
+        if (model_desc$intercept$local > 0) {
+            g <- cbind(model_desc$intercept$local, g)
+        }
+    } else {
+        if (model_desc$intercept$local > 0) g <- matrix(rep(model_desc$intercept$local, times = length(group_unique)), ncol = 1)
+        else stop("Please provide a GLSW effect (including intercept) or use other models.")
+    }
     ### Get bandwidth value
     if (is.character(bw)) {
         bw <- match.arg(bw)
@@ -616,7 +636,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
     print.table.md(rbind(
         c("", "Estimated", "Sd. Err", "t.val", "Pr(>|t|)", ""),
-        as.matrix(cbind(variable = gfe, x$significance$beta, stars = stars))
+        as.matrix(cbind(variable = gfe, matrix2char(as.matrix(x$significance$beta), fmt = decimal.fmt), stars = stars))
     ), ...)
     cat("\n")
     cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = T)

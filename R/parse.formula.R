@@ -22,9 +22,9 @@
 parse.formula <- function(formula) {
     model <- list(
         intercept = list(
-            random = TRUE,
-            fixed = TRUE,
-            local = TRUE
+            random = 1,
+            fixed = 1,
+            local = 1
         )
     )
     root <- as.formula(formula)
@@ -72,19 +72,25 @@ parse.formula <- function(formula) {
             } else stop("Error in formula: unrecognized symbol.")
         } else {
             if (random_mode) {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$random = FALSE
+                if (inherits(cur, "numeric")) {
+                    model$intercept$random = cur
+                }
                 else re <- c(re, cur)
                 if (length(stack) == random_start_length) {
                     random_mode <- FALSE
                 }
             } else if (local_mode) {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$local = FALSE
+                if (inherits(cur, "numeric")) {
+                    model$intercept$local = cur
+                }
                 else le <- c(le, cur)
                 if (length(stack) == local_start_length) {
                     local_mode <- FALSE
                 }
             } else {
-                if (inherits(cur, "numeric") && cur == 0) model$intercept$fixed = FALSE
+                if (inherits(cur, "numeric")) {
+                    model$intercept$fixed = cur
+                }
                 else fe <- c(fe, cur)
             }
         }
