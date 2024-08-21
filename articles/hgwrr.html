@@ -212,9 +212,9 @@ information.</p>
 <span><span class="co">#&gt; Parameter Estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
-<span><span class="co">#&gt;             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;  Intercept  4.0575982  0.25449128  15.94396         0  *** </span></span>
-<span><span class="co">#&gt;         x1  0.9660875  0.04676336  20.65907         0  *** </span></span>
+<span><span class="co">#&gt;             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;  Intercept   4.057598  0.254491  15.943958  0.000000  *** </span></span>
+<span><span class="co">#&gt;         x1   0.966088  0.046763  20.659069  0.000000  *** </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bandwidth: 9.000016 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -259,9 +259,9 @@ be tested with the following codes.</p>
 <span><span class="co">#&gt; Parameter Estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
-<span><span class="co">#&gt;             Estimated     Sd. Err     t.val  Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;  Intercept  4.0575982  0.25449128  15.94396         0  *** </span></span>
-<span><span class="co">#&gt;         x1  0.9660875  0.04676336  20.65907         0  *** </span></span>
+<span><span class="co">#&gt;             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span></span>
+<span><span class="co">#&gt;  Intercept   4.057598  0.254491  15.943958  0.000000  *** </span></span>
+<span><span class="co">#&gt;         x1   0.966088  0.046763  20.659069  0.000000  *** </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bandwidth: 9.000016 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -302,6 +302,8 @@ be tested with the following codes.</p>
 <p>Some other methods are provided.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">m_df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in any(unlist(object$intercept)): coercing argument of type 'double' to</span></span>
+<span><span class="co">#&gt; logical</span></span>
 <span><span class="co">#&gt;   Intercept       g1          g2        x1         z1</span></span>
 <span><span class="co">#&gt; 1 0.8738330 7.721070  0.06175178 0.9660875 -0.1931416</span></span>
 <span><span class="co">#&gt; 2 3.3857847 6.335641  1.52880964 0.9660875  0.2870040</span></span>
