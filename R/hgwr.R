@@ -290,22 +290,22 @@ coef.hgwrm <- function(object, ...) {
     beta <- matrix(object$beta, nrow = length(object$groups), ncol = length(object$beta), byrow = T)
     mu <- object$mu
     intercept <- matrix(0, length(object$groups), 1)
-    if (object$intercept$local) {
+    if (object$intercept$local > 0) {
         intercept <- intercept + gamma[,1]
         gamma <- gamma[,-1]
     }
-    if (object$intercept$fixed) {
+    if (object$intercept$fixed > 0) {
         intercept <- intercept + beta[,1]
         beta <- beta[,-1]
     }
-    if (object$intercept$random) {
+    if (object$intercept$random > 0) {
         intercept <- intercept + mu[,1]
         mu <- mu[,-1]
     }
     effects <- object$effects
     coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
     coef_names <- c(effects$local.fixed, effects$global.fixed, effects$random)
-    if (any(unlist(object$intercept))) {
+    if (any(unlist(object$intercept) > 0)) {
         colnames(coef) <- c("Intercept", coef_names)
     } else {
         colnames(coef) <- coef_names
