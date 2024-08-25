@@ -187,9 +187,11 @@ hgwr_fit <- function(
     group <- data[[model_desc$group]]
     group_unique <- unique(group)
     group_index <- as.vector(match(group, group_unique))
+    re <- model_desc$random.effects
     if (length(model_desc$random.effects) > 0) {
         z <- as.matrix(make.dummy(data[model_desc$random.effects]))
         if (model_desc$intercept$random > 0) {
+            re <- c("Intercept", re)
             z <- cbind(model_desc$intercept$random, z)
         }
     } else {
@@ -197,19 +199,21 @@ hgwr_fit <- function(
         else stop("Please provide a SLR effect (including intercept) or use other models.")
     }
     gfe <- model_desc$fixed.effects
-    lfe <- model_desc$local.fixed.effects
     if (length(model_desc$fixed.effects) > 0) {
-        x <- as.matrix(make.dummy(data[gfe]))
+        x <- as.matrix(make.dummy(data[model_desc$fixed.effects]))
         if (model_desc$intercept$fixed > 0) {
+            gfe <- c("Intercept", gfe)
             x <- cbind(model_desc$intercept$fixed, x)
         }
     } else {
         if (model_desc$intercept$fixed > 0) x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
         else stop("Please provide a fixed effect (including intercept) or use other models.")
     }
+    lfe <- model_desc$local.fixed.effects
     if (length(model_desc$local.fixed.effects) > 0) {
-        g <- as.matrix(aggregate(make.dummy(data[lfe]), list(group), mean)[,-1])
+        g <- as.matrix(aggregate(make.dummy(data[model_desc$local.fixed.effects]), list(group), mean)[,-1])
         if (model_desc$intercept$local > 0) {
+            lfe <- c("Intercept", lfe)
             g <- cbind(model_desc$intercept$local, g)
         }
     } else {
@@ -243,15 +247,18 @@ hgwr_fit <- function(
     }, error = function(e) {
         stop("Error occurred when estimating HGWR parameters.")
     })
+    rownames(hgwr_result$beta) <- c(gfe)
+    colnames(hgwr_result$gamma) <- c(lfe)
+    colnames(hgwr_result$mu) <- c(re)
     if (optim_bw)
         bw_value <- hgwr_result$bw
 
     ### Prepare Return Result
     result <- c(hgwr_result, list(
-            effects = list(
+        effects = list(
             global.fixed = gfe,
             local.fixed = lfe,
-            random = model_desc$random.effects,
+            random = re,
             group = model_desc$group,
             response = model_desc$response
         ),
@@ -304,7 +311,11 @@ coef.hgwrm <- function(object, ...) {
     }
     effects <- object$effects
     coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
-    coef_names <- c(effects$local.fixed, effects$global.fixed, effects$random)
+    coef_names <- c(
+        effects$local.fixed[effects$local.fixed != "Intercept"],
+        effects$global.fixed[effects$global.fixed != "Intercept"],
+        effects$random[effects$random != "Intercept"]
+    )
     if (any(unlist(object$intercept) > 0)) {
         colnames(coef) <- c("Intercept", coef_names)
     } else {
@@ -534,10 +545,6 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("   Data:", deparse(x$call[[3]]), fill = T)
     cat("\n")
     effects <- x$effects
-    intercept <- x$intercept
-    if (intercept$fixed) effects$global.fixed <- c("Intercept", effects$global.fixed)
-    if (intercept$local) effects$local.fixed <- c("Intercept", effects$local.fixed)
-    if (intercept$random) effects$random <- c("Intercept", effects$random)
     cat("Fixed Effects", fill = T)
     cat("-------------", fill = T)
     beta_str <- rbind(
@@ -629,9 +636,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("-------------------", fill = T)
     cat("Fixed effects:", fill = T)
     gfe <- x$effects$global.fixed
-    if (x$intercept$fixed) {
-        gfe <- c("Intercept", gfe)
-    }
     pv_gfe <- x$significance$beta$pv
     stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
     print.table.md(rbind(
@@ -643,9 +647,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
     cat("GLSW effects:", fill = T)
     lfe <- x$effects$local.fixed
-    if (x$intercept$local) {
-        lfe <- c("Intercept", lfe)
-    }
     s_gamma <- t(apply(x$significance$gamma$pv, 2, function(p) { c(
         "***" = mean(p < 0.001),
         "**" = mean(p >= 0.001 & p < 0.01),
@@ -707,9 +708,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     random_corr_str <- rbind("", random_corr_str)
     random_corr_str[1, 1] <- "Corr"
     re <- x$effects$random
-    if (x$intercept$random) {
-        re <- c("Intercept", re)
-    }
     random_dev_str <- cbind(
         "", re, matrix2char(cbind(colMeans(x$mu), matrix(random_stddev, ncol = 1)), decimal.fmt)
     )
