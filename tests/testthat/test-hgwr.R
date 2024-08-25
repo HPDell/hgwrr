@@ -51,9 +51,9 @@ test_that("hgwr fit sf", {
 })
 
 test_that("hgwr parse formula", {
-  expect_setequal(m$effects$local.fixed, c("g1", "g2"))
-  expect_setequal(m$effects$global.fixed, c("x1"))
-  expect_setequal(m$effects$random, c("z1"))
+  expect_setequal(m$effects$local.fixed, c("Intercept", "g1", "g2"))
+  expect_setequal(m$effects$global.fixed, c("Intercept", "x1"))
+  expect_setequal(m$effects$random, c("Intercept", "z1"))
   expect_equal(m$effects$group, c("group"))
   expect_equal(m$effects$response, c("y"))
 })
