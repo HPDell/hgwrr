@@ -605,7 +605,6 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
                 matrix("", nrow = nrow(random_residual_str), ncol = ncol(random_corr_str))
             )
         )
-        print.table.md(random_str, ...)
     }
     print.table.md(random_str, ...)
     cat("\n")
