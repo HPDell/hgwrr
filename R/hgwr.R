@@ -184,6 +184,8 @@ hgwr_fit <- function(
     "D_Beta" = 1L
   )
   model_desc <- parse_formula(formula)
+  ### Order data accordig to group
+  data <- data[order(data[[model_desc$group]]),]
   y <- as.vector(data[[model_desc$response]])
   group <- data[[model_desc$group]]
   group_unique <- unique(group)
