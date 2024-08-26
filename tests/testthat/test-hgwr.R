@@ -212,3 +212,35 @@ test_that("hgwr s3 methods with no GLSW slop", {
   expect_no_error(summary(m_gn))
   expect_no_error(print(summary(m_gn), table.style = "md"))
 })
+
+test_that("hgwr order data", {
+  m0 <- expect_no_error({
+    hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = 10,
+      alpha = 1e-8
+    )
+  })
+  data_perm <- with(multisampling, data[sample(seq_len(nrow(data)), nrow(data), F),])
+  m_perm <- expect_no_error({
+    hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+      data = data_perm,
+      coords = multisampling$coords,
+      bw = 10,
+      alpha = 1e-8
+    )
+  })
+  expect_equal(m_perm$gamma, m0$gamma)
+  expect_equal(m_perm$beta, m0$beta)
+  expect_equal(m_perm$mu, m0$mu)
+  expect_equal(m_perm$D, m0$D)
+  expect_equal(m_perm$sigma, m0$sigma)
+  expect_equal(m_perm$bw, m0$bw)
+  expect_equal(m_perm$gamma_se, m0$gamma_se)
+  expect_equal(m_perm$logLik, m0$logLik)
+  expect_equal(m_perm$trS, m0$trS)
+  expect_equal(m_perm$var_beta, m0$var_beta)
+})
