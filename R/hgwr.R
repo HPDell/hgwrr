@@ -183,6 +183,8 @@ hgwr_fit <- function(
         "D_Beta" = 1L
     )
     model_desc <- parse.formula(formula)
+    ### Order data accordig to group
+    data <- data[order(data[[model_desc$group]]),]
     y <- as.vector(data[[model_desc$response]])
     group <- data[[model_desc$group]]
     group_unique <- unique(group)
@@ -743,7 +745,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
                 matrix("", nrow = nrow(random_residual_str), ncol = ncol(random_corr_str))
             )
         )
-        print.table.md(random_str, ...)
     }
     print.table.md(random_str, ...)
     cat("\n", fill = T)
