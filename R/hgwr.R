@@ -195,8 +195,10 @@ hgwr_fit <- function(
             z <- cbind(model_desc$intercept$random, z)
         }
     } else {
-        if (model_desc$intercept$random > 0) z <- matrix(rep(model_desc$intercept$random, times = nrow(data)), ncol = 1)
-        else stop("Please provide a SLR effect (including intercept) or use other models.")
+        if (model_desc$intercept$random > 0) {
+            re <- c("Intercept", re)
+            z <- matrix(rep(model_desc$intercept$random, times = nrow(data)), ncol = 1)
+        } else stop("Please provide a SLR effect (including intercept) or use other models.")
     }
     gfe <- model_desc$fixed.effects
     if (length(model_desc$fixed.effects) > 0) {
@@ -206,7 +208,10 @@ hgwr_fit <- function(
             x <- cbind(model_desc$intercept$fixed, x)
         }
     } else {
-        if (model_desc$intercept$fixed > 0) x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
+        if (model_desc$intercept$fixed > 0) {
+            gfe <- c("Intercept", gfe)
+            x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
+        }
         else stop("Please provide a fixed effect (including intercept) or use other models.")
     }
     lfe <- model_desc$local.fixed.effects
@@ -217,7 +222,10 @@ hgwr_fit <- function(
             g <- cbind(model_desc$intercept$local, g)
         }
     } else {
-        if (model_desc$intercept$local > 0) g <- matrix(rep(model_desc$intercept$local, times = length(group_unique)), ncol = 1)
+        if (model_desc$intercept$local > 0) {
+            lfe <- c("Intercept", lfe)
+            g <- matrix(rep(model_desc$intercept$local, times = length(group_unique)), ncol = 1)
+        }
         else stop("Please provide a GLSW effect (including intercept) or use other models.")
     }
     ### Get bandwidth value
@@ -567,29 +575,36 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
     cat("Sample-level Random Effects", fill = T)
     cat("---------------------------", fill = T)
+    re <- x$effects$random
     x <- summary.hgwrm(x)
     random_stddev <- x$random.stddev
-    random_corr <- x$random.corr
-    random_corr_str <- matrix2char(random_corr, decimal.fmt)
-    random_corr_str[!lower.tri(random_corr)] <- ""
-    random_corr_str <- rbind("", random_corr_str)
-    random_corr_str[1, 1] <- "Corr"
     random_dev_str <- cbind(
-        "", effects$random, matrix2char(matrix(random_stddev, ncol = 1), decimal.fmt)
+        "", re, matrix2char(matrix(random_stddev, ncol = 1), decimal.fmt)
     )
     random_dev_str[1, 1] <- effects$group
     random_dev_str <- rbind(
         c("Groups", "Name", "Std.Dev."),
         random_dev_str
     )
-    random_residual_str <- cbind(
-        matrix(c("Residual", "", sprintf(decimal.fmt, x$sigma)), nrow = 1),
-        matrix("", nrow = 1, ncol = ncol(random_corr))
-    )
+    random_residual_str <- matrix(c("Residual", "", sprintf(decimal.fmt, x$sigma)), nrow = 1)
     random_str <- rbind(
-        cbind(random_dev_str, random_corr_str),
+        random_dev_str,
         random_residual_str
     )
+    if (length(re) > 1) {
+        random_corr <- x$random.corr
+        random_corr_str <- matrix2char(random_corr, decimal.fmt)
+        random_corr_str[!lower.tri(random_corr)] <- ""
+        random_corr_str <- rbind("", random_corr_str)
+        random_corr_str[1, 1] <- "Corr"
+        random_str <- cbind(
+            random_str, rbind(
+                random_corr_str,
+                matrix("", nrow = nrow(random_residual_str), ncol = ncol(random_corr_str))
+            )
+        )
+        print.table.md(random_str, ...)
+    }
     print.table.md(random_str, ...)
     cat("\n")
     cat("Other Information", fill = T)
@@ -701,13 +716,8 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         cat("\n")
     }
     cat("SLR effects:", fill = T)
-    random_stddev <- x$random.stddev
-    random_corr <- x$random.corr
-    random_corr_str <- matrix2char(random_corr, decimal.fmt)
-    random_corr_str[!lower.tri(random_corr)] <- ""
-    random_corr_str <- rbind("", random_corr_str)
-    random_corr_str[1, 1] <- "Corr"
     re <- x$effects$random
+    random_stddev <- x$random.stddev
     random_dev_str <- cbind(
         "", re, matrix2char(cbind(colMeans(x$mu), matrix(random_stddev, ncol = 1)), decimal.fmt)
     )
@@ -716,14 +726,25 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
         c("Groups", "Name", "Mean", "Std.Dev."),
         random_dev_str
     )
-    random_residual_str <- cbind(
-        matrix(c("Residual", "", sprintf(decimal.fmt, c(mean(x$residuals), x$sigma))), nrow = 1),
-        matrix("", nrow = 1, ncol = ncol(random_corr))
-    )
-    random_str <- rbind(
-        cbind(random_dev_str, random_corr_str),
-        random_residual_str
-    )
+    random_residual_str <- matrix(c("Residual", "", sprintf(decimal.fmt, c(mean(x$residuals), x$sigma))), nrow = 1)
+        random_str <- rbind(
+            random_dev_str,
+            random_residual_str
+        )
+    if (length(re) > 1) {
+        random_corr <- x$random.corr
+        random_corr_str <- matrix2char(random_corr, decimal.fmt)
+        random_corr_str[!lower.tri(random_corr)] <- ""
+        random_corr_str <- rbind("", random_corr_str)
+        random_corr_str[1, 1] <- "Corr"
+        random_str <- cbind(
+            random_str, rbind(
+                random_corr_str,
+                matrix("", nrow = nrow(random_residual_str), ncol = ncol(random_corr_str))
+            )
+        )
+        print.table.md(random_str, ...)
+    }
     print.table.md(random_str, ...)
     cat("\n", fill = T)
 
