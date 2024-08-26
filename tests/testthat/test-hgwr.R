@@ -1,7 +1,7 @@
+data(multisampling)
 m <- NULL
 
 test_that("hgwr fit", {
-  data(multisampling)
   m <<- expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),
@@ -94,4 +94,121 @@ test_that("hgwr summary with spatial heterogeneity test", {
   expect_no_error({
     summary(m, test_hetero = TRUE)
   })
+})
+
+test_that("hgwr s3 methods with no random slop or intercept", {
+  m_rn <- NULL
+  expect_no_error({
+    m_rn <<- hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_rn))
+  expect_no_error(print(m_rn, table.style = "md"))
+  expect_no_error(coef(m_rn))
+  expect_no_error(coefficients(m_rn))
+  expect_no_error(fitted(m_rn))
+  expect_no_error(residuals(m_rn))
+  expect_no_error(summary(m_rn))
+  expect_no_error(print(summary(m_rn), table.style = "md"))
+
+  expect_no_error({
+    m_rn <<- hgwr(
+      formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_rn))
+  expect_no_error(print(m_rn, table.style = "md"))
+  expect_no_error(coef(m_rn))
+  expect_no_error(coefficients(m_rn))
+  expect_no_error(fitted(m_rn))
+  expect_no_error(residuals(m_rn))
+  expect_no_error(summary(m_rn))
+  expect_no_error(print(summary(m_rn), table.style = "md"))
+})
+
+test_that("hgwr s3 methods with no fixed slop or intercept", {
+  m_fn <- NULL
+  expect_no_error({
+    m_fn <<- hgwr(
+      formula = y ~ L(g1 + g2) + 1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_fn))
+  expect_no_error(print(m_fn, table.style = "md"))
+  expect_no_error(coef(m_fn))
+  expect_no_error(coefficients(m_fn))
+  expect_no_error(fitted(m_fn))
+  expect_no_error(residuals(m_fn))
+  expect_no_error(summary(m_fn))
+  expect_no_error(print(summary(m_fn), table.style = "md"))
+
+  expect_no_error({
+    m_fn <<- hgwr(
+      formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_fn))
+  expect_no_error(print(m_fn, table.style = "md"))
+  expect_no_error(coef(m_fn))
+  expect_no_error(coefficients(m_fn))
+  expect_no_error(fitted(m_fn))
+  expect_no_error(residuals(m_fn))
+  expect_no_error(summary(m_fn))
+  expect_no_error(print(summary(m_fn), table.style = "md"))
+})
+
+test_that("hgwr s3 methods with no GLSW slop", {
+  m_gn <- NULL
+  expect_no_error({
+    m_gn <<- hgwr(
+      formula = y ~ L(1) + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_gn))
+  expect_no_error(print(m_gn, table.style = "md"))
+  expect_no_error(coef(m_gn))
+  expect_no_error(coefficients(m_gn))
+  expect_no_error(fitted(m_gn))
+  expect_no_error(residuals(m_gn))
+  expect_no_error(summary(m_gn))
+  expect_no_error(print(summary(m_gn), table.style = "md"))
+
+  expect_no_error({
+    m_gn <<- hgwr(
+      formula = y ~ L(0 + g1 + g2) + x1 + (z1 | group),
+      data = multisampling$data,
+      coords = multisampling$coords,
+      bw = "CV",
+      alpha = 1e-8
+    )
+  })
+  expect_no_error(print(m_gn))
+  expect_no_error(print(m_gn, table.style = "md"))
+  expect_no_error(coef(m_gn))
+  expect_no_error(coefficients(m_gn))
+  expect_no_error(fitted(m_gn))
+  expect_no_error(residuals(m_gn))
+  expect_no_error(summary(m_gn))
+  expect_no_error(print(summary(m_gn), table.style = "md"))
 })
