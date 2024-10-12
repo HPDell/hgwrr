@@ -40,7 +40,7 @@ spatial_hetero_test <- function(
     }
     var_names <- colnames(x)
     kernel_id <- switch(kernel, "gaussian" = 0, "bisquared" = 1)
-    tv <- spatial_hetero_perm(x, coords, poly, resample, bw, kernel_id, verbose)
+    tv <- spatial_hetero_bootstrap(x, coords, poly, resample, bw, kernel_id, verbose)
     pv <- sapply(seq_along(tv$t0), function(i) {
         with(tv, mean(abs(t[,i]) > abs(t0[i])))
     })

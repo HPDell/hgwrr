@@ -11,9 +11,9 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// spatial_hetero_perm
-List spatial_hetero_perm(const arma::mat& x, const arma::mat& uv, int poly, int resample, double bw, int kernel, int verbose);
-RcppExport SEXP _hgwrr_spatial_hetero_perm(SEXP xSEXP, SEXP uvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP, SEXP verboseSEXP) {
+// spatial_hetero_bootstrap
+List spatial_hetero_bootstrap(const arma::mat& x, const arma::mat& uv, int poly, int resample, double bw, int kernel, int verbose);
+RcppExport SEXP _hgwrr_spatial_hetero_bootstrap(SEXP xSEXP, SEXP uvSEXP, SEXP polySEXP, SEXP resampleSEXP, SEXP bwSEXP, SEXP kernelSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -24,7 +24,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type bw(bwSEXP);
     Rcpp::traits::input_parameter< int >::type kernel(kernelSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(spatial_hetero_perm(x, uv, poly, resample, bw, kernel, verbose));
+    rcpp_result_gen = Rcpp::wrap(spatial_hetero_bootstrap(x, uv, poly, resample, bw, kernel, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,7 +57,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hgwrr_spatial_hetero_perm", (DL_FUNC) &_hgwrr_spatial_hetero_perm, 7},
+    {"_hgwrr_spatial_hetero_bootstrap", (DL_FUNC) &_hgwrr_spatial_hetero_bootstrap, 7},
     {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 17},
     {NULL, NULL, 0}
 };
