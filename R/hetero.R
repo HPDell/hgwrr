@@ -110,8 +110,38 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
   if (!(is.numeric(x) || is.integer(x))) {
     stop("Only support numeric or integer matrix")
   }
+  if (is.matrix(coords)) {
+    if (nrow(coords) != nrow(x))
+      stop("`coords` needs to have the same number of rows as `x`")
+  }
   call <- match.call(spatial_hetero_test_data, expand.dots = TRUE)
+  if (is.vector(coords)) {
+    call[["x"]] <- x[, -coords]
+    call[["coords"]] <- x[, coords]
+  }
   eval.parent(call)
+}
+
+#' @describeIn spatial_hetero_test
+#' For the matrix, `coords` is necessary.
+#'
+#' @inheritDotParams spatial_hetero_test_data resample:verbose
+#' @param coords The coordinates used for testing.
+#'
+#' @method spatial_hetero_test matrix
+#' @export
+spatial_hetero_test.data.frame <- function(x, coords, ...) {
+  if (!inherits(x, "data.frame")) {
+    stop("Argument x is not a data.frame")
+  }
+  x_numerical <- as.matrix(x[vapply(x, function(x) is.numeric(x), FALSE)])
+  if (length(x_numerical) < 1) {
+    stop("There needs at least one numeric column in `x`")
+  }
+  if (is.vector(coords)) {
+    coords <- as.matrix(x[coords])
+  }
+  spatial_hetero_test.matrix(x_numerical, coords, ...)
 }
 
 #' @describeIn spatial_hetero_test
@@ -125,19 +155,12 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
 #' @method spatial_hetero_test sf
 #' @export
 spatial_hetero_test.sf <- function(x, ...) {
-  if (!inherits(x, "matrix")) {
-    stop("Argument x is not a matrix")
-  }
-  if (!(is.numeric(x) || is.integer(x))) {
-    stop("Only support numeric or integer matrix")
+  if (!inherits(x, "sf")) {
+    stop("Argument x is not an sf object")
   }
   coords <- sf::st_coordinates(sf::st_centroid(data))
   x_nogeo <- sf::st_drop_geometry(x)
-  x_numerical <- x_nogeo[vapply(x_nogeo, function(x) is.numeric(x), FALSE)]
-  call <- match.call(spatial_hetero_test_data, expand.dots = TRUE)
-  call[["x"]] <- x_numerical
-  call[["coords"]] <- coords
-  eval.parent(call)
+  spatial_hetero_test.data.frame(x_nogeo, coords, ...)
 }
 
 stat_glsw <- function(g, sd) diag(var(g / sd))
