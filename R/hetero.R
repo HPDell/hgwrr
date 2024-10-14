@@ -228,19 +228,15 @@ spatial_hetero_test.hgwrm <- function(
     if (!is.null(pgb)) pgb()
     stati
   }
-  if (parallel) {
-    if (requireNamespace("furrr", quietly = TRUE) &&
-          requireNamespace("future", quietly = TRUE)) {
-      if (is.numeric(parallel) && parallel > 0) {
-        future::plan(future::multicore, workers = as.integer(parallel))
-      }
+  if (is.logical(parallel) && parallel) {
+    if (requireNamespace("furrr", quietly = TRUE)) {
       t <- do.call(rbind, furrr::future_map(
         seq_len(round), worker,
         pgb = pgb,
         .options = furrr::furrr_options(seed = TRUE)
       ))
     } else {
-      stop("Packages \"furrr\" and \"future\" must be installed to parallel",
+      stop("Package \"furrr\" must be installed to parallel",
            call. = FALSE)
     }
   } else {
