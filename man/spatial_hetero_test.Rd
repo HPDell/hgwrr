@@ -4,6 +4,8 @@
 \alias{spatial_hetero_test}
 \alias{spatial_hetero_test.default}
 \alias{spatial_hetero_test.matrix}
+\alias{spatial_hetero_test.numeric}
+\alias{spatial_hetero_test.vector}
 \alias{spatial_hetero_test.data.frame}
 \alias{spatial_hetero_test.sf}
 \title{Generic method to test spatial heterogeneity}
@@ -14,7 +16,11 @@ spatial_hetero_test(x, ...)
 
 \method{spatial_hetero_test}{matrix}(x, coords, ...)
 
-\method{spatial_hetero_test}{matrix}(x, coords, ...)
+\method{spatial_hetero_test}{numeric}(x, coords, ...)
+
+\method{spatial_hetero_test}{vector}(x, coords, ...)
+
+\method{spatial_hetero_test}{data.frame}(x, coords, ...)
 
 \method{spatial_hetero_test}{sf}(x, ...)
 }
@@ -49,7 +55,11 @@ Generic method to test spatial heterogeneity
 
 \item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
 
-\item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
+\item \code{spatial_hetero_test(numeric)}: 
+
+\item \code{spatial_hetero_test(vector)}: 
+
+\item \code{spatial_hetero_test(data.frame)}: For data frame, \code{coords} is necessary.
 
 \item \code{spatial_hetero_test(sf)}: For the \code{sf} object, coordinates of centroids are used.
 Only the numerical columns are tested.

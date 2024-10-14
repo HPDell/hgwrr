@@ -1,16 +1,30 @@
 library(testthat)
 
-test_that("spatial heterogeneity: data.frame", {
+test_that("spatial heterogeneity: vector matrix data.frame", {
   data(multisampling)
+  g <- with(multisampling, {
+    aggregate(data[c("g1", "g2")], by = list(data$group), mean)
+  })[,-1]
   expect_no_error({
-    with(multisampling, spatial_hetero_test(data, coords))
+    spatial_hetero_test_data(g, as.matrix(multisampling$coords))
+  })
+  expect_no_error({
+    spatial_hetero_test(as.matrix(g), multisampling$coords)
+  })
+  expect_no_error({
+    spatial_hetero_test(g[["g1"]], multisampling$coords)
+  })
+  expect_no_error({
+    spatial_hetero_test(g, multisampling$coords)
   })
 })
 
 test_that("spatial heterogeneity: sf", {
   data(wuhan.hp)
+  g <- aggregate(wuhan.hp, list(wuhan.hp$group), mean)[1:16, -1]
+  g <- g[c("d.Commercial", "d.GreenLand")]
   expect_no_error({
-    spatial_hetero_test(wuhan.hp)
+    spatial_hetero_test(g)
   })
 })
 

@@ -119,6 +119,7 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
       stop("`coords` needs to have the same number of rows as `x`")
   }
   call <- match.call(spatial_hetero_test_data, expand.dots = TRUE)
+  call[[1]] <- spatial_hetero_test_data
   if (is.vector(coords)) {
     call[["x"]] <- x[, -coords]
     call[["coords"]] <- x[, coords]
@@ -127,11 +128,39 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
 }
 
 #' @describeIn spatial_hetero_test
-#' For the matrix, `coords` is necessary.
 #'
 #' @inheritParams spatial_hetero_test.matrix
 #'
-#' @method spatial_hetero_test matrix
+#' @method spatial_hetero_test numeric
+#' @export
+spatial_hetero_test.numeric <- function(x, coords, ...) {
+  if (!is.numeric(x) && !is.vector(x)) {
+    stop("Argument x needs to be a numeric vector")
+  }
+  x_mat <- matrix(x, ncol = 1)
+  spatial_hetero_test.matrix(x_mat, coords, ...)
+}
+
+#' @describeIn spatial_hetero_test
+#'
+#' @inheritParams spatial_hetero_test.matrix
+#'
+#' @method spatial_hetero_test vector
+#' @export
+spatial_hetero_test.vector <- function(x, coords, ...) {
+  if (!inherits(x, "vector")) {
+    stop("Argument x is not a vector")
+  }
+  x_mat <- matrix(x, ncol = 1)
+  spatial_hetero_test.matrix(x_mat, coords, ...)
+}
+
+#' @describeIn spatial_hetero_test
+#' For data frame, `coords` is necessary.
+#'
+#' @inheritParams spatial_hetero_test.matrix
+#'
+#' @method spatial_hetero_test data.frame
 #' @export
 spatial_hetero_test.data.frame <- function(x, coords, ...) {
   if (!inherits(x, "data.frame")) {
@@ -142,7 +171,7 @@ spatial_hetero_test.data.frame <- function(x, coords, ...) {
     stop("There needs at least one numeric column in `x`")
   }
   if (is.vector(coords)) {
-    coords <- as.matrix(x[coords])
+    coords <- x[coords]
   }
   spatial_hetero_test.matrix(x_numerical, coords, ...)
 }
@@ -161,7 +190,7 @@ spatial_hetero_test.sf <- function(x, ...) {
   if (!inherits(x, "sf")) {
     stop("Argument x is not an sf object")
   }
-  coords <- sf::st_coordinates(sf::st_centroid(data))
+  coords <- sf::st_coordinates(sf::st_centroid(x))
   x_nogeo <- sf::st_drop_geometry(x)
   spatial_hetero_test.data.frame(x_nogeo, coords, ...)
 }
