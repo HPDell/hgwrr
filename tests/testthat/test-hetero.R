@@ -1,6 +1,20 @@
 library(testthat)
 
-test_that("Multisampling", {
+test_that("spatial heterogeneity: data.frame", {
+  data(multisampling)
+  expect_no_error({
+    with(multisampling, spatial_hetero_test(data, coords))
+  })
+})
+
+test_that("spatial heterogeneity: sf", {
+  data(wuhan.hp)
+  expect_no_error({
+    spatial_hetero_test(wuhan.hp)
+  })
+})
+
+test_that("spatial heterogeneity: HGWR", {
   data(multisampling)
   m <- expect_no_error({
     hgwr(
@@ -12,9 +26,6 @@ test_that("Multisampling", {
     )
   })
   expect_no_error({
-    summary(m, test_hetero = TRUE)
-  })
-  expect_no_error({
-    summary(m, test_hetero = list(kernel = "gaussian"))
+    spatial_hetero_test(m)
   })
 })
