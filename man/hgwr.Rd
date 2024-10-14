@@ -182,18 +182,19 @@ Note that SLR effects can only be specified once!
 }}
 \examples{
 data(multisampling)
-hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-     data = multisampling$data,
-     coords = multisampling$coords,
-     bw = 10)
+hgwr(
+  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+  data = multisampling$data,
+  coords = multisampling$coords,
+  bw = 10
+)
 
-mod_Ftest <-hgwr(
- formula = y ~ L(g1 + g2) + x1 + (z1 | group),
- data = multisampling$data,
- coords = multisampling$coords,
- bw = 10
+mod_Ftest <- hgwr(
+  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+  data = multisampling$data,
+  coords = multisampling$coords,
+  bw = 10
 )
 summary(mod_Ftest)
-
 
 }

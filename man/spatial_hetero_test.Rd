@@ -22,11 +22,14 @@ spatial_hetero_test(
 
 \item{\dots}{Additional arguments.}
 
-\item{resample}{The total times of resampling with replacement. Default to 5000.}
+\item{resample}{The total times of resampling with replacement.
+Default to 5000.}
 
-\item{poly}{The number of polynomial terms used by the polynomial estimator. Default to 2.}
+\item{poly}{The number of polynomial terms used by the polynomial estimator.
+Default to 2.}
 
-\item{bw}{The adaptive bandwidth used by the polynomial estimator. Default to 10.}
+\item{bw}{The adaptive bandwidth used by the polynomial estimator.
+Default to 10.}
 
 \item{kernel}{The kernel function used by the polynomial estimator.}
 
@@ -36,10 +39,11 @@ spatial_hetero_test(
 A \code{shgt} object of permutation-test results with the following items:
 \describe{
 \item{\code{vars}}{The names of variables.}
-\item{\code{t0}}{The value of the statistics (variance of density estimation) on original values.}
+\item{\code{t0}}{The value of the statistics on original values.}
 \item{\code{t}}{The value of the same statistics on permuted values.}
 \item{\code{p}}{The p-value for each variable.}
 }
+Currently, variance is used as the statistics.
 }
 \description{
 Test the spatial heterogeneity in data based on permutation.

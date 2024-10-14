@@ -12,20 +12,23 @@
 \item{decimal.fmt}{The format string passing to \code{\link[base:sprintf]{base::sprintf()}}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=print.table.md]{print.table.md}}
+  Arguments passed on to \code{\link[=print_table_md]{print_table_md}}
   \describe{
-    \item{\code{col.sep}}{Column separator. Default to \code{""}.}
-    \item{\code{header.sep}}{Header separator. Default to \code{"-"}.
-If \code{header.sep} only contains one character, it will be repeated for each column.
-If it contains more than one character, it will be printed below the first row.}
-    \item{\code{row.begin}}{Character at the beginning of each row.
-Default to \code{col.sep}.}
-    \item{\code{row.end}}{Character at the ending of each row.
-Default to \code{col.sep}.}
-    \item{\code{table.before}}{Characters to be printed before the table.}
-    \item{\code{table.after}}{Characters to be printed after the table.}
-    \item{\code{table.style}}{Name of pre-defined style.
-Possible values are \code{"plain"}, \code{"md"}, \code{"latex"}, or \code{"booktabs"}. Default to \code{"plain"}.}
+    \item{\code{col_sep}}{Column separator. Default to \code{""}.}
+    \item{\code{header_sep}}{Header separator. Default to \code{"-"}.
+If \code{header_sep} only contains one character,
+it will be repeated for each column.
+If it contains more than one character,
+it will be printed below the first row.}
+    \item{\code{row_begin}}{Character at the beginning of each row.
+Default to \code{col_sep}.}
+    \item{\code{row_end}}{Character at the ending of each row.
+Default to \code{col_sep}.}
+    \item{\code{table_before}}{Characters to be printed before the table.}
+    \item{\code{table_after}}{Characters to be printed after the table.}
+    \item{\code{table_style}}{Name of pre-defined style.
+Possible values are \code{"plain"}, \code{"md"}, \code{"latex"}, or \code{"booktabs"}.
+Default to \code{"plain"}.}
   }}
 }
 \value{
@@ -36,14 +39,16 @@ Print description of a \code{hgwrm} object.
 }
 \examples{
 data(multisampling)
-model <- hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-              data = multisampling$data,
-              coords = multisampling$coords,
-              bw = 10)
+model <- hgwr(
+  formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+  data = multisampling$data,
+  coords = multisampling$coords,
+  bw = 10
+)
 print(model)
 print(model, table.style = "md")
 
 }
 \seealso{
-\code{\link[=summary.hgwrm]{summary.hgwrm()}}, \code{\link[=print.table.md]{print.table.md()}}.
+\code{\link[=summary.hgwrm]{summary.hgwrm()}}, \code{\link[=print_table_md]{print_table_md()}}.
 }
