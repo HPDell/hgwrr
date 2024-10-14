@@ -47,5 +47,4 @@ Test the spatial heterogeneity in data based on permutation.
 \examples{
 data(multisampling.large)
 spatial_hetero_test(multisampling.large$beta, multisampling.large$coords)
-
 }
