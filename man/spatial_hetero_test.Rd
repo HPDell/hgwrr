@@ -9,11 +9,11 @@
 \usage{
 spatial_hetero_test(x, ...)
 
-\method{spatial_hetero}{default}(x, ...)
+\method{spatial_hetero_test}{default}(x, ...)
 
-\method{spatial_hetero}{matrix}(x, coords, ...)
+\method{spatial_hetero_test}{matrix}(x, coords, ...)
 
-\method{spatial_hetero}{sf}(x, ...)
+\method{spatial_hetero_test}{sf}(x, ...)
 }
 \arguments{
 \item{x}{The data to be tested.}
@@ -36,13 +36,13 @@ Default to 10.}
 \description{
 Generic method to test spatial heterogeneity
 }
-\section{Functions}{
+\section{Methods (by class)}{
 \itemize{
-\item \code{spatial_hetero(default)}: Default behavior.
+\item \code{spatial_hetero_test(default)}: Default behavior.
 
-\item \code{spatial_hetero(matrix)}: For the matrix, \code{coords} is necessary.
+\item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
 
-\item \code{spatial_hetero(sf)}: For the \code{sf} object, coordinates of centroids are used.
+\item \code{spatial_hetero_test(sf)}: For the \code{sf} object, coordinates of centroids are used.
 Only the numerical columns are tested.
 
 }}

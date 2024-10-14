@@ -6,7 +6,7 @@ spatial_hetero_test <- function(x, ...) UseMethod("spatial_hetero_test")
 
 #' @describeIn spatial_hetero_test
 #' Default behavior.
-#' @method spatial_hetero default
+#' @method spatial_hetero_test default
 spatial_hetero_test.default <- function(x, ...) stop("Method not implemented")
 
 #' Test the spatial heterogeneity in data based on permutation.
@@ -100,7 +100,9 @@ print.spahetbootres <- function(x, ...) {
 #'
 #' @inheritDotParams spatial_hetero_test_data resample:verbose
 #' @param coords The coordinates used for testing.
-#' @method spatial_hetero matrix
+#'
+#' @method spatial_hetero_test matrix
+#' @export
 spatial_hetero_test.matrix <- function(x, coords, ...) {
   if (!inherits(x, "matrix")) {
     stop("Argument x is not a matrix")
@@ -119,7 +121,9 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
 #' @inheritDotParams spatial_hetero_test_data resample:verbose
 #'
 #' @importFrom sf st_centroid st_coordinates st_drop_geometry
-#' @method spatial_hetero sf
+#'
+#' @method spatial_hetero_test sf
+#' @export
 spatial_hetero_test.sf <- function(x, ...) {
   if (!inherits(x, "matrix")) {
     stop("Argument x is not a matrix")
@@ -136,6 +140,8 @@ spatial_hetero_test.sf <- function(x, ...) {
   eval.parent(call)
 }
 
+stat_glsw <- function(g, sd) diag(var(g / sd))
+
 #' @describeIn hgwr
 #' Test the spatial heterogeneity with bootstrapping.
 #'
@@ -146,13 +152,22 @@ spatial_hetero_test.sf <- function(x, ...) {
 #'
 #' @importFrom MASS mvrnorm
 #' @method spatial_hetero_test hgwrm
-spatial_hetero_test.hgwrm <- function(x, round, parallel = FALSE, ...) {
-  t0 <- with(x, stat(gamma, gamma_se))
+#' @export
+spatial_hetero_test.hgwrm <- function(
+  x,
+  round = 99,
+  statistic = stat_glsw,
+  parallel = FALSE,
+  verbose = 0,
+  ...
+) {
+  t0 <- with(x, statistic(gamma, gamma_se))
   args <- as.list(x$call[-1])
   args$f_test <- FALSE
   args$alpha <- 1e-12
   args$max_iters <- 100
   args$bw <- x$bw
+  args$verbose <- verbose
   yhat <- fitted(x)
   covar0 <- x$D
   sigma0 <- x$sigma
@@ -162,8 +177,11 @@ spatial_hetero_test.hgwrm <- function(x, round, parallel = FALSE, ...) {
   groups <- unique(data0[[ge]])
   z0 <- x$frame.parsed$z
   z_group <- lapply(groups, function(gr) z0[data0[[ge]] == gr, ])
-  p <- progressr::progressor(round)
-  worker <- function(i) {
+  pgb <- NULL
+  if (requireNamespace("progressr", quietly = TRUE)) {
+    pgb <- progressr::progressor(round)
+  }
+  worker <- function(i, pgb = NULL) {
     ei <- do.call(c, lapply(z_group, function(zi) {
       MASS::mvrnorm(mu = rep(0, nrow(zi)),
                     Sigma = zi %*% covar0 %*% t(zi) + sigma0)
@@ -174,25 +192,27 @@ spatial_hetero_test.hgwrm <- function(x, round, parallel = FALSE, ...) {
     argsi <- args
     argsi$data <- datai
     modeli <- do.call(hgwrr::hgwr, argsi)
-    stati <- with(modeli, stat(gamma, gamma_se))
-    p()
+    stati <- with(modeli, statistic(gamma, gamma_se))
+    if (!is.null(pgb)) pgb()
     stati
   }
   if (parallel) {
-    if (requireNamespace("furrr", quietly = TRUE)) {
-      t <- do.call(
-        rbind,
-        furrr::future_map(seq_len(round), worker,
-                          .options = furrr::furrr_options(seed = TRUE))
-      )
+    if (requireNamespace("furrr", quietly = TRUE) &&
+          requireNamespace("future", quietly = TRUE)) {
+      if (is.numeric(parallel) && parallel > 0) {
+        future::plan(future::multicore, workers = as.integer(parallel))
+      }
+      t <- do.call(rbind, furrr::future_map(
+        seq_len(round), worker,
+        pgb = pgb,
+        .options = furrr::furrr_options(seed = TRUE)
+      ))
     } else {
-      stop(
-        "Package \"furrr\" must be installed to parallel",
-        call. = FALSE
-      )
+      stop("Packages \"furrr\" and \"future\" must be installed to parallel",
+           call. = FALSE)
     }
   } else {
-    t <- do.call(rbind, lapply(seq_len(round), worker))
+    t <- do.call(rbind, lapply(seq_len(round), worker, pgb = pgb))
   }
   pv <- sapply(seq_along(t0), function(i) {
     mean(abs(t[, i]) > abs(t0[i]))
@@ -204,4 +224,5 @@ spatial_hetero_test.hgwrm <- function(x, round, parallel = FALSE, ...) {
     pv = pv
   )
   class(res) <- "spahetbootres"
+  res
 }

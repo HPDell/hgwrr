@@ -8,7 +8,14 @@
 \alias{hgwr_fit}
 \title{Hierarchical and Geographically Weighted Regression}
 \usage{
-\method{spatial_hetero_test}{hgwrm}(x, round, parallel = FALSE, ...)
+\method{spatial_hetero_test}{hgwrm}(
+  x,
+  round = 99,
+  statistic = stat_glsw,
+  parallel = FALSE,
+  verbose = 0,
+  ...
+)
 
 hgwr(
   formula,
@@ -82,6 +89,14 @@ hgwr_fit(
 
 \item{parallel}{If TRUE, use \code{furrr} package to parallel.}
 
+\item{verbose}{An integer value. Determine the log level.
+Possible values are:
+\describe{
+\item{0}{no log is printed.}
+\item{1}{only logs in back-fitting are printed.}
+\item{2}{all logs are printed.}
+}}
+
 \item{\dots}{Further arguments for the specified type of \code{data}.}
 
 \item{formula}{A formula.
@@ -132,14 +147,6 @@ algorithm is used. Possible values are:
 \item{f_test}{A logical value. Determine whether to do F test on GLSW effects.
 If \code{f_test=TURE}, there will be a \code{f_test} item in the returned object
 showing the F test for each GLSW effect.}
-
-\item{verbose}{An integer value. Determine the log level.
-Possible values are:
-\describe{
-\item{0}{no log is printed.}
-\item{1}{only logs in back-fitting are printed.}
-\item{2}{all logs are printed.}
-}}
 
 \item{coords}{A 2-column matrix.
 It consists of coordinates for each group.}

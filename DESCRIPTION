@@ -19,6 +19,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    furrr,
+    progressr,
 SystemRequirements: GNU make
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
