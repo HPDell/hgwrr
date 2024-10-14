@@ -2,50 +2,66 @@
 % Please edit documentation in R/hetero.R
 \name{spatial_hetero_test}
 \alias{spatial_hetero_test}
-\title{Test the spatial heterogeneity in data based on permutation.}
+\alias{spatial_hetero_test.default}
+\alias{spatial_hetero_test.matrix}
+\alias{spatial_hetero_test.numeric}
+\alias{spatial_hetero_test.vector}
+\alias{spatial_hetero_test.data.frame}
+\alias{spatial_hetero_test.sf}
+\title{Generic method to test spatial heterogeneity}
 \usage{
-spatial_hetero_test(
-  x,
-  coords,
-  ...,
-  resample = 5000,
-  poly = 2,
-  bw = 10,
-  kernel = c("bisquared", "gaussian"),
-  verbose = 0
-)
+spatial_hetero_test(x, ...)
+
+\method{spatial_hetero_test}{default}(x, ...)
+
+\method{spatial_hetero_test}{matrix}(x, coords, ...)
+
+\method{spatial_hetero_test}{numeric}(x, coords, ...)
+
+\method{spatial_hetero_test}{vector}(x, coords, ...)
+
+\method{spatial_hetero_test}{data.frame}(x, coords, ...)
+
+\method{spatial_hetero_test}{sf}(x, ...)
 }
 \arguments{
-\item{x}{A matrix of data to be tested. Each column is a variable.}
+\item{x}{The data to be tested.}
 
-\item{coords}{A matrix of coordinates.}
+\item{...}{
+  Arguments passed on to \code{\link[=spatial_hetero_test_data]{spatial_hetero_test_data}}, \code{\link[=spatial_hetero_test_data]{spatial_hetero_test_data}}
+  \describe{
+    \item{\code{resample}}{The total times of resampling with replacement.
+Default to 5000.}
+    \item{\code{poly}}{The number of polynomial terms used by the polynomial estimator.
+Default to 2.}
+    \item{\code{bw}}{The adaptive bandwidth used by the polynomial estimator.
+Default to 10.}
+    \item{\code{kernel}}{The kernel function used by the polynomial estimator.}
+    \item{\code{verbose}}{The verbosity level. Default to 0.}
+  }}
 
-\item{\dots}{Additional arguments.}
-
-\item{resample}{The total times of resampling with replacement. Default to 5000.}
-
-\item{poly}{The number of polynomial terms used by the polynomial estimator. Default to 2.}
-
-\item{bw}{The adaptive bandwidth used by the polynomial estimator. Default to 10.}
-
-\item{kernel}{The kernel function used by the polynomial estimator.}
-
-\item{verbose}{The verbosity level. Default to 0.}
-}
-\value{
-A \code{shgt} object of permutation-test results with the following items:
-\describe{
-\item{\code{vars}}{The names of variables.}
-\item{\code{t0}}{The value of the statistics (variance of density estimation) on original values.}
-\item{\code{t}}{The value of the same statistics on permuted values.}
-\item{\code{p}}{The p-value for each variable.}
-}
+\item{coords}{The coordinates used for testing.
+Accepts a matrix or vector.
+For matrix, it needs to have the same number of rows as \code{x}.
+For vector, it indicates the columns in \code{x}
+and the actual coordinates will be taken from \code{x}.}
 }
 \description{
-Test the spatial heterogeneity in data based on permutation.
+Generic method to test spatial heterogeneity
 }
-\examples{
-data(multisampling.large)
-spatial_hetero_test(multisampling.large$beta, multisampling.large$coords)
+\section{Methods (by class)}{
+\itemize{
+\item \code{spatial_hetero_test(default)}: Default behavior.
 
-}
+\item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
+
+\item \code{spatial_hetero_test(numeric)}: 
+
+\item \code{spatial_hetero_test(vector)}: 
+
+\item \code{spatial_hetero_test(data.frame)}: For data frame, \code{coords} is necessary.
+
+\item \code{spatial_hetero_test(sf)}: For the \code{sf} object, coordinates of centroids are used.
+Only the numerical columns are tested.
+
+}}

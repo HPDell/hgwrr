@@ -92,7 +92,7 @@ mat denreg_poly(
 }
 
 // [[Rcpp::export]]
-List spatial_hetero_perm(
+List spatial_hetero_bootstrap(
     const arma::mat& x,
     const arma::mat& uv,
     int poly = 2,
@@ -129,11 +129,9 @@ List spatial_hetero_perm(
     ProgressBar p(resample, verbose > 0);
     p.display();
     for (size_t i = 0; i < resample; i++) {
-        mat xi(size(x));
-        for (size_t c = 0; c < x.n_cols; c++)
-        {
-            xi.col(c) = shuffle(x.col(c));
-        }
+        Rcpp::checkUserInterrupt();
+        uvec index = arma::conv_to<arma::uvec>::from(arma::randi(x.n_rows, distr_param(0, x.n_rows - 1)));
+        mat xi = x.rows(index);
         mat ri = precalc_dw ? denreg_poly(xi, uv, L) : denreg_poly(xi, uv, alpha, bw, kernel);
         stats.row(i) = var(ri, 0, 0);
         p.tic();

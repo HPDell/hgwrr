@@ -7,11 +7,12 @@ d <- data.frame(
 )
 
 test_that("make dummy", {
-    dummy_d <- expect_no_error(make.dummy(d))
-    expect_setequal(
-        names(dummy_d),
-        c("years", "number", "level.top", "level.mid",
-          "distance.far", "sold")
+  dummy_d <- expect_no_error(make_dummy(d))
+  expect_setequal(
+    names(dummy_d),
+    c(
+      "years", "number", "level.top", "level.mid",
+      "distance.far", "sold"
     )
+  )
 })
-
