@@ -1,3 +1,14 @@
+#' Generic method to test spatial heterogeneity
+#'
+#' @param x The data to be tested.
+#' @export
+spatial_hetero_test <- function(x, ...) UseMethod("spatial_hetero_test")
+
+#' @describeIn spatial_hetero_test
+#' Default behavior.
+#' @method spatial_hetero default
+spatial_hetero_test.default <- function(x, ...) stop("Method not implemented")
+
 #' Test the spatial heterogeneity in data based on permutation.
 #'
 #' @param x A matrix of data to be tested. Each column is a variable.
@@ -12,7 +23,7 @@
 #' @param kernel The kernel function used by the polynomial estimator.
 #' @param verbose The verbosity level. Default to 0.
 #'
-#' @return A `shgt` object of permutation-test results with the following items:
+#' @return A `spahetbootres` object of permutation-test results with the following items:
 #' \describe{
 #'  \item{\code{vars}}{The names of variables.}
 #'  \item{\code{t0}}{The value of the statistics on original values.}
@@ -21,10 +32,8 @@
 #' }
 #' Currently, variance is used as the statistics.
 #'
-#' @examples
-#' data(multisampling.large)
-#' spatial_hetero_test(multisampling.large$beta, multisampling.large$coords)
-spatial_hetero_test <- function(
+#' @export
+spatial_hetero_test_data <- function(
   x,
   coords,
   ...,
@@ -53,20 +62,20 @@ spatial_hetero_test <- function(
   res <- tv
   res$vars <- var_names
   res$p <- pv
-  class(res) <- "shgt"
+  class(res) <- "spahetbootres"
   res
 }
 
 #' Print the result of spatial heterogeneity test
 #'
-#' @param x A `shgt` object.
+#' @param x A `spahetbootres` object.
 #' @param \dots Other unused arguments.
 #'
-#' @method print shgt
+#' @method print spahetbootres
 #' @export
-print.shgt <- function(x, ...) {
-  if (!inherits(x, "shgt")) {
-    stop("The `x` must be an shgt object.")
+print.spahetbootres <- function(x, ...) {
+  if (!inherits(x, "spahetbootres")) {
+    stop("The `x` must be an spahetbootres object.")
   }
   cat("Spatial Heterogeneity Test\n", fill = TRUE)
   show_tbl <- data.frame(
@@ -86,36 +95,32 @@ print.shgt <- function(x, ...) {
       fill = TRUE)
 }
 
-#' Generic method to test spatial heterogeneity
-#'
-#' @param x The data to be tested.
-#' @inheritParams spatial_hetero_test
-#' @export
-spatial_hetero <- function(x, ...) UseMethod("spatial_hetero")
-
-#' @describeIn spatial_hetero
+#' @describeIn spatial_hetero_test
 #' For the matrix, `coords` is necessary.
 #'
+#' @inheritDotParams spatial_hetero_test_data resample:verbose
 #' @param coords The coordinates used for testing.
 #' @method spatial_hetero matrix
-spatial_hetero.matrix <- function(x, coords, ...) {
+spatial_hetero_test.matrix <- function(x, coords, ...) {
   if (!inherits(x, "matrix")) {
     stop("Argument x is not a matrix")
   }
   if (!(is.numeric(x) || is.integer(x))) {
     stop("Only support numeric or integer matrix")
   }
-  call <- match.call(spatial_hetero_test, expand.dots = TRUE)
+  call <- match.call(spatial_hetero_test_data, expand.dots = TRUE)
   eval.parent(call)
 }
 
-#' @describeIn spatial_hetero
-#' For the matrix, `coords` is necessary.
+#' @describeIn spatial_hetero_test
+#' For the `sf` object, coordinates of centroids are used.
+#' Only the numerical columns are tested.
 #'
-#' @param coords The coordinates used for testing.
+#' @inheritDotParams spatial_hetero_test_data resample:verbose
+#'
 #' @importFrom sf st_centroid st_coordinates st_drop_geometry
 #' @method spatial_hetero sf
-spatial_hetero.sf <- function(x, ...) {
+spatial_hetero_test.sf <- function(x, ...) {
   if (!inherits(x, "matrix")) {
     stop("Argument x is not a matrix")
   }
@@ -125,13 +130,78 @@ spatial_hetero.sf <- function(x, ...) {
   coords <- sf::st_coordinates(sf::st_centroid(data))
   x_nogeo <- sf::st_drop_geometry(x)
   x_numerical <- x_nogeo[vapply(x_nogeo, function(x) is.numeric(x), FALSE)]
-  call <- match.call(spatial_hetero_test, expand.dots = TRUE)
+  call <- match.call(spatial_hetero_test_data, expand.dots = TRUE)
   call[["x"]] <- x_numerical
   call[["coords"]] <- coords
   eval.parent(call)
 }
 
-#' @describeIn spatial_hetero
-#' Default behavior.
-#' @method spatial_hetero default
-spatial_hetero.default <- function(x, ...) stop("Method not implemented")
+#' @describeIn hgwr
+#' Test the spatial heterogeneity with bootstrapping.
+#'
+#' @param x An `hgwrm` object
+#' @param round The number of times to sampling from model.
+#' @param parallel If TRUE, use `furrr` package to parallel.
+#' @param \dots Unused arguments
+#'
+#' @importFrom MASS mvrnorm
+#' @method spatial_hetero_test hgwrm
+spatial_hetero_test.hgwrm <- function(x, round, parallel = FALSE, ...) {
+  t0 <- with(x, stat(gamma, gamma_se))
+  args <- as.list(x$call[-1])
+  args$f_test <- FALSE
+  args$alpha <- 1e-12
+  args$max_iters <- 100
+  args$bw <- x$bw
+  yhat <- fitted(x)
+  covar0 <- x$D
+  sigma0 <- x$sigma
+  data0 <- x$frame
+  resp <- x$effects$response
+  ge <- x$effects$group
+  groups <- unique(data0[[ge]])
+  z0 <- x$frame.parsed$z
+  z_group <- lapply(groups, function(gr) z0[data0[[ge]] == gr, ])
+  p <- progressr::progressor(round)
+  worker <- function(i) {
+    ei <- do.call(c, lapply(z_group, function(zi) {
+      MASS::mvrnorm(mu = rep(0, nrow(zi)),
+                    Sigma = zi %*% covar0 %*% t(zi) + sigma0)
+    }))
+    ysi <- ei + yhat
+    datai <- data0
+    datai[[resp]] <- ysi
+    argsi <- args
+    argsi$data <- datai
+    modeli <- do.call(hgwrr::hgwr, argsi)
+    stati <- with(modeli, stat(gamma, gamma_se))
+    p()
+    stati
+  }
+  if (parallel) {
+    if (requireNamespace("furrr", quietly = TRUE)) {
+      t <- do.call(
+        rbind,
+        furrr::future_map(seq_len(round), worker,
+                          .options = furrr::furrr_options(seed = TRUE))
+      )
+    } else {
+      stop(
+        "Package \"furrr\" must be installed to parallel",
+        call. = FALSE
+      )
+    }
+  } else {
+    t <- do.call(rbind, lapply(seq_len(round), worker))
+  }
+  pv <- sapply(seq_along(t0), function(i) {
+    mean(abs(t[, i]) > abs(t0[i]))
+  })
+  res <- list(
+    t0 = t0,
+    t = t,
+    vars = x$effects$local.fixed,
+    pv = pv
+  )
+  class(res) <- "spahetbootres"
+}
