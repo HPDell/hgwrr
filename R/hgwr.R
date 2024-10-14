@@ -485,57 +485,6 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
     tv = t_gamma,
     pv = p_gamma
   )
-  #### Gamma spatial heterogeneity
-  is_test_hetero <- FALSE
-  if (length(test_hetero) == 1 &&
-        is.logical(test_hetero) &&
-        test_hetero == TRUE) {
-    is_test_hetero <- TRUE
-  } else if (is.list(test_hetero)) {
-    is_test_hetero <- TRUE
-  }
-  if (is_test_hetero) {
-    bw <- 10L
-    resample <- 5000L
-    poly <- 2L
-    kernel <- "bisquared"
-    if (is.list(test_hetero)) {
-      bw <- ifelse("bw" %in% names(test_hetero), test_hetero$bw, bw)
-      resample <- ifelse("resample" %in% names(test_hetero),
-                         test_hetero$resample,
-                         resample)
-      poly <- ifelse("poly" %in% names(test_hetero), test_hetero$poly, poly)
-      kernel <- ifelse("kernel" %in% names(test_hetero),
-                       test_hetero$kernel,
-                       kernel)
-    }
-    kernel <- match.arg(kernel, c("gaussian", "bisquared"))
-    kernel_id <- switch(kernel,
-      "gaussian" = 0,
-      "bisquared" = 1
-    )
-    sd_gamma <- apply(object$gamma, 2, stats::sd)
-    t_gamma <- spatial_hetero_perm(
-      object$gamma,
-      as.matrix(object$coords),
-      poly = poly,
-      resample = resample,
-      bw = bw,
-      kernel = kernel_id,
-      verbose = as.integer(verbose)
-    )
-    t_gamma$t <- sqrt(t_gamma$t)
-    t_gamma$t0 <- sqrt(t_gamma$t0)
-    pv <- sapply(seq_along(t_gamma$t0), function(i) {
-      with(t_gamma, mean(t[, i] > t0[i]))
-    })
-    significance$gamma$hetero <- list(
-      sd = sd_gamma,
-      t = t_gamma$t,
-      t0 = t_gamma$t0,
-      pv = pv
-    )
-  }
   #### Save results
   res$significance <- significance
 
@@ -682,7 +631,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
   if (!inherits(x, "summary.hgwrm")) {
     stop("It's not a summary.hgwrm object.")
   }
-  args <- list(...)
 
   ### Call information
   cat("Hierarchical and geographically weighted regression model", fill = TRUE)
@@ -748,29 +696,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     print_table_md(f_test_str, ...)
     cat("\n")
   }
-  if (!is.null(x$significance$gamma$hetero)) {
-    cat("GLSW effect spatial heterogeneity:", fill = TRUE)
-    h_gamma <- x$significance$gamma$hetero
-    pv_hetero <- h_gamma$pv
-    hetero_stats <- matrix2char(cbind(
-      gamma_sd = as.vector(h_gamma$sd),
-      t0 = as.vector(h_gamma$t0),
-      t.min = apply(h_gamma$t, 2, min),
-      t.max = apply(h_gamma$t, 2, max),
-      pv = pv_hetero
-    ), decimal.fmt)
-    hetero_stats <- cbind(
-      hetero_stats,
-      stars = vapply(pv_hetero, pv2stars, rep(" ", n = length(pv_hetero)))
-    )
-    hetero_stats_name <- c("Sd. Est.", "t0", "Min. t", "Max. t", "Pr(t>t0)", "")
-    hetero_str <- rbind(
-      c("", hetero_stats_name),
-      cbind(lfe, hetero_stats)
-    )
-    print_table_md(hetero_str, ...)
-    cat("\n")
-  }
   cat("SLR effects:", fill = TRUE)
   re <- x$effects$random
   random_stddev <- x$random.stddev
@@ -805,7 +730,6 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
                ncol = ncol(random_corr_str))
       )
     )
-    print_table_md(random_str, ...)
   }
   print_table_md(random_str, ...)
   cat("\n", fill = TRUE)
