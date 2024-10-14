@@ -13,7 +13,7 @@ License: GPL (>= 2)
 URL: https://github.com/HPDell/hgwrr/, https://hpdell.github.io/hgwrr/
 Imports: Rcpp (>= 1.0.8)
 LinkingTo: Rcpp, RcppArmadillo
-Depends: R (>= 3.5.0), sf, stats, utils
+Depends: R (>= 3.5.0), sf, stats, utils, MASS
 NeedsCompilation: yes
 Suggests: 
     knitr,

@@ -87,6 +87,10 @@ hgwr_fit(
 
 \item{round}{The number of times to sampling from model.}
 
+\item{statistic}{A function used to calculate the statistics
+on the original data and bootstrapped data.
+Default to the variance of standardlised GLSW estimates.}
+
 \item{parallel}{If TRUE, use \code{furrr} package to parallel.}
 
 \item{verbose}{An integer value. Determine the log level.

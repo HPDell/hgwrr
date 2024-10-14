@@ -195,6 +195,7 @@ spatial_hetero_test.sf <- function(x, ...) {
   spatial_hetero_test.data.frame(x_nogeo, coords, ...)
 }
 
+#' @importFrom stats var
 stat_glsw <- function(g, sd) diag(var(g / sd))
 
 #' @describeIn hgwr
@@ -202,6 +203,9 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #'
 #' @param x An `hgwrm` object
 #' @param round The number of times to sampling from model.
+#' @param statistic A function used to calculate the statistics
+#' on the original data and bootstrapped data.
+#' Default to the variance of standardlised GLSW estimates.
 #' @param parallel If TRUE, use `furrr` package to parallel.
 #' @param verbose Override the verbose setting
 #' in the `hgwrm` model with this value.
@@ -209,6 +213,7 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #' with function [hgwrr::hgwr].
 #'
 #' @importFrom MASS mvrnorm
+#' @importFrom stats fitted
 #' @method spatial_hetero_test hgwrm
 #' @export
 spatial_hetero_test.hgwrm <- function(
