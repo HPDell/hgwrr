@@ -4,12 +4,15 @@
 \alias{spatial_hetero_test}
 \alias{spatial_hetero_test.default}
 \alias{spatial_hetero_test.matrix}
+\alias{spatial_hetero_test.data.frame}
 \alias{spatial_hetero_test.sf}
 \title{Generic method to test spatial heterogeneity}
 \usage{
 spatial_hetero_test(x, ...)
 
 \method{spatial_hetero_test}{default}(x, ...)
+
+\method{spatial_hetero_test}{matrix}(x, coords, ...)
 
 \method{spatial_hetero_test}{matrix}(x, coords, ...)
 
@@ -31,7 +34,11 @@ Default to 10.}
     \item{\code{verbose}}{The verbosity level. Default to 0.}
   }}
 
-\item{coords}{The coordinates used for testing.}
+\item{coords}{The coordinates used for testing.
+Accepts a matrix or vector.
+For matrix, it needs to have the same number of rows as \code{x}.
+For vector, it indicates the columns in \code{x}
+and the actual coordinates will be taken from \code{x}.}
 }
 \description{
 Generic method to test spatial heterogeneity
@@ -39,6 +46,8 @@ Generic method to test spatial heterogeneity
 \section{Methods (by class)}{
 \itemize{
 \item \code{spatial_hetero_test(default)}: Default behavior.
+
+\item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
 
 \item \code{spatial_hetero_test(matrix)}: For the matrix, \code{coords} is necessary.
 

@@ -100,6 +100,10 @@ print.spahetbootres <- function(x, ...) {
 #'
 #' @inheritDotParams spatial_hetero_test_data resample:verbose
 #' @param coords The coordinates used for testing.
+#' Accepts a matrix or vector.
+#' For matrix, it needs to have the same number of rows as `x`.
+#' For vector, it indicates the columns in `x`
+#' and the actual coordinates will be taken from `x`.
 #'
 #' @method spatial_hetero_test matrix
 #' @export
@@ -125,8 +129,7 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
 #' @describeIn spatial_hetero_test
 #' For the matrix, `coords` is necessary.
 #'
-#' @inheritDotParams spatial_hetero_test_data resample:verbose
-#' @param coords The coordinates used for testing.
+#' @inheritParams spatial_hetero_test.matrix
 #'
 #' @method spatial_hetero_test matrix
 #' @export
@@ -171,7 +174,10 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #' @param x An `hgwrm` object
 #' @param round The number of times to sampling from model.
 #' @param parallel If TRUE, use `furrr` package to parallel.
-#' @param \dots Unused arguments
+#' @param verbose Override the verbose setting
+#' in the `hgwrm` model with this value.
+#' @param \dots Arguments to be used in re-fitting the model
+#' with function [hgwrr::hgwr].
 #'
 #' @importFrom MASS mvrnorm
 #' @method spatial_hetero_test hgwrm
@@ -186,6 +192,9 @@ spatial_hetero_test.hgwrm <- function(
 ) {
   t0 <- with(x, statistic(gamma, gamma_se))
   args <- as.list(x$call[-1])
+  if (...length() > 0) {
+    args <- c(args, as.list(...))
+  }
   args$f_test <- FALSE
   args$alpha <- 1e-12
   args$max_iters <- 100
