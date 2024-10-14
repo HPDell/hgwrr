@@ -61,31 +61,34 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Arguments passed on to <code><a href="print.table.md.html">print.table.md</a></code></p><dl><dt><code>col.sep</code></dt>
+<dd><p>Arguments passed on to <code><a href="print_table_md.html">print_table_md</a></code></p><dl><dt><code>col_sep</code></dt>
 <dd><p>Column separator. Default to <code>""</code>.</p></dd>
 
-    <dt><code>header.sep</code></dt>
+    <dt><code>header_sep</code></dt>
 <dd><p>Header separator. Default to <code>"-"</code>.
-If <code>header.sep</code> only contains one character, it will be repeated for each column.
-If it contains more than one character, it will be printed below the first row.</p></dd>
+If <code>header_sep</code> only contains one character,
+it will be repeated for each column.
+If it contains more than one character,
+it will be printed below the first row.</p></dd>
 
-    <dt><code>row.begin</code></dt>
+    <dt><code>row_begin</code></dt>
 <dd><p>Character at the beginning of each row.
-Default to <code>col.sep</code>.</p></dd>
+Default to <code>col_sep</code>.</p></dd>
 
-    <dt><code>row.end</code></dt>
+    <dt><code>row_end</code></dt>
 <dd><p>Character at the ending of each row.
-Default to <code>col.sep</code>.</p></dd>
+Default to <code>col_sep</code>.</p></dd>
 
-    <dt><code>table.before</code></dt>
+    <dt><code>table_before</code></dt>
 <dd><p>Characters to be printed before the table.</p></dd>
 
-    <dt><code>table.after</code></dt>
+    <dt><code>table_after</code></dt>
 <dd><p>Characters to be printed after the table.</p></dd>
 
-    <dt><code>table.style</code></dt>
+    <dt><code>table_style</code></dt>
 <dd><p>Name of pre-defined style.
-Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code>, or <code>"booktabs"</code>. Default to <code>"plain"</code>.</p></dd>
+Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code>, or <code>"booktabs"</code>.
+Default to <code>"plain"</code>.</p></dd>
 
 
 </dl></dd>
@@ -97,16 +100,18 @@ Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="summary.hgwrm.html">summary.hgwrm()</a></code>, <code><a href="print.table.md.html">print.table.md()</a></code>.</p></div>
+    <div class="dont-index"><p><code><a href="summary.hgwrm.html">summary.hgwrm()</a></code>, <code><a href="print_table_md.html">print_table_md()</a></code>.</p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="hgwr.html">hgwr</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>              data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
-<span class="r-in"><span>              coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
-<span class="r-in"><span>              bw <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="hgwr.html">hgwr</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>  coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
+<span class="r-in"><span>  bw <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
@@ -153,37 +158,29 @@ Possible values are <code>"plain"</code>, <code>"md"</code>, <code>"latex"</code
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | Intercept |       x1 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | --------- | -------- |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |  2.844509 | 0.966059 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept        x1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.844509  0.966059 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Group-level Spatially Weighted Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficient estimates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | Coefficient |       Min | 1st Quartile |    Median | 3rd Quartile |       Max |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | ----------- | --------- | ------------ | --------- | ------------ | --------- |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   Intercept | -1.430985 |    -1.350693 | -1.140097 |    -0.911629 | -0.727237 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |          g1 |  5.969397 |     6.328338 |  7.136143 |     7.447083 |  8.481628 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |          g2 | -0.683021 |     0.043467 |  0.887209 |     1.174541 |  1.521918 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intercept  -1.430985     -1.350693  -1.140097     -0.911629  -0.727237 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g1   5.969397      6.328338   7.136143      7.447083   8.481628 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g2  -0.683021      0.043467   0.887209      1.174541   1.521918 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample-level Random Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   Groups |      Name | Std.Dev. |     Corr |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | -------- | --------- | -------- | -------- |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |    group | Intercept | 1.921255 |          |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |          |        z1 | 1.921255 | 0.000000 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | Residual |           | 1.921255 |          |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   Groups |      Name | Std.Dev. |     Corr |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | -------- | --------- | -------- | -------- |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |    group | Intercept | 1.921255 |          |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |          |        z1 | 1.921255 | 0.000000 |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> | Residual |           | 1.921255 |          |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name  Std.Dev.      Corr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name  Std.Dev.      Corr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.921255  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>

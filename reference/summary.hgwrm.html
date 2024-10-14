@@ -64,7 +64,8 @@
 <dd><p>Logical/list value.
 Whether to test the spatial heterogeneity of GLSW effects.
 If it is set to <code>FALSE</code>, the test will not be executed.
-If it is set to <code>TRUE</code>, the test will be executed with default parameters (see details below).
+If it is set to <code>TRUE</code>, the test will be executed with default parameters
+(see details below).
 It accepts a list to enable the test with specified parameters.</p></dd>
 
 
@@ -115,10 +116,10 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="hgwr.html">hgwr</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span> formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span> data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
-<span class="r-in"><span> coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
-<span class="r-in"><span> bw <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>  coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
+<span class="r-in"><span>  bw <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
@@ -143,10 +144,6 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
@@ -190,17 +187,7 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effect spatial heterogeneity:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  0.241211  0.230216  0.035692  0.228627  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1  0.736901  0.716578  0.109344  0.694086  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2  0.645812  0.622871  0.118444  0.606161  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
@@ -244,17 +231,7 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effect spatial heterogeneity:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  0.241211  0.239693  0.127825  0.244467  0.002600   ** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1  0.736901  0.732991  0.403952  0.738807  0.001000   ** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2  0.645812  0.644046  0.352540  0.651728  0.000400  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>

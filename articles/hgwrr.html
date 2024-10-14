@@ -85,7 +85,8 @@ the three kinds of effects considering the spatial heterogeneity.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HPDell/hgwrr/" class="external-link">hgwrr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: sf</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="co">#&gt; Loading required package: MASS</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
@@ -233,10 +234,6 @@ information.</p>
 <span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
 <span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>
 <span><span class="co">#&gt;  Residual              0.245697  1.920528           </span></span>
-<span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
-<span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual              0.245697  1.920528           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
@@ -279,17 +276,7 @@ be tested with the following codes.</p>
 <span><span class="co">#&gt;         g1   6.948511  3.180199    0.0%  6.2%  62.5%  31.2% </span></span>
 <span><span class="co">#&gt;         g2   0.719551  3.199181    0.0%  0.0%   0.0%   0.0% </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; GLSW effect spatial heterogeneity:</span></span>
-<span><span class="co">#&gt;             Sd. Est.        t0    Min. t    Max. t  Pr(t&gt;t0)      </span></span>
-<span><span class="co">#&gt;  Intercept  0.268012  0.253645  0.031230  0.247266  0.000000  *** </span></span>
-<span><span class="co">#&gt;         g1  0.854397  0.809485  0.166221  0.805451  0.000000  *** </span></span>
-<span><span class="co">#&gt;         g2  0.722266  0.691518  0.142386  0.673427  0.000000  *** </span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SLR effects:</span></span>
-<span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
-<span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual              0.245697  1.920528           </span></span>
 <span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
 <span><span class="co">#&gt;     group  Intercept  -0.000000  1.920528           </span></span>
 <span><span class="co">#&gt;                   z1   0.005523  1.920528  0.000000 </span></span>

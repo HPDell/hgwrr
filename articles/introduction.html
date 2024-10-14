@@ -176,7 +176,8 @@ a simulated data.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HPDell/hgwrr/" class="external-link">hgwrr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: sf</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="co">#&gt; Loading required package: MASS</span></span></code></pre></div>
 <p>Then we can calibrate an HGWR model via <code><a href="../reference/hgwr.html">hgwr()</a></code>
 function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -380,10 +381,6 @@ information about this model.</p>
 <span><span class="co">#&gt;     group  Intercept  0.000000  1.921255           </span></span>
 <span><span class="co">#&gt;                   z1  0.005422  1.921255  0.000000 </span></span>
 <span><span class="co">#&gt;  Residual             0.233641  1.921255           </span></span>
-<span><span class="co">#&gt;    Groups       Name      Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  0.000000  1.921255           </span></span>
-<span><span class="co">#&gt;                   z1  0.005422  1.921255  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             0.233641  1.921255           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
@@ -507,6 +504,9 @@ get results.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:MASS':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     select</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     filter, lag</span></span>
