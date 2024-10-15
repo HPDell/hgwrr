@@ -223,7 +223,11 @@ test_that("hgwr order data", {
       alpha = 1e-8
     )
   })
-  data_perm <- with(multisampling, data[sample(seq_len(nrow(data)), nrow(data), F),])
+  set.seed(1)
+  data_perm <- with(
+    multisampling,
+    data[sample(seq_len(nrow(data)), nrow(data), FALSE), ]
+  )
   m_perm <- expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),

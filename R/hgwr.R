@@ -126,9 +126,12 @@ hgwr.sf <- function(
   ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
   ### Generate group-level coordinates by taking means
+  model_desc <- parse_formula(formula)
+  ### Order data accordig to group
+  data <- data[order(data[[model_desc$group]]), ]
   data_coords <- sf::st_coordinates(sf::st_centroid(data))
   data <- sf::st_drop_geometry(data)
-  group <- data[[parse_formula(formula)$group]]
+  group <- data[[model_desc$group]]
   group_unique <- unique(group)
   group_index <- as.vector(match(group, group_unique))
   group_coords <- aggregate(data_coords,
@@ -157,8 +160,12 @@ hgwr.data.frame <- function(
   max_iters = 1e6, max_retries = 1e6,
   ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
+  model_desc <- parse_formula(formula)
+  ### Order data accordig to group
+  data <- data[order(data[[model_desc$group]]), ]
   mc0 <- mc <- match.call(expand.dots = TRUE)
   mc[[1]] <- as.name("hgwr_fit")
+  mc[["data"]] <- data
   mev <- eval.parent(mc)
   mev$call <- mc0
   mev
@@ -184,8 +191,6 @@ hgwr_fit <- function(
     "D_Beta" = 1L
   )
   model_desc <- parse_formula(formula)
-  ### Order data accordig to group
-  data <- data[order(data[[model_desc$group]]),]
   y <- as.vector(data[[model_desc$response]])
   group <- data[[model_desc$group]]
   group_unique <- unique(group)
