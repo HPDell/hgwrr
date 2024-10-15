@@ -597,7 +597,6 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
                ncol = ncol(random_corr_str))
       )
     )
-    print_table_md(random_str, ...)
   }
   print_table_md(random_str, ...)
   cat("\n")
