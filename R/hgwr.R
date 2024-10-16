@@ -7,7 +7,7 @@
 #' in **lme4** package.
 #' Models can be specified with the following form:
 #' ```r
-#' response ~ L(local.fixed) + global.fixed + (random | group)
+#' response ~ L(glsw) + fixed + (random | group)
 #' ```
 #' For more information, please see the `formula` subsection in details.
 #' @param data The data.
@@ -287,9 +287,9 @@ hgwr_fit <- function(
   ### Prepare Return Result
   result <- c(hgwr_result, list(
     effects = list(
-      global.fixed = gfe,
-      local.fixed = lfe,
-      random = re,
+      fixed = gfe,
+      glsw = lfe,
+      slr = re,
       group = model_desc$group,
       response = model_desc$response
     ),
@@ -348,9 +348,9 @@ coef.hgwrm <- function(object, ...) {
   effects <- object$effects
   coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
   coef_names <- c(
-    effects$local.fixed[effects$local.fixed != "Intercept"],
-    effects$global.fixed[effects$global.fixed != "Intercept"],
-    effects$random[effects$random != "Intercept"]
+    effects$glsw[effects$glsw != "Intercept"],
+    effects$fixed[effects$fixed != "Intercept"],
+    effects$slr[effects$slr != "Intercept"]
   )
   if (any(unlist(object$intercept) > 0)) {
     colnames(coef) <- c("Intercept", coef_names)
@@ -545,7 +545,7 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
   cat("Fixed Effects", fill = TRUE)
   cat("-------------", fill = TRUE)
   beta_str <- rbind(
-    effects$global.fixed,
+    effects$fixed,
     matrix2char(t(x$beta), decimal.fmt)
   )
   print_table_md(beta_str, ...)
@@ -558,13 +558,13 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
   gamma_fivenum <- t(apply(x$gamma, 2, fivenum))
   gamma_str <- rbind(
     c("Coefficient", "Min", "1st Quartile", "Median", "3rd Quartile", "Max"),
-    cbind(effects$local.fixed, matrix2char(gamma_fivenum, decimal.fmt))
+    cbind(effects$glsw, matrix2char(gamma_fivenum, decimal.fmt))
   )
   print_table_md(gamma_str, ...)
   cat("\n")
   cat("Sample-level Random Effects", fill = TRUE)
   cat("---------------------------", fill = TRUE)
-  re <- x$effects$random
+  re <- x$effects$slr
   x <- summary.hgwrm(x)
   random_stddev <- x$random.stddev
   random_dev_str <- cbind(
@@ -643,7 +643,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
   cat("Parameter Estimates", fill = TRUE)
   cat("-------------------", fill = TRUE)
   cat("Fixed effects:", fill = TRUE)
-  gfe <- x$effects$global.fixed
+  gfe <- x$effects$fixed
   pv_gfe <- x$significance$beta$pv
   stars <- vapply(pv_gfe, pv2stars, rep(" ", n = length(pv_gfe)))
   print_table_md(rbind(
@@ -658,7 +658,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
   cat("Bandwidth:", x$bw, "(nearest neighbours)", fill = TRUE)
   cat("\n")
   cat("GLSW effects:", fill = TRUE)
-  lfe <- x$effects$local.fixed
+  lfe <- x$effects$glsw
   s_gamma <- t(apply(x$significance$gamma$pv, 2, function(p) {
     c(
       "***" = mean(p < 0.001),
@@ -696,7 +696,7 @@ print.summary.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
     cat("\n")
   }
   cat("SLR effects:", fill = TRUE)
-  re <- x$effects$random
+  re <- x$effects$slr
   random_stddev <- x$random.stddev
   random_dev_str <- cbind(
     "", re, matrix2char(cbind(colMeans(x$mu), matrix(random_stddev, ncol = 1)),
