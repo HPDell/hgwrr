@@ -226,7 +226,7 @@ test_that("hgwr order data", {
   set.seed(1)
   data_perm <- with(
     multisampling,
-    data[sample(seq_len(nrow(data)), nrow(data), FALSE), ]
+    data[order(runif(nrow(data))), ]
   )
   m_perm <- expect_no_error({
     hgwr(
