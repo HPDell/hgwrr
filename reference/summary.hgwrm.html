@@ -114,11 +114,11 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="hgwr.html">hgwr</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span></span>
-<span class="r-in"><span>  coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">mulsam.test</span><span class="op">$</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>  coords <span class="op">=</span> <span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span>,</span></span>
 <span class="r-in"><span>  bw <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
@@ -126,133 +126,133 @@ with the following fields.</p><dl><dt><code>diagnostic</code></dt>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: mulsam.test$data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   2.844509  0.254491  11.177234  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   0.966059  0.046763  20.658467  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   1.967644  0.033827  58.168539  0.000000  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -1.115285  0.543705  0.0%  0.0%  56.2%  18.8% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **     *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.033171           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.869539  1.033171  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.079964  1.033171           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.641698 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.905207 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q    Median        3Q       Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.222809  -0.982000  0.161400  1.480594  5.562956 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 25</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span>, test_hetero <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: mulsam.test$data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   2.844509  0.254491  11.177234  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   0.966059  0.046763  20.658467  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   1.967644  0.033827  58.168539  0.000000  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -1.115285  0.543705  0.0%  0.0%  56.2%  18.8% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **     *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.033171           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.869539  1.033171  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.079964  1.033171           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.641698 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.905207 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q    Median        3Q       Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.222809  -0.982000  0.161400  1.480594  5.562956 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 25</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span>, test_hetero <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>kernel <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hierarchical and geographically weighted regression model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =========================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Method: Back-fitting and Maximum likelihood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: multisampling$data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: mulsam.test$data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   2.844509  0.254491  11.177234  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   0.966059  0.046763  20.658467  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   1.967644  0.033827  58.168539  0.000000  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **      *      . </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -1.115285  0.543705  0.0%  0.0%  56.2%  18.8% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **     *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.921255           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  0.005422  1.921255  0.000000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.233641  1.921255           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.033171           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.869539  1.033171  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.079964  1.033171           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.641698 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.905207 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q    Median        3Q       Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -5.222809  -0.982000  0.161400  1.480594  5.562956 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 25</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

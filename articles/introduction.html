@@ -163,7 +163,7 @@ the following codes to install it.</p>
 <p>Or download <a href="https://github.com/HPDell/hgwr/releases/latest" class="external-link">latest released
 source package</a> and run the following command to install this
 package.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL hgwrr_0.2-0.tar.gz</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL hgwrr_0.5-0.tar.gz</span></code></pre></div>
 <p>Note that <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">RTools</a> is
 required on Windows.</p>
 </div>
@@ -218,25 +218,25 @@ for more information.</p>
 <p><em>This example is used to show the usage of this package and to
 test whether it works. We don’t care about how good the fitness of this
 model is with this data set.</em></p>
-<p>A data set “multisampling” is provided with this package,</p>
+<p>A data set “mulsam.test” is provided with this package,</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           y        g1         g2         z1         x1 group</span></span>
-<span><span class="co">#&gt; 1 1.2311965 0.1706889 -0.2246718  1.4808437  0.7930132     1</span></span>
-<span><span class="co">#&gt; 2 2.7154442 0.1706889 -0.2246718  0.4890035  0.5222513     1</span></span>
-<span><span class="co">#&gt; 3 1.9980754 0.1706889 -0.2246718 -0.2261288  1.7462222     1</span></span>
-<span><span class="co">#&gt; 4 3.7671728 0.1706889 -0.2246718  0.3268472 -1.2713361     1</span></span>
-<span><span class="co">#&gt; 5 4.4938533 0.1706889 -0.2246718  1.8754945  2.1973895     1</span></span>
-<span><span class="co">#&gt; 6 0.7256683 0.1706889 -0.2246718 -0.3023764  0.4331308     1</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          U        V</span></span>
-<span><span class="co">#&gt; 1 2940.897 2851.943</span></span>
-<span><span class="co">#&gt; 2 3002.659 3157.717</span></span>
-<span><span class="co">#&gt; 3 2848.345 2904.326</span></span>
-<span><span class="co">#&gt; 4 2863.735 2907.999</span></span>
-<span><span class="co">#&gt; 5 3117.849 2800.236</span></span>
-<span><span class="co">#&gt; 6 2906.585 2972.770</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            y        g1         g2         x1         z1 group</span></span>
+<span><span class="co">#&gt; 1  3.0943882 0.0443617 -0.0486926  0.9265996  0.4943128     1</span></span>
+<span><span class="co">#&gt; 2  3.5794558 0.0443617 -0.0486926  0.5094696  1.3079015     1</span></span>
+<span><span class="co">#&gt; 3  7.8495496 0.0443617 -0.0486926  1.6624003  1.4970410     1</span></span>
+<span><span class="co">#&gt; 4  2.3392806 0.0443617 -0.0486926 -0.3305220  0.8147027     1</span></span>
+<span><span class="co">#&gt; 5  0.1267381 0.0443617 -0.0486926  1.5099312 -1.8697888     1</span></span>
+<span><span class="co">#&gt; 6 -2.1884856 0.0443617 -0.0486926 -1.9505113  0.4820295     1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   u  v</span></span>
+<span><span class="co">#&gt; 1 0  9</span></span>
+<span><span class="co">#&gt; 2 2 19</span></span>
+<span><span class="co">#&gt; 3 3 17</span></span>
+<span><span class="co">#&gt; 4 4  2</span></span>
+<span><span class="co">#&gt; 5 5 10</span></span>
+<span><span class="co">#&gt; 6 6  1</span></span></code></pre></div>
 <p>where <code>y</code> is the dependent variable, <code>g1</code> and
 <code>g2</code> are two group-level variables, <code>z1</code> and
 <code>x1</code> are two sample-level variables, <code>group</code> are
@@ -250,43 +250,43 @@ this</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ms_hgwr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hgwr.html">hgwr</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span>
-<span>  coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span>
-<span>  bw <span class="op">=</span> <span class="fl">10</span></span>
+<span>  data <span class="op">=</span> <span class="va">mulsam.test</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  coords <span class="op">=</span> <span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span>,</span>
+<span>  bw <span class="op">=</span> <span class="fl">10</span>, alpha <span class="op">=</span> <span class="fl">1e-16</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">ms_hgwr</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
 <span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
-<span><span class="co">#&gt;    Data: multisampling$data</span></span>
+<span><span class="co">#&gt;    Data: mulsam.test$data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   2.844509  0.966059 </span></span>
+<span><span class="co">#&gt;   1.852190  1.967644 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; --------------------------------------</span></span>
 <span><span class="co">#&gt; Bandwidth: 10 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficient estimates:</span></span>
-<span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;    Intercept  -1.430985     -1.350693  -1.140097     -0.911629  -0.727237 </span></span>
-<span><span class="co">#&gt;           g1   5.969397      6.328338   7.136143      7.447083   8.481628 </span></span>
-<span><span class="co">#&gt;           g2  -0.683021      0.043467   0.887209      1.174541   1.521918 </span></span>
+<span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
+<span><span class="co">#&gt;    Intercept  -0.549094     -0.439522  -0.151433     -0.024133  0.178044 </span></span>
+<span><span class="co">#&gt;           g1   0.909293      1.253143   1.692616      1.927313  2.310056 </span></span>
+<span><span class="co">#&gt;           g2   1.083410      1.279953   1.415744      1.594576  1.693768 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.921255           </span></span>
-<span><span class="co">#&gt;                   z1  1.921255  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.921255           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.033171           </span></span>
+<span><span class="co">#&gt;                   z1  1.033171  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.033171           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 484</span></span>
-<span><span class="co">#&gt;        Groups: group , 16</span></span></code></pre></div>
+<span><span class="co">#&gt; Number of Obs: 873</span></span>
+<span><span class="co">#&gt;        Groups: group , 25</span></span></code></pre></div>
 <p>The output of the model shows estimations of global fixed effects,
 summary of those of local fixed effects. Also there are the standard
 deviations of random effects and correlation coefficients between
@@ -294,30 +294,38 @@ them.</p>
 <p>Then we can have a look on the coefficient estimations.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     Intercept       g1          g2        x1          z1</span></span>
-<span><span class="co">#&gt; 1  0.63728385 7.718650  0.04654332 0.9660594 -0.19316953</span></span>
-<span><span class="co">#&gt; 2  3.16626457 6.554636  1.33431862 0.9660594  0.28646830</span></span>
-<span><span class="co">#&gt; 3  0.59681282 7.420539  0.79849908 0.9660594  1.27063639</span></span>
-<span><span class="co">#&gt; 4  2.26041067 7.395640  0.86517318 0.9660594 -0.59984180</span></span>
-<span><span class="co">#&gt; 5  5.72855111 8.481628 -0.68302067 0.9660594 -1.46606958</span></span>
-<span><span class="co">#&gt; 6  0.35901307 6.235741  1.26283083 0.9660594  0.69526966</span></span>
-<span><span class="co">#&gt; 7  2.39877444 7.650960 -0.02458224 0.9660594 -1.46161629</span></span>
-<span><span class="co">#&gt; 8  2.96706662 7.274534 -0.09758977 0.9660594  0.32008996</span></span>
-<span><span class="co">#&gt; 9  0.80004263 5.969397  0.95359748 0.9660594  0.60679673</span></span>
-<span><span class="co">#&gt; 10 1.03852566 6.004158  1.52191830 0.9660594 -0.85534304</span></span>
-<span><span class="co">#&gt; 11 0.88341276 6.997752  1.08577440 0.9660594  0.31273932</span></span>
-<span><span class="co">#&gt; 12 0.19476251 7.473628  0.04039086 0.9660594 -0.41973900</span></span>
-<span><span class="co">#&gt; 13 0.08539817 7.308281  0.90924576 0.9660594  1.57629379</span></span>
-<span><span class="co">#&gt; 14 2.91084212 5.975806  1.10442026 0.9660594  0.01154764</span></span>
-<span><span class="co">#&gt; 15 1.58219548 6.420936  1.24466256 0.9660594  0.04762966</span></span>
-<span><span class="co">#&gt; 16 2.05821271 6.734675  0.26179176 0.9660594 -0.04494147</span></span></code></pre></div>
+<span><span class="co">#&gt;    Intercept        g1       g2       x1       z1</span></span>
+<span><span class="co">#&gt; 1  0.9233672 2.3100563 1.623094 1.967644 1.817155</span></span>
+<span><span class="co">#&gt; 2  1.1355688 1.9273133 1.623457 1.967644 2.305716</span></span>
+<span><span class="co">#&gt; 3  1.8948376 1.9681553 1.625849 1.967644 2.251604</span></span>
+<span><span class="co">#&gt; 4  1.1327246 2.2656619 1.536906 1.967644 1.590994</span></span>
+<span><span class="co">#&gt; 5  1.7883252 2.1834680 1.594576 1.967644 1.698679</span></span>
+<span><span class="co">#&gt; 6  0.7060594 2.0168951 1.399640 1.967644 1.855324</span></span>
+<span><span class="co">#&gt; 7  1.0109699 1.9266816 1.355484 1.967644 1.105044</span></span>
+<span><span class="co">#&gt; 8  1.7495857 1.8658473 1.670593 1.967644 1.021006</span></span>
+<span><span class="co">#&gt; 9  0.8418062 1.8149658 1.279953 1.967644 2.980240</span></span>
+<span><span class="co">#&gt; 10 1.3535790 1.9201790 1.362606 1.967644 2.081303</span></span>
+<span><span class="co">#&gt; 11 1.0394353 1.9399671 1.480825 1.967644 1.999491</span></span>
+<span><span class="co">#&gt; 12 1.8167418 1.8022871 1.693768 1.967644 2.303986</span></span>
+<span><span class="co">#&gt; 13 2.4239639 1.5126602 1.612656 1.967644 1.471564</span></span>
+<span><span class="co">#&gt; 14 0.5334871 1.6926159 1.237340 1.967644 1.676205</span></span>
+<span><span class="co">#&gt; 15 1.3043111 1.6881432 1.264833 1.967644 1.454624</span></span>
+<span><span class="co">#&gt; 16 1.3370861 1.5843740 1.238710 1.967644 2.374940</span></span>
+<span><span class="co">#&gt; 17 1.5039024 1.5804393 1.525840 1.967644 1.042542</span></span>
+<span><span class="co">#&gt; 18 2.0337854 1.2531427 1.376711 1.967644 1.454729</span></span>
+<span><span class="co">#&gt; 19 1.9575950 1.2613191 1.415744 1.967644 2.718663</span></span>
+<span><span class="co">#&gt; 20 2.5267858 1.2438959 1.500855 1.967644 1.902474</span></span>
+<span><span class="co">#&gt; 21 1.4363110 1.1675786 1.354417 1.967644 1.672610</span></span>
+<span><span class="co">#&gt; 22 2.6255900 1.0711151 1.543638 1.967644 3.185923</span></span>
+<span><span class="co">#&gt; 23 2.6121111 0.9099629 1.168313 1.967644 1.382425</span></span>
+<span><span class="co">#&gt; 24 2.2433299 0.9092926 1.083410 1.967644 1.755667</span></span>
+<span><span class="co">#&gt; 25 3.1624476 0.9708449 1.183679 1.967644 1.635566</span></span></code></pre></div>
 <p>With <strong>ggplot2</strong> or other packages, we can create some
 figures.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="va">ms_hgwr_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ms_hgwr_coef</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">U</span>, y <span class="op">=</span> <span class="va">V</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">g1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">ms_hgwr_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ms_hgwr_coef</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">v</span>, color <span class="op">=</span> <span class="va">g1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>We can also convert it to spatial data and use <strong>tmap</strong>
@@ -328,25 +336,24 @@ to visualize.</p>
 <span><span class="co">#&gt; Breaking News: tmap 3.x is retiring. Please test v4, e.g. with</span></span>
 <span><span class="co">#&gt; remotes::install_github('r-tmap/tmap')</span></span>
 <span><span class="va">ms_hgwr_coef_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">ms_hgwr_coef</span>,</span>
-<span>                            coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span>,</span>
+<span>                            coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span>,</span>
 <span>                            crs <span class="op">=</span> <span class="fl">27700</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">ms_hgwr_coef_sf</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g1"</span>, <span class="st">"g2"</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Variable(s) "g2" contains positive and negative values, so midpoint is set to 0. Set midpoint = NA to show the full spectrum of the color palette.</span></span></code></pre></div>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">ms_hgwr_coef_sf</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g1"</span>, <span class="st">"g2"</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>And we can also fetch the fitted and residuals.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  real <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">y</span>,</span>
+<span>  real <span class="op">=</span> <span class="va">mulsam.test</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">y</span>,</span>
 <span>  fitted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span>,</span>
 <span>  residuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        real    fitted  residuals</span></span>
-<span><span class="co">#&gt; 1 1.2311965 2.4243588 -1.1931623</span></span>
-<span><span class="co">#&gt; 2 2.7154442 2.3543800  0.3610642</span></span>
-<span><span class="co">#&gt; 3 1.9980754 3.6749504 -1.6768750</span></span>
-<span><span class="co">#&gt; 4 3.7671728 0.6529918  3.1141810</span></span>
-<span><span class="co">#&gt; 5 4.4938533 3.7048352  0.7890181</span></span>
-<span><span class="co">#&gt; 6 0.7256683 2.4211548 -1.6954865</span></span></code></pre></div>
+<span><span class="co">#&gt;         real    fitted  residuals</span></span>
+<span><span class="co">#&gt; 1  3.0943882  3.668274 -0.5738854</span></span>
+<span><span class="co">#&gt; 2  3.5794558  4.325927 -0.7464712</span></span>
+<span><span class="co">#&gt; 3  7.8495496  6.938180  0.9113695</span></span>
+<span><span class="co">#&gt; 4  2.3392806  1.776904  0.5623768</span></span>
+<span><span class="co">#&gt; 5  0.1267381  0.520124 -0.3933859</span></span>
+<span><span class="co">#&gt; 6 -2.1884856 -2.015177 -0.1733083</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function will give some statistical
 information about this model.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -355,45 +362,45 @@ information about this model.</p>
 <span><span class="co">#&gt; =========================================================</span></span>
 <span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
-<span><span class="co">#&gt;    Data: multisampling$data</span></span>
+<span><span class="co">#&gt;    Data: mulsam.test$data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Parameter Estimates</span></span>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;  Intercept   2.844509  0.254491  11.177234  0.000000  *** </span></span>
-<span><span class="co">#&gt;         x1   0.966059  0.046763  20.658467  0.000000  *** </span></span>
+<span><span class="co">#&gt;  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span></span>
+<span><span class="co">#&gt;         x1   1.967644  0.033827  58.168539  0.000000  *** </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bandwidth: 10 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; GLSW effects:</span></span>
-<span><span class="co">#&gt;             Mean Est.  Mean Sd.   ***    **      *      . </span></span>
-<span><span class="co">#&gt;  Intercept  -1.115285  0.543705  0.0%  0.0%  56.2%  18.8% </span></span>
-<span><span class="co">#&gt;         g1   6.976060  3.128518  0.0%  6.2%  68.8%  25.0% </span></span>
-<span><span class="co">#&gt;         g2   0.663998  3.158385  0.0%  0.0%   0.0%   0.0% </span></span>
+<span><span class="co">#&gt;             Mean Est.  Mean Sd.   ***    **     *      . </span></span>
+<span><span class="co">#&gt;  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span></span>
+<span><span class="co">#&gt;         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span></span>
+<span><span class="co">#&gt;         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SLR effects:</span></span>
 <span><span class="co">#&gt;    Groups       Name      Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  0.000000  1.921255           </span></span>
-<span><span class="co">#&gt;                   z1  0.005422  1.921255  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             0.233641  1.921255           </span></span>
+<span><span class="co">#&gt;     group  Intercept  0.000000  1.033171           </span></span>
+<span><span class="co">#&gt;                   z1  1.869539  1.033171  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             0.079964  1.033171           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  rsquared  0.641698 </span></span>
-<span><span class="co">#&gt;    logLik       NaN </span></span>
-<span><span class="co">#&gt;       AIC       NaN </span></span>
+<span><span class="co">#&gt;  rsquared     0.905207 </span></span>
+<span><span class="co">#&gt;    logLik  -118.467314 </span></span>
+<span><span class="co">#&gt;       AIC   261.985064 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Scaled Residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q    Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -5.222809  -0.982000  0.161400  1.480594  5.562956 </span></span>
+<span><span class="co">#&gt;  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 484</span></span>
-<span><span class="co">#&gt;        Groups: group , 16</span></span></code></pre></div>
+<span><span class="co">#&gt; Number of Obs: 873</span></span>
+<span><span class="co">#&gt;        Groups: group , 25</span></span></code></pre></div>
 <p>On the current stage, only pseudo
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
 is available. In the future, more diagnostic information will be
@@ -402,41 +409,41 @@ provided in this package.</p>
 <div class="section level3">
 <h3 id="example-large-scale-simulated-data">Example: Large Scale Simulated Data<a class="anchor" aria-label="anchor" href="#example-large-scale-simulated-data"></a>
 </h3>
-<p>In the former example, there are only 484 observations and 16 groups.
+<p>In the former example, there are only 873 observations and 25 groups.
 They are not adequate enough to get precises estimations. Here, we are
 going to use a large scale simulated data set to show the performance of
 HGWR model. As the true value of coefficients are already known (stored
 in variable <code>msl_beta</code>), closeness between estimated and true
 values is an practical performance metric.</p>
 <p>The data set is provided <a href="./data/example2.rda">here</a>. Its
-structure is similar to data <code>multisampling</code>.</p>
+structure is similar to data <code>mulsam.test</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling.large</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling.large</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          y        g1        g2         x1         z1 group</span></span>
-<span><span class="co">#&gt; 1 2.090256 0.1933745 -0.057836  0.7930132  1.1432041     1</span></span>
-<span><span class="co">#&gt; 2 3.456452 0.1933745 -0.057836  0.5222513  1.0198745     1</span></span>
-<span><span class="co">#&gt; 3 2.876627 0.1933745 -0.057836  1.7462222 -0.7071740     1</span></span>
-<span><span class="co">#&gt; 4 4.510162 0.1933745 -0.057836 -1.2713361  0.8431381     1</span></span>
-<span><span class="co">#&gt; 5 5.583738 0.1933745 -0.057836  2.1973895 -0.1603318     1</span></span>
-<span><span class="co">#&gt; 6 1.601511 0.1933745 -0.057836  0.4331308 -0.7634945     1</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling.large</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            V1       V2</span></span>
-<span><span class="co">#&gt; [1,] 2940.897 2851.943</span></span>
-<span><span class="co">#&gt; [2,] 3002.659 3157.717</span></span>
-<span><span class="co">#&gt; [3,] 2848.345 2904.326</span></span>
-<span><span class="co">#&gt; [4,] 2863.735 2907.999</span></span>
-<span><span class="co">#&gt; [5,] 3117.849 2800.236</span></span>
-<span><span class="co">#&gt; [6,] 2906.585 2972.770</span></span>
-<span><span class="va">msl_beta</span> <span class="op">&lt;-</span> <span class="va">multisampling.large</span><span class="op">$</span><span class="va">beta</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           y         g1        g2         x1         z1 group</span></span>
+<span><span class="co">#&gt; 1  4.274065 -0.1541009 0.1088925  3.1685285 -0.6264538     1</span></span>
+<span><span class="co">#&gt; 2  0.952104 -0.1541009 0.1088925 -0.0310156  0.1836433     1</span></span>
+<span><span class="co">#&gt; 3 -2.277711 -0.1541009 0.1088925 -1.0921285 -0.8356286     1</span></span>
+<span><span class="co">#&gt; 4  1.210245 -0.1541009 0.1088925 -0.9828463  1.5952808     1</span></span>
+<span><span class="co">#&gt; 5  4.546979 -0.1541009 0.1088925  1.7193320  0.3295078     1</span></span>
+<span><span class="co">#&gt; 6 -5.204828 -0.1541009 0.1088925 -1.8466449 -0.8204684     1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   u v</span></span>
+<span><span class="co">#&gt; 1 0 0</span></span>
+<span><span class="co">#&gt; 2 0 1</span></span>
+<span><span class="co">#&gt; 3 0 2</span></span>
+<span><span class="co">#&gt; 4 0 3</span></span>
+<span><span class="co">#&gt; 5 0 4</span></span>
+<span><span class="co">#&gt; 6 0 5</span></span>
+<span><span class="va">msl_beta</span> <span class="op">&lt;-</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">beta</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">msl_beta</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept        g1        g2          z1 x1</span></span>
-<span><span class="co">#&gt; 1 0.7114818 11.309720  3.336208 -0.13592452  1</span></span>
-<span><span class="co">#&gt; 2 1.6523106 12.438025  4.972805 -0.04079697  1</span></span>
-<span><span class="co">#&gt; 3 1.4783712  6.876733 -5.069080  1.01053901  1</span></span>
-<span><span class="co">#&gt; 4 3.2734732  6.088872 -3.877653 -0.15826244  1</span></span>
-<span><span class="co">#&gt; 5 3.8245206 21.341706  3.814638 -2.15663750  1</span></span>
-<span><span class="co">#&gt; 6 0.4886921  1.243364 -2.469626  0.49864683  1</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intercept g1        g2 x1       z1</span></span>
+<span><span class="co">#&gt; 1 0.3495151  0 0.2519548  2 2.463117</span></span>
+<span><span class="co">#&gt; 2 0.4287200  0 0.3142063  2 2.633550</span></span>
+<span><span class="co">#&gt; 3 0.3296451  0 0.3843869  2 1.252887</span></span>
+<span><span class="co">#&gt; 4 0.2671497  0 0.4613005  2 1.905223</span></span>
+<span><span class="co">#&gt; 5 0.4647590  0 0.5430762  2 1.908053</span></span>
+<span><span class="co">#&gt; 6 0.2715478  0 0.6271901  2 1.425105</span></span></code></pre></div>
 <p>In this data, we also regards <code>g1</code> and <code>g2</code> as
 two group-level variables, <code>z1</code> and <code>x1</code> as two
 sample-level variables, <code>group</code> as the labels of the groups
@@ -444,49 +451,49 @@ they belong to, and <code>U</code>, <code>V</code> as longitude and
 latitude coordinate values of all groups. Then we calibrate an HGWR
 model.</p>
 <blockquote>
-<p>As the data is large (13862 observations), it may take some time to
+<p>As the data is large (21434 observations), it may take some time to
 get results.</p>
 </blockquote>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">msl_hgwr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hgwr.html">hgwr</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span><span class="op">)</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">multisampling.large</span><span class="op">$</span><span class="va">data</span>,</span>
-<span>  coords <span class="op">=</span> <span class="va">multisampling.large</span><span class="op">$</span><span class="va">coords</span>,</span>
-<span>  bw <span class="op">=</span> <span class="fl">32</span>, kernel <span class="op">=</span> <span class="st">"bisquared"</span></span>
+<span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  coords <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span>,</span>
+<span>  bw <span class="op">=</span> <span class="fl">128</span>, kernel <span class="op">=</span> <span class="st">"bisquared"</span>, alpha <span class="op">=</span> <span class="fl">1e-16</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">msl_hgwr</span></span>
 <span><span class="co">#&gt; Hierarchical and geographically weighted regression model</span></span>
 <span><span class="co">#&gt; =========================================================</span></span>
 <span><span class="co">#&gt; Formula: y ~ L(g1 + g2) + x1 + (z1 | group)</span></span>
 <span><span class="co">#&gt;  Method: Back-fitting and Maximum likelihood</span></span>
-<span><span class="co">#&gt;    Data: multisampling.large$data</span></span>
+<span><span class="co">#&gt;    Data: multisampling$data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   1.856041  1.010716 </span></span>
+<span><span class="co">#&gt;   1.993571  2.013951 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; --------------------------------------</span></span>
-<span><span class="co">#&gt; Bandwidth: 32 (nearest neighbours)</span></span>
+<span><span class="co">#&gt; Bandwidth: 128 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficient estimates:</span></span>
-<span><span class="co">#&gt;  Coefficient         Min  1st Quartile     Median  3rd Quartile        Max </span></span>
-<span><span class="co">#&gt;    Intercept   -0.839777     -0.231721  -0.065754      0.095718   0.622823 </span></span>
-<span><span class="co">#&gt;           g1   -3.110748      0.390257   3.637581      6.433589  12.076704 </span></span>
-<span><span class="co">#&gt;           g2  -10.971950     -2.457583  -0.439274      1.977123   8.306397 </span></span>
+<span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
+<span><span class="co">#&gt;    Intercept  -1.365347     -0.546013  -0.000998      0.568186  1.408843 </span></span>
+<span><span class="co">#&gt;           g1   0.383958      1.101335   1.560858      2.425391  3.599753 </span></span>
+<span><span class="co">#&gt;           g2   0.777366      1.371943   1.751608      2.461359  3.572902 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.989349           </span></span>
-<span><span class="co">#&gt;                   z1  1.989349  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.989349           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.037299           </span></span>
+<span><span class="co">#&gt;                   z1  1.037299  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.037299           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 13862</span></span>
-<span><span class="co">#&gt;        Groups: group , 200</span></span></code></pre></div>
+<span><span class="co">#&gt; Number of Obs: 21434</span></span>
+<span><span class="co">#&gt;        Groups: group , 625</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="fitness-assessment">Fitness Assessment<a class="anchor" aria-label="anchor" href="#fitness-assessment"></a>
 </h4>
@@ -528,9 +535,9 @@ useful to assess the fitting performance.</p>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_hgwr_err</span></span>
-<span><span class="co">#&gt;      Intercept       g1       g2        z1         x1</span></span>
-<span><span class="co">#&gt; MAE  0.3599828 2.367257 2.266689 0.2025208 0.01071645</span></span>
-<span><span class="co">#&gt; RMSE 0.4910691 3.644679 2.976845 0.2576828 0.01071645</span></span></code></pre></div>
+<span><span class="co">#&gt;      Intercept        g1        g2        x1        z1</span></span>
+<span><span class="co">#&gt; MAE  0.1677028 0.4417195 0.3350320 0.4179894 0.3952250</span></span>
+<span><span class="co">#&gt; RMSE 0.2127406 0.5485650 0.4073874 0.5191893 0.4937104</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="comparison-of-hgwr-gwr-and-hlm">Comparison of HGWR, GWR and HLM<a class="anchor" aria-label="anchor" href="#comparison-of-hgwr-gwr-and-hlm"></a>
@@ -548,8 +555,8 @@ calibrated with the following codes.</p>
 <span><span class="co">#&gt; Loading required package: sp</span></span>
 <span><span class="co">#&gt; Loading required package: Rcpp</span></span>
 <span><span class="co">#&gt; Welcome to GWmodel version 2.4-2.</span></span>
-<span><span class="va">msl_gwr_data</span> <span class="op">&lt;-</span> <span class="va">multisampling.large</span><span class="op">$</span><span class="va">data</span></span>
-<span><span class="fu"><a href="https://edzer.github.io/sp/reference/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">msl_gwr_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">multisampling.large</span>, <span class="va">coords</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">group</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">msl_gwr_data</span> <span class="op">&lt;-</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="fu"><a href="https://edzer.github.io/sp/reference/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">msl_gwr_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">multisampling</span>, <span class="va">coords</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">group</span>, <span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">##### Get optimized bandwidth via golden minimization algorithm.</span></span>
 <span><span class="va">msl_gwr_bw</span> <span class="op">&lt;-</span> <span class="fl">265</span>  <span class="co"># The bandiwdth is pre-optimised to save time.</span></span>
 <span><span class="co">##### Calibrate GWR model with optimized bandwidth.</span></span>
@@ -577,16 +584,16 @@ calibrated with the following codes.</p>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_gwr_err</span></span>
-<span><span class="co">#&gt;         Intercept           g1           g2        z1        x1</span></span>
-<span><span class="co">#&gt; MAE  3.414899e+15 8.396317e+16 1.925287e+17 0.7135892 0.4244955</span></span>
-<span><span class="co">#&gt; RMSE 4.168939e+16 1.006233e+18 2.338391e+18 2.7673018 2.6585412</span></span></code></pre></div>
+<span><span class="co">#&gt;      Intercept       g1        g2        x1        z1</span></span>
+<span><span class="co">#&gt; MAE  0.1827751 1.024012 0.9715697 0.2332346 0.3964786</span></span>
+<span><span class="co">#&gt; RMSE 0.2448687 1.532527 1.4101019 0.2964659 0.4994751</span></span></code></pre></div>
 <p>And also a HLM model calibrated with the following codes.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
 <span><span class="va">msl_hlm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">multisampling.large</span><span class="op">$</span><span class="va">data</span></span>
+<span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">msl_hlm_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">msl_hlm</span><span class="op">)</span><span class="op">$</span><span class="va">group</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">msl_hlm_coef</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">msl_hlm_coef</span><span class="op">)</span> <span class="op">==</span> <span class="st">"(Intercept)"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Intercept"</span></span>
@@ -598,9 +605,9 @@ calibrated with the following codes.</p>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_hlm_err</span></span>
-<span><span class="co">#&gt;      Intercept       g1       g2        z1        x1</span></span>
-<span><span class="co">#&gt; MAE  0.5403015 3.961721 3.183228 0.2036397 0.0102346</span></span>
-<span><span class="co">#&gt; RMSE 0.8043435 5.423963 4.610203 0.2584218 0.0102346</span></span></code></pre></div>
+<span><span class="co">#&gt;      Intercept       g1        g2        x1        z1</span></span>
+<span><span class="co">#&gt; MAE  0.2454883 1.073194 0.8378061 0.4266994 0.3952242</span></span>
+<span><span class="co">#&gt; RMSE 0.3279763 1.237473 0.9856770 0.5300526 0.4937105</span></span></code></pre></div>
 <p>A bar plot will be helpful here to compare the fitness of these three
 models.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
