@@ -158,7 +158,7 @@ ms_hgwr <- hgwr(
   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
   data = mulsam.test$data,
   coords = mulsam.test$coords,
-  bw = 10
+  bw = 10, alpha = 1e-16
 )
 ms_hgwr
 ```
@@ -246,7 +246,7 @@ msl_hgwr <- hgwr(
   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
   data = multisampling$data,
   coords = multisampling$coords,
-  bw = 32, kernel = "bisquared"
+  bw = 128, kernel = "bisquared", alpha = 1e-16
 )
 msl_hgwr
 ```
