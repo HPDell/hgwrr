@@ -136,12 +136,12 @@ please check the documentation of function `hgwr()` for more information.
 *This example is used to show the usage of this package and to test whether it works.
 We don't care about how good the fitness of this model is with this data set.*
 
-A data set "multisampling" is provided with this package,
+A data set "mulsam.test" is provided with this package,
 
 ```{r}
-data(multisampling)
-head(multisampling$data)
-head(multisampling$coords)
+data(mulsam.test)
+head(mulsam.test$data)
+head(mulsam.test$coords)
 ```
 
 where `y` is the dependent variable,
@@ -156,8 +156,8 @@ Then we can calibrate an HGWR model with like this
 ```{r ms-hgwr, cache=T}
 ms_hgwr <- hgwr(
   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-  data = multisampling$data,
-  coords = multisampling$coords,
+  data = mulsam.test$data,
+  coords = mulsam.test$coords,
   bw = 10
 )
 ms_hgwr
@@ -177,7 +177,7 @@ With **ggplot2** or other packages, we can create some figures.
 
 ```{r}
 library(ggplot2)
-ms_hgwr_coef <- as.data.frame(cbind(multisampling$coords, coef(ms_hgwr)))
+ms_hgwr_coef <- as.data.frame(cbind(mulsam.test$coords, coef(ms_hgwr)))
 ggplot(ms_hgwr_coef, aes(x = U, y = V)) +
   geom_point(aes(color = g1)) +
   coord_fixed() + theme_bw()
@@ -189,7 +189,7 @@ We can also convert it to spatial data and use **tmap** to visualize.
 library(sf)
 library(tmap)
 ms_hgwr_coef_sf <- st_as_sf(ms_hgwr_coef,
-                            coords = names(multisampling$coords),
+                            coords = names(mulsam.test$coords),
                             crs = 27700)
 tm_shape(ms_hgwr_coef_sf) + tm_dots(col = c("g1", "g2"), size = 0.5)
 ```
@@ -198,7 +198,7 @@ And we can also fetch the fitted and residuals.
 
 ```{r}
 head(data.frame(
-  real = multisampling$data$y,
+  real = mulsam.test$data$y,
   fitted = fitted(ms_hgwr),
   residuals = residuals(ms_hgwr)
 ))
@@ -215,20 +215,20 @@ In the future, more diagnostic information will be provided in this package.
 
 ## Example: Large Scale Simulated Data
 
-In the former example, there are only `r nrow(multisampling$data)` observations and `r nrow(multisampling$coords)` groups.
+In the former example, there are only `r nrow(mulsam.test$data)` observations and `r nrow(mulsam.test$coords)` groups.
 They are not adequate enough to get precises estimations.
 Here, we are going to use a large scale simulated data set to show the performance of HGWR model.
 As the true value of coefficients are already known (stored in variable `msl_beta`),
 closeness between estimated and true values is an practical performance metric.
 
 The data set is provided [here](./data/example2.rda).
-Its structure is similar to data `multisampling`.
+Its structure is similar to data `mulsam.test`.
 
 ```{r}
-data(multisampling.large)
-head(multisampling.large$data)
-head(multisampling.large$coords)
-msl_beta <- multisampling.large$beta
+data(multisampling)
+head(multisampling$data)
+head(multisampling$coords)
+msl_beta <- multisampling$beta
 head(msl_beta)
 ```
 
@@ -239,14 +239,14 @@ In this data, we also regards
 and `U`, `V` as longitude and latitude coordinate values of all groups.
 Then we calibrate an HGWR model.
 
-> As the data is large (`r nrow(multisampling.large$data)` observations),
+> As the data is large (`r nrow(multisampling$data)` observations),
 > it may take some time to get results.
 
 ```{r msl-hgwr, cache=T}
 msl_hgwr <- hgwr(
   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-  data = multisampling.large$data,
-  coords = multisampling.large$coords,
+  data = multisampling$data,
+  coords = multisampling$coords,
   bw = 32, kernel = "bisquared"
 )
 msl_hgwr
@@ -296,8 +296,8 @@ parallel_method = ifelse(enable_parallel, "omp", FALSE)
 parallel_arg = ifelse(enable_parallel, 0, NA)
 ### GWR model
 library(GWmodel)
-msl_gwr_data <- multisampling.large$data
-coordinates(msl_gwr_data) <- with(multisampling.large, coords[data$group, ])
+msl_gwr_data <- multisampling$data
+coordinates(msl_gwr_data) <- with(multisampling, coords[data$group, ])
 ##### Get optimized bandwidth via golden minimization algorithm.
 msl_gwr_bw <- 265  # The bandiwdth is pre-optimised to save time.
 ##### Calibrate GWR model with optimized bandwidth.
@@ -333,7 +333,7 @@ And also a HLM model calibrated with the following codes.
 library(lme4)
 msl_hlm <- lmer(
   formula = y ~ g1 + g2 + x1 + (z1 | group),
-  data = multisampling.large$data
+  data = multisampling$data
 )
 msl_hlm_coef <- coef(msl_hlm)$group
 colnames(msl_hlm_coef)[which(colnames(msl_hlm_coef) == "(Intercept)")] <- "Intercept"

@@ -38,11 +38,11 @@ No return.
 Print summary of an \code{hgwrm} object.
 }
 \examples{
-data(multisampling)
+data(mulsam.test)
 model <- hgwr(
   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-  data = multisampling$data,
-  coords = multisampling$coords,
+  data = mulsam.test$data,
+  coords = mulsam.test$coords,
   bw = 10
 )
 summary(model)

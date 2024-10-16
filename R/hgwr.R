@@ -82,18 +82,18 @@
 #' Note that SLR effects can only be specified once!
 #'
 #' @examples
-#' data(multisampling)
+#' data(mulsam.test)
 #' hgwr(
 #'   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-#'   data = multisampling$data,
-#'   coords = multisampling$coords,
+#'   data = mulsam.test$data,
+#'   coords = mulsam.test$coords,
 #'   bw = 10
 #' )
 #'
 #' mod_Ftest <- hgwr(
 #'   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-#'   data = multisampling$data,
-#'   coords = multisampling$coords,
+#'   data = mulsam.test$data,
+#'   coords = mulsam.test$coords,
 #'   bw = 10
 #' )
 #' summary(mod_Ftest)
@@ -427,11 +427,11 @@ residuals.hgwrm <- function(object, ...) {
 #' }
 #'
 #' @examples
-#' data(multisampling)
+#' data(mulsam.test)
 #' m <- hgwr(
 #'   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-#'   data = multisampling$data,
-#'   coords = multisampling$coords,
+#'   data = mulsam.test$data,
+#'   coords = mulsam.test$coords,
 #'   bw = 10
 #' )
 #' summary(m)
@@ -513,11 +513,11 @@ summary.hgwrm <- function(object, ..., test_hetero = FALSE, verbose = 0) {
 #' @return No return.
 #'
 #' @examples
-#' data(multisampling)
+#' data(mulsam.test)
 #' model <- hgwr(
 #'   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-#'   data = multisampling$data,
-#'   coords = multisampling$coords,
+#'   data = mulsam.test$data,
+#'   coords = mulsam.test$coords,
 #'   bw = 10
 #' )
 #' print(model)
@@ -615,11 +615,11 @@ print.hgwrm <- function(x, decimal.fmt = "%.6f", ...) {
 #' @return No return.
 #'
 #' @examples
-#' data(multisampling)
+#' data(mulsam.test)
 #' model <- hgwr(
 #'   formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-#'   data = multisampling$data,
-#'   coords = multisampling$coords,
+#'   data = mulsam.test$data,
+#'   coords = mulsam.test$coords,
 #'   bw = 10
 #' )
 #' summary(model)
