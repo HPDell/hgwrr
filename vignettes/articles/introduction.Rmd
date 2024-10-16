@@ -85,7 +85,7 @@ Or download [latest released source package](https://github.com/HPDell/hgwr/rele
 and run the following command to install this package.
 
 ```bash
-R CMD INSTALL hgwrr_0.2-0.tar.gz
+R CMD INSTALL hgwrr_0.5-0.tar.gz
 ```
 
 Note that [RTools](https://cran.r-project.org/bin/windows/Rtools/) is required on Windows.
@@ -178,8 +178,7 @@ With **ggplot2** or other packages, we can create some figures.
 ```{r}
 library(ggplot2)
 ms_hgwr_coef <- as.data.frame(cbind(mulsam.test$coords, coef(ms_hgwr)))
-ggplot(ms_hgwr_coef, aes(x = U, y = V)) +
-  geom_point(aes(color = g1)) +
+ggplot(ms_hgwr_coef, aes(u, v, color = g1)) + geom_point() +
   coord_fixed() + theme_bw()
 ```
 
