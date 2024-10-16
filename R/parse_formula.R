@@ -22,9 +22,9 @@
 parse_formula <- function(formula) {
   model <- list(
     intercept = list(
-      random = 1,
+      slr = 1,
       fixed = 1,
-      local = 1
+      glsw = 1
     )
   )
   root <- as.formula(formula)
@@ -83,7 +83,7 @@ parse_formula <- function(formula) {
     } else {
       if (random_mode) {
         if (inherits(cur, "numeric")) {
-          model$intercept$random <- cur
+          model$intercept$slr <- cur
         } else {
           re <- c(re, cur)
         }
@@ -92,7 +92,7 @@ parse_formula <- function(formula) {
         }
       } else if (local_mode) {
         if (inherits(cur, "numeric")) {
-          model$intercept$local <- cur
+          model$intercept$glsw <- cur
         } else {
           le <- c(le, cur)
         }
@@ -108,9 +108,9 @@ parse_formula <- function(formula) {
       }
     }
   }
-  model$random.effects <- rev(as.character(re))
+  model$slr.effects <- rev(as.character(re))
   model$fixed.effects <- rev(as.character(fe))
-  model$local.fixed.effects <- rev(as.character(le))
+  model$glsw.effects <- rev(as.character(le))
   model
 }
 

@@ -188,18 +188,18 @@ hgwr_fit <- function(
   group <- data[[model_desc$group]]
   group_unique <- unique(group)
   group_index <- as.vector(match(group, group_unique))
-  re <- model_desc$random.effects
-  if (length(model_desc$random.effects) > 0) {
-    z <- as.matrix(make_dummy(data[model_desc$random.effects]))
-    if (model_desc$intercept$random > 0) {
+  re <- model_desc$slr.effects
+  if (length(model_desc$slr.effects) > 0) {
+    z <- as.matrix(make_dummy(data[model_desc$slr.effects]))
+    if (model_desc$intercept$slr > 0) {
       re <- c("Intercept", re)
-      z <- cbind(model_desc$intercept$random, z)
+      z <- cbind(model_desc$intercept$slr, z)
     }
   } else {
-    if (model_desc$intercept$random > 0) {
+    if (model_desc$intercept$slr > 0) {
       re <- c("Intercept", re)
       z <- matrix(
-        rep(model_desc$intercept$random, times = nrow(data)),
+        rep(model_desc$intercept$slr, times = nrow(data)),
         ncol = 1
       )
     } else {
@@ -221,22 +221,22 @@ hgwr_fit <- function(
       stop("Please provide a fixed effect (including intercept) or use other models.")
     }
   }
-  lfe <- model_desc$local.fixed.effects
-  if (length(model_desc$local.fixed.effects) > 0) {
+  lfe <- model_desc$glsw.effects
+  if (length(model_desc$glsw.effects) > 0) {
     g <- as.matrix(
-      aggregate(make_dummy(data[model_desc$local.fixed.effects]),
+      aggregate(make_dummy(data[model_desc$glsw.effects]),
                 list(group),
                 mean)[, -1]
     )
-    if (model_desc$intercept$local > 0) {
+    if (model_desc$intercept$glsw > 0) {
       lfe <- c("Intercept", lfe)
-      g <- cbind(model_desc$intercept$local, g)
+      g <- cbind(model_desc$intercept$glsw, g)
     }
   } else {
-    if (model_desc$intercept$local > 0) {
+    if (model_desc$intercept$glsw > 0) {
       lfe <- c("Intercept", lfe)
       g <- matrix(
-        rep(model_desc$intercept$local, times = length(group_unique)),
+        rep(model_desc$intercept$glsw, times = length(group_unique)),
         ncol = 1
       )
     } else {
@@ -333,7 +333,7 @@ coef.hgwrm <- function(object, ...) {
   )
   mu <- object$mu
   intercept <- matrix(0, length(object$groups), 1)
-  if (object$intercept$local > 0) {
+  if (object$intercept$glsw > 0) {
     intercept <- intercept + gamma[, 1]
     gamma <- gamma[, -1]
   }
@@ -341,7 +341,7 @@ coef.hgwrm <- function(object, ...) {
     intercept <- intercept + beta[, 1]
     beta <- beta[, -1]
   }
-  if (object$intercept$random > 0) {
+  if (object$intercept$slr > 0) {
     intercept <- intercept + mu[, 1]
     mu <- mu[, -1]
   }
