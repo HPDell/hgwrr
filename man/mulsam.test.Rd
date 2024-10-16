@@ -1,15 +1,15 @@
-\name{multisampling.large}
-\alias{multisampling.large}
+\name{mulsam.test}
+\alias{mulsam.test}
 \docType{data}
-\title{Large Scale Simulated Spatial Multisampling Data (DataFrame)}
+\title{Simulated Spatial Multisampling Data For Test (DataFrame)}
 \description{
-A large scale simulation data of spatial hierarchical structure and
+A simulation data set for testing use of spatial hierarchical structure and
 samples overlapping on certain locations.
 }
-\usage{data(multisampling)}
+\usage{data(mulsam.test)}
 \format{
 A list of three items called "data", "coords" and "beta".
-Item "data" is a data frame with 13862 observations at 200 locations
+Item "data" is a data frame with 873 observations at 25 locations
 and the following 6 variables.
 \describe{
     \item{\code{y}}{a numeric vector, dependent variable \eqn{y}}
@@ -25,11 +25,9 @@ and \code{z1} is used to estimate random effects.
 }
 \author{Yigong Hu \email{yigong.hu@bristol.ac.uk}}
 \examples{
-\dontrun{
-data(multisampling.large)
+data(mulsam.test)
 hgwr(formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-     data = multisampling.large$data,
-     coords = multisampling.large$coords,
-     bw = 32, kernel = "bisquared")
-}
+     data = mulsam.test$data,
+     coords = mulsam.test$coords,
+     bw = 10, kernel = "bisquared")
 }

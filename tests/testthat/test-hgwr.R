@@ -1,12 +1,12 @@
-data(multisampling)
+data(mulsam.test)
 m <- NULL
 
 test_that("hgwr fit", {
   m <<- expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = 10,
       alpha = 1e-8
     )
@@ -14,33 +14,33 @@ test_that("hgwr fit", {
 })
 
 test_that("hgwr fit no intercept", {
-  data(multisampling)
+  data(mulsam.test)
   expect_no_error(hgwr(
     formula = y ~ L(0 + g1 + g2) + x1 + (z1 | group),
-    data = multisampling$data,
-    coords = multisampling$coords,
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
     bw = 10,
     alpha = 1e-8
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
-    data = multisampling$data,
-    coords = multisampling$coords,
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
     bw = 10,
     alpha = 1e-8
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
-    data = multisampling$data,
-    coords = multisampling$coords,
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
     bw = 10,
     alpha = 1e-8
   ))
 })
 
 test_that("hgwr fit sf", {
-  data(multisampling)
-  ms_sf <- with(multisampling, cbind(coords[data$group, ], data))
+  data(mulsam.test)
+  ms_sf <- with(mulsam.test, cbind(coords[data$group, ], data))
   ms_sf <- sf::st_as_sf(ms_sf, coords = 1:2)
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
@@ -72,7 +72,7 @@ test_that("hgwr s3 methods", {
 test_that("hgwr data.frame coords check", {
   expect_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-    data = multisampling$data,
+    data = mulsam.test$data,
     bw = 10,
     alpha = 1e-8
   ))
@@ -82,8 +82,8 @@ test_that("hgwr bandwidth optimisation", {
   expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -101,8 +101,8 @@ test_that("hgwr s3 methods with no random slop or intercept", {
   expect_no_error({
     m_rn <<- hgwr(
       formula = y ~ L(g1 + g2) + x1 + (1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -119,8 +119,8 @@ test_that("hgwr s3 methods with no random slop or intercept", {
   expect_no_error({
     m_rn <<- hgwr(
       formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -140,8 +140,8 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
   expect_no_error({
     m_fn <<- hgwr(
       formula = y ~ L(g1 + g2) + 1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -158,8 +158,8 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
   expect_no_error({
     m_fn <<- hgwr(
       formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -179,8 +179,8 @@ test_that("hgwr s3 methods with no GLSW slop", {
   expect_no_error({
     m_gn <<- hgwr(
       formula = y ~ L(1) + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
@@ -197,8 +197,8 @@ test_that("hgwr s3 methods with no GLSW slop", {
   expect_no_error({
     m_gn <<- hgwr(
       formula = y ~ L(0 + g1 + g2) + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = "CV",
       alpha = 1e-8
     )
