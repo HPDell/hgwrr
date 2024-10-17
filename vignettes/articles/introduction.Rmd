@@ -113,11 +113,11 @@ hgwr(
 The first five arguments are mandatory.
 
 - `formula` accepts a formula object in R. Its format follows **lme4** package.
-  As there are two types of effects: fixed effects and random effects,
+  As there are three types of effects: GLSW effects, fixed effects and SLR effects,
   we use the following format to specify both of them:
 
     ```r
-    dependent ~ L(local.fixed) + fixed + (random | group)
+    dependent ~ L(glsw) + fixed + (slr | group)
     ```
 
 - `data` accepts a `data.frame` or a `sf` object in R.
@@ -461,7 +461,7 @@ wh_basemap <- tm_shape(wuhan) + tm_polygons(col = "white")
 Then visualize coefficients estimations with the basemap.
 
 ```{r whhp-hgwr-coef, fig.height=9, fig.width=9, dpi=300, cache=T}
-with(whhp_hgwr$effects, c(local.fixed, random, global.fixed, "Intercept")) %>%
+with(whhp_hgwr$effects, c(glsw, slr, fixed, "Intercept")) %>%
   map(function(var) {
     wh_basemap +
       tm_shape(wuhp_coef_sf, is.master = T) +
