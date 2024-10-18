@@ -38,6 +38,7 @@ List hgwr_bfml(
         algorithm.set_bw_criterion_type(HGWR::BwOptimCriterionType(bw_optim));
     }
     algorithm.set_printer(&prcout);
+    algorithm.set_canceler(&prcancel);
     auto hgwr_result = algorithm.fit(f_test);
 
     auto results = List::create(
