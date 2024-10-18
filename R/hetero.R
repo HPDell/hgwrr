@@ -226,14 +226,17 @@ spatial_hetero_test.hgwrm <- function(
 ) {
   t0 <- with(x, statistic(gamma, gamma_se))
   args <- as.list(x$call[-1])
-  if (...length() > 0) {
-    args <- c(args, as.list(...))
-  }
+  args$coords <- x$coords
   args$f_test <- FALSE
-  args$alpha <- 1e-12
   args$max_iters <- 100
   args$bw <- x$bw
   args$verbose <- verbose
+  if (...length() > 0) {
+    settings <- as.list(...)
+    for (key in names(settings)) {
+      args[[key]] <- settings[[key]]
+    }
+  }
   yhat <- fitted(x)
   covar0 <- x$D
   sigma0 <- x$sigma
@@ -257,7 +260,7 @@ spatial_hetero_test.hgwrm <- function(
     datai[[resp]] <- ysi
     argsi <- args
     argsi$data <- datai
-    modeli <- do.call(hgwrr::hgwr, argsi)
+    modeli <- do.call(hgwrr::hgwr_fit, argsi)
     stati <- with(modeli, statistic(gamma, gamma_se))
     if (!is.null(pgb)) pgb()
     stati
