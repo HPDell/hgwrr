@@ -190,11 +190,11 @@ function.</p>
 <ul>
 <li>
 <p><code>formula</code> accepts a formula object in R. Its format
-follows <strong>lme4</strong> package. As there are two types of
-effects: fixed effects and random effects, we use the following format
-to specify both of them:</p>
+follows <strong>lme4</strong> package. As there are three types of
+effects: GLSW effects, fixed effects and SLR effects, we use the
+following format to specify both of them:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dependent</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">local.fixed</span><span class="op">)</span> <span class="op">+</span> <span class="va">fixed</span> <span class="op">+</span> <span class="op">(</span><span class="va">random</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dependent</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">glsw</span><span class="op">)</span> <span class="op">+</span> <span class="va">fixed</span> <span class="op">+</span> <span class="op">(</span><span class="va">slr</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li><p><code>data</code> accepts a <code>data.frame</code> or a
 <code>sf</code> object in R. All variables specified in
@@ -888,7 +888,7 @@ and groups can be one-to-one matched.</p>
 <span><span class="va">wh_basemap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">wuhan</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 <p>Then visualize coefficients estimations with the basemap.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">whhp_hgwr</span><span class="op">$</span><span class="va">effects</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">local.fixed</span>, <span class="va">random</span>, <span class="va">global.fixed</span>, <span class="st">"Intercept"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">whhp_hgwr</span><span class="op">$</span><span class="va">effects</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glsw</span>, <span class="va">slr</span>, <span class="va">fixed</span>, <span class="st">"Intercept"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">wh_basemap</span> <span class="op">+</span></span>
 <span>      <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">wuhp_coef_sf</span>, is.master <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span></span>
