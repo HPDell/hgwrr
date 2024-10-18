@@ -222,21 +222,21 @@ model is with this data set.</em></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            y        g1         g2          x1          z1 group</span></span>
-<span><span class="co">#&gt; 1  2.6721146 0.1865666 0.05643929  0.02157402 -0.30874057     1</span></span>
-<span><span class="co">#&gt; 2  1.0163732 0.1865666 0.05643929  1.58854379 -1.25328976     1</span></span>
-<span><span class="co">#&gt; 3  4.8983101 0.1865666 0.05643929  1.17899681  0.64224131     1</span></span>
-<span><span class="co">#&gt; 4  1.8430518 0.1865666 0.05643929 -0.93792728 -0.04470914     1</span></span>
-<span><span class="co">#&gt; 5 -0.1526352 0.1865666 0.05643929  0.71445036 -1.73321841     1</span></span>
-<span><span class="co">#&gt; 6  6.7405466 0.1865666 0.05643929  1.93508457  0.00213186     1</span></span>
+<span><span class="co">#&gt;            y        g1         g2         x1         z1 group</span></span>
+<span><span class="co">#&gt; 1  3.0943882 0.0443617 -0.0486926  0.9265996  0.4943128     1</span></span>
+<span><span class="co">#&gt; 2  3.5794558 0.0443617 -0.0486926  0.5094696  1.3079015     1</span></span>
+<span><span class="co">#&gt; 3  7.8495496 0.0443617 -0.0486926  1.6624003  1.4970410     1</span></span>
+<span><span class="co">#&gt; 4  2.3392806 0.0443617 -0.0486926 -0.3305220  0.8147027     1</span></span>
+<span><span class="co">#&gt; 5  0.1267381 0.0443617 -0.0486926  1.5099312 -1.8697888     1</span></span>
+<span><span class="co">#&gt; 6 -2.1884856 0.0443617 -0.0486926 -1.9505113  0.4820295     1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           u         v</span></span>
-<span><span class="co">#&gt; 1 18.074842  4.161063</span></span>
-<span><span class="co">#&gt; 2 15.672497 14.106166</span></span>
-<span><span class="co">#&gt; 3  5.859670  7.379483</span></span>
-<span><span class="co">#&gt; 4 13.204585 12.326743</span></span>
-<span><span class="co">#&gt; 5 13.934151  2.695295</span></span>
-<span><span class="co">#&gt; 6  6.297534 11.439149</span></span></code></pre></div>
+<span><span class="co">#&gt;   u  v</span></span>
+<span><span class="co">#&gt; 1 0  9</span></span>
+<span><span class="co">#&gt; 2 2 19</span></span>
+<span><span class="co">#&gt; 3 3 17</span></span>
+<span><span class="co">#&gt; 4 4  2</span></span>
+<span><span class="co">#&gt; 5 5 10</span></span>
+<span><span class="co">#&gt; 6 6  1</span></span></code></pre></div>
 <p>where <code>y</code> is the dependent variable, <code>g1</code> and
 <code>g2</code> are two group-level variables, <code>z1</code> and
 <code>x1</code> are two sample-level variables, <code>group</code> are
@@ -264,7 +264,7 @@ this</p>
 <span><span class="co">#&gt; Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   2.440666  2.014782 </span></span>
+<span><span class="co">#&gt;   1.852190  1.967644 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; --------------------------------------</span></span>
@@ -272,20 +272,20 @@ this</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficient estimates:</span></span>
 <span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
-<span><span class="co">#&gt;    Intercept  -0.491212     -0.359529  -0.203494      0.070833  0.240133 </span></span>
-<span><span class="co">#&gt;           g1   2.818291      3.264139   3.500339      3.571126  3.742935 </span></span>
-<span><span class="co">#&gt;           g2  -0.381891      0.709233   2.157296      2.785082  3.182954 </span></span>
+<span><span class="co">#&gt;    Intercept  -0.549094     -0.439522  -0.151433     -0.024133  0.178044 </span></span>
+<span><span class="co">#&gt;           g1   0.909293      1.253143   1.692616      1.927313  2.310056 </span></span>
+<span><span class="co">#&gt;           g2   1.083410      1.279953   1.415744      1.594576  1.693768 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.056981           </span></span>
-<span><span class="co">#&gt;                   z1  1.056981  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.056981           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.033171           </span></span>
+<span><span class="co">#&gt;                   z1  1.033171  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.033171           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 862</span></span>
+<span><span class="co">#&gt; Number of Obs: 873</span></span>
 <span><span class="co">#&gt;        Groups: group , 25</span></span></code></pre></div>
 <p>The output of the model shows estimations of global fixed effects,
 summary of those of local fixed effects. Also there are the standard
@@ -294,32 +294,32 @@ them.</p>
 <p>Then we can have a look on the coefficient estimations.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    Intercept       g1         g2       x1        z1</span></span>
-<span><span class="co">#&gt; 1   1.636688 3.264139  1.2775995 2.014782 2.6148972</span></span>
-<span><span class="co">#&gt; 2   2.671010 3.426098  1.0667468 2.014782 1.9169482</span></span>
-<span><span class="co">#&gt; 3   1.235798 3.607475  2.9159780 2.014782 2.6147279</span></span>
-<span><span class="co">#&gt; 4   1.882214 3.675168  2.6856261 2.014782 2.2401834</span></span>
-<span><span class="co">#&gt; 5   1.329237 3.295076  1.9731926 2.014782 1.7000318</span></span>
-<span><span class="co">#&gt; 6   1.378156 3.633589  3.1829539 2.014782 0.9039831</span></span>
-<span><span class="co">#&gt; 7   2.089984 3.525870  1.8804143 2.014782 1.6477377</span></span>
-<span><span class="co">#&gt; 8   1.922369 3.679050  2.3712552 2.014782 2.1836697</span></span>
-<span><span class="co">#&gt; 9   2.093850 3.571126  2.7850818 2.014782 1.7189373</span></span>
-<span><span class="co">#&gt; 10  1.594372 3.539944  2.4045439 2.014782 0.7657523</span></span>
-<span><span class="co">#&gt; 11  1.638853 3.742935  3.1252078 2.014782 2.5974503</span></span>
-<span><span class="co">#&gt; 12  3.255206 3.043394  0.2818696 2.014782 2.9888363</span></span>
-<span><span class="co">#&gt; 13  3.095332 2.881078 -0.3695739 2.014782 1.3255923</span></span>
-<span><span class="co">#&gt; 14  1.737180 3.525103  3.0146782 2.014782 2.7211806</span></span>
-<span><span class="co">#&gt; 15  1.888075 3.722960  2.6997344 2.014782 2.2200362</span></span>
-<span><span class="co">#&gt; 16  2.316594 3.306531  0.7092326 2.014782 2.5558100</span></span>
-<span><span class="co">#&gt; 17  4.178065 2.866792 -0.3714106 2.014782 1.3475642</span></span>
-<span><span class="co">#&gt; 18  1.387498 3.474486  2.9955717 2.014782 2.7380492</span></span>
-<span><span class="co">#&gt; 19  2.271200 3.125124  0.4842371 2.014782 2.9221749</span></span>
-<span><span class="co">#&gt; 20  2.509130 3.500339  2.5884030 2.014782 1.8244821</span></span>
-<span><span class="co">#&gt; 21  4.279119 2.818291 -0.3818914 2.014782 2.4275832</span></span>
-<span><span class="co">#&gt; 22  3.263759 2.866045 -0.3726968 2.014782 1.4347775</span></span>
-<span><span class="co">#&gt; 23  1.888910 3.518538  2.8565757 2.014782 2.7150126</span></span>
-<span><span class="co">#&gt; 24  2.646187 3.525190  2.1572956 2.014782 2.6645253</span></span>
-<span><span class="co">#&gt; 25  2.673264 3.286231  1.1280931 2.014782 2.2249770</span></span></code></pre></div>
+<span><span class="co">#&gt;    Intercept        g1       g2       x1       z1</span></span>
+<span><span class="co">#&gt; 1  0.9233672 2.3100563 1.623094 1.967644 1.817155</span></span>
+<span><span class="co">#&gt; 2  1.1355688 1.9273133 1.623457 1.967644 2.305716</span></span>
+<span><span class="co">#&gt; 3  1.8948376 1.9681553 1.625849 1.967644 2.251604</span></span>
+<span><span class="co">#&gt; 4  1.1327246 2.2656619 1.536906 1.967644 1.590994</span></span>
+<span><span class="co">#&gt; 5  1.7883252 2.1834680 1.594576 1.967644 1.698679</span></span>
+<span><span class="co">#&gt; 6  0.7060594 2.0168951 1.399640 1.967644 1.855324</span></span>
+<span><span class="co">#&gt; 7  1.0109699 1.9266816 1.355484 1.967644 1.105044</span></span>
+<span><span class="co">#&gt; 8  1.7495857 1.8658473 1.670593 1.967644 1.021006</span></span>
+<span><span class="co">#&gt; 9  0.8418062 1.8149658 1.279953 1.967644 2.980240</span></span>
+<span><span class="co">#&gt; 10 1.3535790 1.9201790 1.362606 1.967644 2.081303</span></span>
+<span><span class="co">#&gt; 11 1.0394353 1.9399671 1.480825 1.967644 1.999491</span></span>
+<span><span class="co">#&gt; 12 1.8167418 1.8022871 1.693768 1.967644 2.303986</span></span>
+<span><span class="co">#&gt; 13 2.4239639 1.5126602 1.612656 1.967644 1.471564</span></span>
+<span><span class="co">#&gt; 14 0.5334871 1.6926159 1.237340 1.967644 1.676205</span></span>
+<span><span class="co">#&gt; 15 1.3043111 1.6881432 1.264833 1.967644 1.454624</span></span>
+<span><span class="co">#&gt; 16 1.3370861 1.5843740 1.238710 1.967644 2.374940</span></span>
+<span><span class="co">#&gt; 17 1.5039024 1.5804393 1.525840 1.967644 1.042542</span></span>
+<span><span class="co">#&gt; 18 2.0337854 1.2531427 1.376711 1.967644 1.454729</span></span>
+<span><span class="co">#&gt; 19 1.9575950 1.2613191 1.415744 1.967644 2.718663</span></span>
+<span><span class="co">#&gt; 20 2.5267858 1.2438959 1.500855 1.967644 1.902474</span></span>
+<span><span class="co">#&gt; 21 1.4363110 1.1675786 1.354417 1.967644 1.672610</span></span>
+<span><span class="co">#&gt; 22 2.6255900 1.0711151 1.543638 1.967644 3.185923</span></span>
+<span><span class="co">#&gt; 23 2.6121111 0.9099629 1.168313 1.967644 1.382425</span></span>
+<span><span class="co">#&gt; 24 2.2433299 0.9092926 1.083410 1.967644 1.755667</span></span>
+<span><span class="co">#&gt; 25 3.1624476 0.9708449 1.183679 1.967644 1.635566</span></span></code></pre></div>
 <p>With <strong>ggplot2</strong> or other packages, we can create some
 figures.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -338,8 +338,7 @@ to visualize.</p>
 <span><span class="va">ms_hgwr_coef_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">ms_hgwr_coef</span>,</span>
 <span>                            coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mulsam.test</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span>,</span>
 <span>                            crs <span class="op">=</span> <span class="fl">27700</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">ms_hgwr_coef_sf</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g1"</span>, <span class="st">"g2"</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Variable(s) "g2" contains positive and negative values, so midpoint is set to 0. Set midpoint = NA to show the full spectrum of the color palette.</span></span></code></pre></div>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">ms_hgwr_coef_sf</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g1"</span>, <span class="st">"g2"</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>And we can also fetch the fitted and residuals.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -348,13 +347,13 @@ to visualize.</p>
 <span>  fitted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span>,</span>
 <span>  residuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">ms_hgwr</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         real     fitted  residuals</span></span>
-<span><span class="co">#&gt; 1  2.6721146  1.5539157  1.1181990</span></span>
-<span><span class="co">#&gt; 2  1.0163732  2.2411197 -1.2247465</span></span>
-<span><span class="co">#&gt; 3  4.8983101  6.3725906 -1.4742805</span></span>
-<span><span class="co">#&gt; 4  1.8430518  0.3111444  1.5319074</span></span>
-<span><span class="co">#&gt; 5 -0.1526352 -0.7749524  0.6223172</span></span>
-<span><span class="co">#&gt; 6  6.7405466  6.2221225  0.5184241</span></span></code></pre></div>
+<span><span class="co">#&gt;         real    fitted  residuals</span></span>
+<span><span class="co">#&gt; 1  3.0943882  3.668274 -0.5738854</span></span>
+<span><span class="co">#&gt; 2  3.5794558  4.325927 -0.7464712</span></span>
+<span><span class="co">#&gt; 3  7.8495496  6.938180  0.9113695</span></span>
+<span><span class="co">#&gt; 4  2.3392806  1.776904  0.5623768</span></span>
+<span><span class="co">#&gt; 5  0.1267381  0.520124 -0.3933859</span></span>
+<span><span class="co">#&gt; 6 -2.1884856 -2.015177 -0.1733083</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function will give some statistical
 information about this model.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -369,38 +368,38 @@ information about this model.</p>
 <span><span class="co">#&gt; -------------------</span></span>
 <span><span class="co">#&gt; Fixed effects:</span></span>
 <span><span class="co">#&gt;             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span></span>
-<span><span class="co">#&gt;  Intercept   2.440666  0.203203  12.010957  0.000000  *** </span></span>
-<span><span class="co">#&gt;         x1   2.014782  0.036134  55.759116  0.000000  *** </span></span>
+<span><span class="co">#&gt;  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span></span>
+<span><span class="co">#&gt;         x1   1.967644  0.033827  58.168539  0.000000  *** </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bandwidth: 10 (nearest neighbours)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; GLSW effects:</span></span>
-<span><span class="co">#&gt;             Mean Est.  Mean Sd.   ***     **      *      . </span></span>
-<span><span class="co">#&gt;  Intercept  -0.166184  0.282249  0.0%   0.0%   0.0%   4.0% </span></span>
-<span><span class="co">#&gt;         g1   3.376823  1.293908  0.0%  68.0%  32.0%   0.0% </span></span>
-<span><span class="co">#&gt;         g2   1.723549  1.240805  0.0%   0.0%  36.0%  16.0% </span></span>
+<span><span class="co">#&gt;             Mean Est.  Mean Sd.   ***    **     *      . </span></span>
+<span><span class="co">#&gt;  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span></span>
+<span><span class="co">#&gt;         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span></span>
+<span><span class="co">#&gt;         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SLR effects:</span></span>
-<span><span class="co">#&gt;    Groups       Name       Mean  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  -0.000000  1.056981           </span></span>
-<span><span class="co">#&gt;                   z1   2.120597  1.056981  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual              0.120806  1.056981           </span></span>
+<span><span class="co">#&gt;    Groups       Name      Mean  Std.Dev.      Corr </span></span>
+<span><span class="co">#&gt;     group  Intercept  0.000000  1.033171           </span></span>
+<span><span class="co">#&gt;                   z1  1.869539  1.033171  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             0.079964  1.033171           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Diagnostics</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt;  rsquared     0.915910 </span></span>
-<span><span class="co">#&gt;    logLik  -138.022821 </span></span>
-<span><span class="co">#&gt;       AIC   302.057737 </span></span>
+<span><span class="co">#&gt;  rsquared     0.905207 </span></span>
+<span><span class="co">#&gt;    logLik  -118.467314 </span></span>
+<span><span class="co">#&gt;       AIC   261.985064 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Scaled Residuals</span></span>
 <span><span class="co">#&gt; ----------------</span></span>
 <span><span class="co">#&gt;        Min         1Q    Median        3Q       Max </span></span>
-<span><span class="co">#&gt;  -3.383468  -0.490715  0.141942  0.728246  3.437397 </span></span>
+<span><span class="co">#&gt;  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; Number of Obs: 862</span></span>
+<span><span class="co">#&gt; Number of Obs: 873</span></span>
 <span><span class="co">#&gt;        Groups: group , 25</span></span></code></pre></div>
 <p>On the current stage, only pseudo
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
@@ -410,7 +409,7 @@ provided in this package.</p>
 <div class="section level3">
 <h3 id="example-large-scale-simulated-data">Example: Large Scale Simulated Data<a class="anchor" aria-label="anchor" href="#example-large-scale-simulated-data"></a>
 </h3>
-<p>In the former example, there are only 862 observations and 25 groups.
+<p>In the former example, there are only 873 observations and 25 groups.
 They are not adequate enough to get precises estimations. Here, we are
 going to use a large scale simulated data set to show the performance of
 HGWR model. As the true value of coefficients are already known (stored
@@ -421,30 +420,30 @@ structure is similar to data <code>mulsam.test</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            y         g1        g2         x1         z1 group</span></span>
-<span><span class="co">#&gt; 1  5.9298453 -0.1541009 0.1088925  3.1685285 -0.6264538     1</span></span>
-<span><span class="co">#&gt; 2  2.6078845 -0.1541009 0.1088925 -0.0310156  0.1836433     1</span></span>
-<span><span class="co">#&gt; 3 -0.6219307 -0.1541009 0.1088925 -1.0921285 -0.8356286     1</span></span>
-<span><span class="co">#&gt; 4  2.8660259 -0.1541009 0.1088925 -0.9828463  1.5952808     1</span></span>
-<span><span class="co">#&gt; 5  6.2027599 -0.1541009 0.1088925  1.7193320  0.3295078     1</span></span>
-<span><span class="co">#&gt; 6 -3.5490472 -0.1541009 0.1088925 -1.8466449 -0.8204684     1</span></span>
+<span><span class="co">#&gt;           y         g1        g2         x1         z1 group</span></span>
+<span><span class="co">#&gt; 1  4.274065 -0.1541009 0.1088925  3.1685285 -0.6264538     1</span></span>
+<span><span class="co">#&gt; 2  0.952104 -0.1541009 0.1088925 -0.0310156  0.1836433     1</span></span>
+<span><span class="co">#&gt; 3 -2.277711 -0.1541009 0.1088925 -1.0921285 -0.8356286     1</span></span>
+<span><span class="co">#&gt; 4  1.210245 -0.1541009 0.1088925 -0.9828463  1.5952808     1</span></span>
+<span><span class="co">#&gt; 5  4.546979 -0.1541009 0.1088925  1.7193320  0.3295078     1</span></span>
+<span><span class="co">#&gt; 6 -5.204828 -0.1541009 0.1088925 -1.8466449 -0.8204684     1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multisampling</span><span class="op">$</span><span class="va">coords</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           u         v</span></span>
-<span><span class="co">#&gt; 1 10.604582 11.781225</span></span>
-<span><span class="co">#&gt; 2 11.372421 10.087258</span></span>
-<span><span class="co">#&gt; 3  7.985031  6.520217</span></span>
-<span><span class="co">#&gt; 4 14.418267 12.836864</span></span>
-<span><span class="co">#&gt; 5  9.780573  7.669678</span></span>
-<span><span class="co">#&gt; 6  7.971738  3.559246</span></span>
+<span><span class="co">#&gt;   u v</span></span>
+<span><span class="co">#&gt; 1 0 0</span></span>
+<span><span class="co">#&gt; 2 0 1</span></span>
+<span><span class="co">#&gt; 3 0 2</span></span>
+<span><span class="co">#&gt; 4 0 3</span></span>
+<span><span class="co">#&gt; 5 0 4</span></span>
+<span><span class="co">#&gt; 6 0 5</span></span>
 <span><span class="va">msl_beta</span> <span class="op">&lt;-</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">beta</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">msl_beta</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Intercept       g1       g2 x1       z1</span></span>
-<span><span class="co">#&gt; 1 2.2149990 3.944600 3.908435  2 2.463117</span></span>
-<span><span class="co">#&gt; 2 2.1336933 3.887710 3.820789  2 2.633550</span></span>
-<span><span class="co">#&gt; 3 1.3717491 2.811485 2.475271  2 1.252887</span></span>
-<span><span class="co">#&gt; 4 2.2884106 3.818891 3.775528  2 1.905223</span></span>
-<span><span class="co">#&gt; 5 1.5856133 3.360108 3.113644  2 1.908053</span></span>
-<span><span class="co">#&gt; 6 0.8157964 1.793202 1.621688  2 1.425105</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intercept g1        g2 x1       z1</span></span>
+<span><span class="co">#&gt; 1 0.3495151  0 0.2519548  2 2.463117</span></span>
+<span><span class="co">#&gt; 2 0.4287200  0 0.3142063  2 2.633550</span></span>
+<span><span class="co">#&gt; 3 0.3296451  0 0.3843869  2 1.252887</span></span>
+<span><span class="co">#&gt; 4 0.2671497  0 0.4613005  2 1.905223</span></span>
+<span><span class="co">#&gt; 5 0.4647590  0 0.5430762  2 1.908053</span></span>
+<span><span class="co">#&gt; 6 0.2715478  0 0.6271901  2 1.425105</span></span></code></pre></div>
 <p>In this data, we also regards <code>g1</code> and <code>g2</code> as
 two group-level variables, <code>z1</code> and <code>x1</code> as two
 sample-level variables, <code>group</code> as the labels of the groups
@@ -472,7 +471,7 @@ get results.</p>
 <span><span class="co">#&gt; Fixed Effects</span></span>
 <span><span class="co">#&gt; -------------</span></span>
 <span><span class="co">#&gt;  Intercept        x1 </span></span>
-<span><span class="co">#&gt;   2.015111  2.013900 </span></span>
+<span><span class="co">#&gt;   1.993571  2.013951 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Group-level Spatially Weighted Effects</span></span>
 <span><span class="co">#&gt; --------------------------------------</span></span>
@@ -480,16 +479,16 @@ get results.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficient estimates:</span></span>
 <span><span class="co">#&gt;  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span></span>
-<span><span class="co">#&gt;    Intercept  -1.455692     -0.486378  -0.055867      0.614836  1.493694 </span></span>
-<span><span class="co">#&gt;           g1   0.665180      1.120381   1.637533      2.647719  3.892706 </span></span>
-<span><span class="co">#&gt;           g2   0.154202      1.057656   1.779733      2.518826  4.333307 </span></span>
+<span><span class="co">#&gt;    Intercept  -1.365347     -0.546013  -0.000998      0.568186  1.408843 </span></span>
+<span><span class="co">#&gt;           g1   0.383958      1.101335   1.560858      2.425391  3.599753 </span></span>
+<span><span class="co">#&gt;           g2   0.777366      1.371943   1.751608      2.461359  3.572902 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Sample-level Random Effects</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt;    Groups       Name  Std.Dev.      Corr </span></span>
-<span><span class="co">#&gt;     group  Intercept  1.037301           </span></span>
-<span><span class="co">#&gt;                   z1  1.037301  0.000000 </span></span>
-<span><span class="co">#&gt;  Residual             1.037301           </span></span>
+<span><span class="co">#&gt;     group  Intercept  1.037299           </span></span>
+<span><span class="co">#&gt;                   z1  1.037299  0.000000 </span></span>
+<span><span class="co">#&gt;  Residual             1.037299           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other Information</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
@@ -537,8 +536,8 @@ useful to assess the fitting performance.</p>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_hgwr_err</span></span>
 <span><span class="co">#&gt;      Intercept        g1        g2        x1        z1</span></span>
-<span><span class="co">#&gt; MAE  0.1574270 0.3550501 0.2620077 0.4180247 0.3952253</span></span>
-<span><span class="co">#&gt; RMSE 0.2047127 0.4505155 0.3221589 0.5192503 0.4937103</span></span></code></pre></div>
+<span><span class="co">#&gt; MAE  0.1677028 0.4417195 0.3350320 0.4179894 0.3952250</span></span>
+<span><span class="co">#&gt; RMSE 0.2127406 0.5485650 0.4073874 0.5191893 0.4937104</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="comparison-of-hgwr-gwr-and-hlm">Comparison of HGWR, GWR and HLM<a class="anchor" aria-label="anchor" href="#comparison-of-hgwr-gwr-and-hlm"></a>
@@ -585,9 +584,9 @@ calibrated with the following codes.</p>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_gwr_err</span></span>
-<span><span class="co">#&gt;      Intercept        g1        g2        x1        z1</span></span>
-<span><span class="co">#&gt; MAE  0.1798416 0.9309037 0.8919768 0.2088706 0.3997666</span></span>
-<span><span class="co">#&gt; RMSE 0.2298074 1.3467197 1.2711928 0.2665668 0.4995490</span></span></code></pre></div>
+<span><span class="co">#&gt;      Intercept       g1        g2        x1        z1</span></span>
+<span><span class="co">#&gt; MAE  0.1827751 1.024012 0.9715697 0.2332346 0.3964786</span></span>
+<span><span class="co">#&gt; RMSE 0.2448687 1.532527 1.4101019 0.2964659 0.4994751</span></span></code></pre></div>
 <p>And also a HLM model calibrated with the following codes.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
@@ -596,8 +595,6 @@ calibrated with the following codes.</p>
 <span>  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">g1</span> <span class="op">+</span> <span class="va">g2</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="op">(</span><span class="va">z1</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">multisampling</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :</span></span>
-<span><span class="co">#&gt; Model failed to converge with max|grad| = 0.0048102 (tol = 0.002, component 1)</span></span>
 <span><span class="va">msl_hlm_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">msl_hlm</span><span class="op">)</span><span class="op">$</span><span class="va">group</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">msl_hlm_coef</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">msl_hlm_coef</span><span class="op">)</span> <span class="op">==</span> <span class="st">"(Intercept)"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Intercept"</span></span>
 <span><span class="va">msl_hlm_err</span> <span class="op">&lt;-</span> <span class="va">msl_hlm_coef</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -609,8 +606,8 @@ calibrated with the following codes.</p>
 <span>  <span class="op">}</span></span>
 <span><span class="va">msl_hlm_err</span></span>
 <span><span class="co">#&gt;      Intercept       g1        g2        x1        z1</span></span>
-<span><span class="co">#&gt; MAE  0.2503059 1.060611 0.8690968 0.4263051 0.3952242</span></span>
-<span><span class="co">#&gt; RMSE 0.3302841 1.205450 1.0044419 0.5300693 0.4937105</span></span></code></pre></div>
+<span><span class="co">#&gt; MAE  0.2454883 1.073194 0.8378061 0.4266994 0.3952242</span></span>
+<span><span class="co">#&gt; RMSE 0.3279763 1.237473 0.9856770 0.5300526 0.4937105</span></span></code></pre></div>
 <p>A bar plot will be helpful here to compare the fitness of these three
 models.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">

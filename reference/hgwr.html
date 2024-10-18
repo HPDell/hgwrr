@@ -331,28 +331,28 @@ Note that SLR effects can only be specified once!</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept        x1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  11.032290  2.012776 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.852190  1.967644 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Group-level Spatially Weighted Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficient estimates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Coefficient         Min  1st Quartile      Median  3rd Quartile        Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Intercept  -10.625654    -10.476169  -10.342824    -10.082224  -9.887707 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           g1    3.234242      3.411959    3.739997      4.049043   4.266686 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           g2   -1.028527      0.245155    2.398146      2.895908   3.644736 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Coefficient        Min  1st Quartile     Median  3rd Quartile       Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intercept  -0.549094     -0.439522  -0.151433     -0.024133  0.178044 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g1   0.909293      1.253143   1.692616      1.927313  2.310056 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           g2   1.083410      1.279953   1.415744      1.594576  1.693768 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample-level Random Effects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.498572           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.860923  0.870870 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.017063           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.033171           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.033171  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             1.033171           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 873</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 25</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod_Ftest</span> <span class="op">&lt;-</span> <span class="fu">hgwr</span><span class="op">(</span></span></span>
@@ -372,38 +372,38 @@ Note that SLR effects can only be specified once!</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Estimated   Sd. Err      t.val  Pr(&gt;|t|)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  11.032290  0.150958  73.081666  0.000000  *** </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   2.012776  0.036125  55.716567  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept   1.852190  0.203079   9.120541  0.000000  *** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x1   1.967644  0.033827  58.168539  0.000000  *** </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bandwidth: 10 (nearest neighbours)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GLSW effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Mean Est.  Mean Sd.     ***     **     *     . </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -10.283740  0.202035  100.0%   0.0%  0.0%  0.0% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g1    3.742114  0.925963  100.0%   0.0%  0.0%  0.0% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g2    1.629314  0.887359   12.0%  40.0%  4.0%  8.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Mean Est.  Mean Sd.   ***    **     *      . </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Intercept  -0.208441  0.247059  0.0%  0.0%  4.0%  24.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g1   1.631474  1.795246  0.0%  0.0%  0.0%   0.0% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         g2   1.430116  1.476570  0.0%  0.0%  0.0%   0.0% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SLR effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Groups       Name      Mean  Std.Dev.      Corr </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  1.518778  1.498572           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  2.165669  1.860923  0.870870 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.133072  1.017063           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group  Intercept  0.000000  1.033171           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   z1  1.869539  1.033171  0.000000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.079964  1.033171           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diagnostics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared     0.915785 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    logLik  -112.459159 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       AIC   247.650133 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rsquared  0.905207 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    logLik       NaN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       AIC       NaN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Scaled Residuals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ----------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Min         1Q    Median        3Q       Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.392234  -0.484757  0.163063  0.737220  3.382038 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.416380  -0.584726  0.092501  0.725766  3.028003 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other Information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Obs: 873</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Groups: group , 25</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
