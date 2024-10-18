@@ -232,7 +232,7 @@ spatial_hetero_test.hgwrm <- function(
   args$bw <- x$bw
   args$verbose <- verbose
   if (...length() > 0) {
-    settings <- as.list(...)
+    settings <- list(...)
     for (key in names(settings)) {
       args[[key]] <- settings[[key]]
     }
@@ -253,7 +253,7 @@ spatial_hetero_test.hgwrm <- function(
   worker <- function(i, pgb = NULL) {
     ei <- do.call(c, lapply(z_group, function(zi) {
       MASS::mvrnorm(mu = rep(0, nrow(zi)),
-                    Sigma = zi %*% covar0 %*% t(zi) + sigma0)
+                    Sigma = zi %*% covar0 %*% t(zi) + diag(sigma0, nrow(zi)))
     }))
     ysi <- ei + yhat
     datai <- data0
