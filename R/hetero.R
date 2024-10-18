@@ -285,7 +285,7 @@ spatial_hetero_test.hgwrm <- function(
   res <- list(
     t0 = t0,
     t = t,
-    vars = x$effects$local.fixed,
+    vars = x$effects$glsw,
     pv = pv
   )
   class(res) <- "spahetbootres"
