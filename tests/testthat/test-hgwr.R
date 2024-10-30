@@ -217,22 +217,22 @@ test_that("hgwr order data", {
   m0 <- expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),
-      data = multisampling$data,
-      coords = multisampling$coords,
+      data = mulsam.test$data,
+      coords = mulsam.test$coords,
       bw = 10,
       alpha = 1e-8
     )
   })
   set.seed(1)
   data_perm <- with(
-    multisampling,
+    mulsam.test,
     data[order(runif(nrow(data))), ]
   )
   m_perm <- expect_no_error({
     hgwr(
       formula = y ~ L(g1 + g2) + x1 + (z1 | group),
       data = data_perm,
-      coords = multisampling$coords,
+      coords = mulsam.test$coords,
       bw = 10,
       alpha = 1e-8
     )
