@@ -1,7 +1,7 @@
 Package: hgwrr
 Type: Package
 Title: Hierarchical and Geographically Weighted Regression
-Version: 0.5-0
+Version: 0.6-0
 Date: 2024-07-04
 Author: Yigong Hu, Richard Harris, Richard Timmerman
 Maintainer: Yigong Hu <yigong.hu@bristol.ac.uk>
