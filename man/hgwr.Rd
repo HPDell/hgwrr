@@ -108,7 +108,7 @@ Its structure is similar to \code{\link[lme4]{lmer}} function
 in \strong{lme4} package.
 Models can be specified with the following form:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{response ~ L(local.fixed) + global.fixed + (random | group)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{response ~ L(glsw) + fixed + (random | group)
 }\if{html}{\out{</div>}}
 
 For more information, please see the \code{formula} subsection in details.}
