@@ -7,6 +7,7 @@ spatial_hetero_test <- function(x, ...) UseMethod("spatial_hetero_test")
 #' @describeIn spatial_hetero_test
 #' Default behavior.
 #' @method spatial_hetero_test default
+#' @export
 spatial_hetero_test.default <- function(x, ...) stop("Method not implemented")
 
 #' Test the spatial heterogeneity in data based on permutation.
