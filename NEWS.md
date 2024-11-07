@@ -1,3 +1,22 @@
+# Version 0.6.0
+
+- Feature: F-test for GLSW effects
+- Feature: `print_table_md` add `booktabs` table format
+- Change: variable name style
+- Change: spatial heterogeneity test now use bootstrap method
+- Change: a new data set `multisampling`; the old one is renamed to `mulsam.test`.
+- Fix: problems caused by Bisquared kernel
+- Fix: lower bound of bandwidth optimising with bisquared kernel
+- Fix: effect names
+- Fix: unwanted output of print.hgwr
+- Fix: calculation of standard error of GLSW effects
+- Fix: errors in S3 methods when slop or intercept is missing
+- Fix: comapre of intercept
+- Fix: update Ygf before final calibration
+- Fix: deal with random effect only 1
+- Fix: add a space above tables
+- Fix: pass args when printing F test
+
 # Version 0.5.0
 
 - Feature: `spatial_hetero_test()` function for testing spatial heterogeneity
