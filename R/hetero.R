@@ -129,6 +129,8 @@ spatial_hetero_test.matrix <- function(x, coords, ...) {
 }
 
 #' @describeIn spatial_hetero_test
+#' Takes `x` as values of a series variables stored by column,
+#' and `coords` as coordinates for each row in `x`.
 #'
 #' @inheritParams spatial_hetero_test.matrix
 #'
@@ -143,6 +145,8 @@ spatial_hetero_test.numeric <- function(x, coords, ...) {
 }
 
 #' @describeIn spatial_hetero_test
+#' Takes `x` as values of the variable,
+#' and `coords` as coordinates for each element in `x`.
 #'
 #' @inheritParams spatial_hetero_test.matrix
 #'
@@ -157,7 +161,8 @@ spatial_hetero_test.vector <- function(x, coords, ...) {
 }
 
 #' @describeIn spatial_hetero_test
-#' For data frame, `coords` is necessary.
+#' Takes `x` as variable values (each column is a variable),
+#' and `coords` as coordinates for each row in `x`.
 #'
 #' @inheritParams spatial_hetero_test.matrix
 #'
