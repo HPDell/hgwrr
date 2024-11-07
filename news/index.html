@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,28 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/HPDell/hgwrr/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.6-0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="version-060">Version 0.6.0<a class="anchor" aria-label="anchor" href="#version-060"></a></h2>
+<ul><li>Feature: F-test for GLSW effects</li>
+<li>Feature: <code>print_table_md</code> add <code>booktabs</code> table format</li>
+<li>Change: variable name style</li>
+<li>Change: spatial heterogeneity test now use bootstrap method</li>
+<li>Change: a new data set <code>multisampling</code>; the old one is renamed to <code>mulsam.test</code>.</li>
+<li>Fix: problems caused by Bisquared kernel</li>
+<li>Fix: lower bound of bandwidth optimising with bisquared kernel</li>
+<li>Fix: effect names</li>
+<li>Fix: unwanted output of print.hgwr</li>
+<li>Fix: calculation of standard error of GLSW effects</li>
+<li>Fix: errors in S3 methods when slop or intercept is missing</li>
+<li>Fix: comapre of intercept</li>
+<li>Fix: update Ygf before final calibration</li>
+<li>Fix: deal with random effect only 1</li>
+<li>Fix: add a space above tables</li>
+<li>Fix: pass args when printing F test</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="version-050">Version 0.5.0<a class="anchor" aria-label="anchor" href="#version-050"></a></h2>
 <ul><li>Feature: <code><a href="../reference/spatial_hetero_test.html">spatial_hetero_test()</a></code> function for testing spatial heterogeneity</li>
@@ -97,7 +116,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yigong Hu.</p>
+  <p>Developed by Yigong Hu, Richard Harris, Richard Timmerman.</p>
 </div>
 
 <div class="pkgdown-footer-right">

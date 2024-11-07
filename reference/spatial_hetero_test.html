@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generic method to test spatial heterogeneity</h1>
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/R/hetero.R" class="external-link"><code>R/hetero.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.6-0/R/hetero.R" class="external-link"><code>R/hetero.R</code></a></small>
       <div class="d-none name"><code>spatial_hetero_test.Rd</code></div>
     </div>
 
@@ -109,9 +109,12 @@ and the actual coordinates will be taken from <code>x</code>.</p></dd>
 
 <ul><li><p><code>spatial_hetero_test(default)</code>: Default behavior.</p></li>
 <li><p><code>spatial_hetero_test(matrix)</code>: For the matrix, <code>coords</code> is necessary.</p></li>
-<li><p><code>spatial_hetero_test(numeric)</code>:</p></li>
-<li><p><code>spatial_hetero_test(vector)</code>:</p></li>
-<li><p><code>spatial_hetero_test(data.frame)</code>: For data frame, <code>coords</code> is necessary.</p></li>
+<li><p><code>spatial_hetero_test(numeric)</code>: Takes <code>x</code> as values of a series variables stored by column,
+and <code>coords</code> as coordinates for each row in <code>x</code>.</p></li>
+<li><p><code>spatial_hetero_test(vector)</code>: Takes <code>x</code> as values of the variable,
+and <code>coords</code> as coordinates for each element in <code>x</code>.</p></li>
+<li><p><code>spatial_hetero_test(data.frame)</code>: Takes <code>x</code> as variable values (each column is a variable),
+and <code>coords</code> as coordinates for each row in <code>x</code>.</p></li>
 <li><p><code>spatial_hetero_test(sf)</code>: For the <code>sf</code> object, coordinates of centroids are used.
 Only the numerical columns are tested.</p></li>
 </ul></div>
@@ -121,7 +124,7 @@ Only the numerical columns are tested.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yigong Hu.</p>
+  <p>Developed by Yigong Hu, Richard Harris, Richard Timmerman.</p>
 </div>
 
 <div class="pkgdown-footer-right">

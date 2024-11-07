@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hgwrr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Hierarchical and Geographically Weighted Regression</h1>
-      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/master/R/hetero.R" class="external-link"><code>R/hetero.R</code></a>, <a href="https://github.com/HPDell/hgwrr/blob/master/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HPDell/hgwrr/blob/v0.6-0/R/hetero.R" class="external-link"><code>R/hetero.R</code></a>, <a href="https://github.com/HPDell/hgwrr/blob/v0.6-0/R/hgwr.R" class="external-link"><code>R/hgwr.R</code></a></small>
       <div class="d-none name"><code>hgwr.Rd</code></div>
     </div>
 
@@ -168,7 +168,7 @@ Possible values are:</p><dl><dt>0</dt>
 Its structure is similar to <code><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></code> function
 in <strong>lme4</strong> package.
 Models can be specified with the following form:</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="va">response</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">local.fixed</span><span class="op">)</span> <span class="op">+</span> <span class="va">global.fixed</span> <span class="op">+</span> <span class="op">(</span><span class="va">random</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">response</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">glsw</span><span class="op">)</span> <span class="op">+</span> <span class="va">fixed</span> <span class="op">+</span> <span class="op">(</span><span class="va">random</span> <span class="op">|</span> <span class="va">group</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>For more information, please see the <code>formula</code> subsection in details.</p></dd>
 
 
@@ -413,7 +413,7 @@ Note that SLR effects can only be specified once!</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Yigong Hu.</p>
+  <p>Developed by Yigong Hu, Richard Harris, Richard Timmerman.</p>
 </div>
 
 <div class="pkgdown-footer-right">
