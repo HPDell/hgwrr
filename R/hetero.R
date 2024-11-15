@@ -251,7 +251,7 @@ spatial_hetero_test.hgwrm <- function(
   ge <- x$effects$group
   groups <- unique(data0[[ge]])
   z0 <- x$frame.parsed$z
-  z_group <- lapply(groups, function(gr) z0[data0[[ge]] == gr, ])
+  z_group <- lapply(groups, function(gr) as.matrix(z0[data0[[ge]] == gr, ]))
   pgb <- NULL
   if (requireNamespace("progressr", quietly = TRUE)) {
     pgb <- progressr::progressor(round)
