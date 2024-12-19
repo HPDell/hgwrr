@@ -357,7 +357,7 @@ coef.hgwrm <- function(object, ...) {
     )))
   }))
   colnames(coef) <- coef_names
-  coef
+  as.data.frame(coef)
 }
 
 #' Get fitted response.
