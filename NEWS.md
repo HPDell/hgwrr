@@ -1,3 +1,7 @@
+# Version 0.6.1
+
+- Fix: error in `spatial_hetero_test.hgwrm()` when there is only one SLR effect.
+
 # Version 0.6.0
 
 - Feature: F-test for GLSW effects
