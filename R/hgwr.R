@@ -331,40 +331,33 @@ coef.hgwrm <- function(object, ...) {
   if (!inherits(object, "hgwrm")) {
     stop("It's not a hgwrm object.")
   }
-  gamma <- object$gamma
-  beta <- matrix(
-    object$beta,
-    nrow = length(object$groups),
-    ncol = length(object$beta),
-    byrow = TRUE
+  
+  params <- list(
+    glsw = object$gamma,
+    fixed = matrix(
+      object$beta,
+      nrow = length(object$groups),
+      ncol = length(object$beta),
+      byrow = TRUE
+    ),
+    slr = object$mu
   )
-  mu <- object$mu
-  intercept <- matrix(0, length(object$groups), 1)
-  if (object$intercept$glsw > 0) {
-    intercept <- intercept + gamma[, 1]
-    gamma <- gamma[, -1]
-  }
-  if (object$intercept$fixed > 0) {
-    intercept <- intercept + beta[, 1]
-    beta <- beta[, -1]
-  }
-  if (object$intercept$slr > 0) {
-    intercept <- intercept + mu[, 1]
-    mu <- mu[, -1]
-  }
-  effects <- object$effects
-  coef <- as.data.frame(cbind(intercept, gamma, beta, mu))
-  coef_names <- c(
-    effects$glsw[effects$glsw != "Intercept"],
-    effects$fixed[effects$fixed != "Intercept"],
-    effects$slr[effects$slr != "Intercept"]
-  )
-  if (any(unlist(object$intercept) > 0)) {
-    colnames(coef) <- c("Intercept", coef_names)
-  } else {
-    colnames(coef) <- coef_names
-  }
-  coef
+  effects <- object$effects[c("glsw", "fixed", "slr")]
+  coef_names <- unique(c(effects$glsw, effects$fixed, effects$slr))
+  coef <- do.call(cbind, lapply(coef_names, function(n) {
+    index_eff <- unlist(lapply(effects, function(e) match(n, e)))
+    has_eff <- which(!is.na(index_eff))
+    index_eff <- index_eff[has_eff]
+    params_eff <- params[has_eff]
+    rowSums(do.call(cbind, mapply(
+      function(p, i) p[, i],
+      params_eff,
+      index_eff,
+      SIMPLIFY = FALSE
+    )))
+  }))
+  colnames(coef) <- coef_names
+  as.data.frame(coef)
 }
 
 #' Get fitted response.
