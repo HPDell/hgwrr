@@ -1,3 +1,7 @@
+# Version 0.6.2
+
+- Fix: deprecated usage of Armadillo function `pow()`
+
 # Version 0.6.1
 
 - Fix: error in `spatial_hetero_test.hgwrm()` when there is only one SLR effect.

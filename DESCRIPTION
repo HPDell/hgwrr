@@ -1,8 +1,8 @@
 Package: hgwrr
 Type: Package
 Title: Hierarchical and Geographically Weighted Regression
-Version: 0.6-1
-Date: 2024-11-15
+Version: 0.6-2
+Date: 2025-09-24
 Authors@R: c(person(given = "Yigong",
                     family = "Hu",
                     role = c("aut", "cre"),
