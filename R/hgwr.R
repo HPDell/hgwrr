@@ -127,6 +127,14 @@ hgwr.sf <- function(
 ) {
   ### Generate group-level coordinates by taking means
   model_desc <- parse_formula(formula)
+  ### Warning if geographical CRS is used
+  if (sf::st_is_longlat(data)) {
+    warning("The coordinate reference system of ",
+            "this sf object is geographical. ",
+            "Please make sure the unit of coordinates ",
+            "is in degree and the bandwidth value ",
+            "is set accordingly.")
+  }
   ### Order data accordig to group
   data <- data[order(data[[model_desc$group]]), ]
   data_coords <- sf::st_coordinates(sf::st_centroid(data))
