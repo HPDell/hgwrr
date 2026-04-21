@@ -47,7 +47,11 @@ mat poly_items(const mat& x, const mat& alpha) {
     mat px(x.n_rows, alpha.n_rows + 1, arma::fill::ones);
     for (size_t i = 0; i < alpha.n_rows; i++)
     {
-        px.col(i + 1) = prod(arma::pow(x.each_row(), alpha.row(i)), 1) / div(i);
+        mat nx = x;
+        nx.each_row([&](rowvec& r) {
+            r = arma::pow(r, alpha.row(i));
+        });
+        px.col(i + 1) = prod(nx, 1) / div(i);
     }
     return px;
 }
