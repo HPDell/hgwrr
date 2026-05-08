@@ -104,9 +104,9 @@
 hgwr <- function(
   formula, data, ..., bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-  max_iters = 1e6, max_retries = 1e6,
-  ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
+  eps_iter = 1e-6, max_iters = 1e6, max_retries = 1e6,
+  global_options = ml_options(),
+  f_test = FALSE, verbose = 0
 ) {
   UseMethod("hgwr", data)
 }
@@ -121,9 +121,9 @@ hgwr <- function(
 hgwr.sf <- function(
   formula, data, ..., bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-  max_iters = 1e6, max_retries = 1e6,
-  ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
+  eps_iter = 1e-6, max_iters = 1e6, max_retries = 1e6,
+  global_options = ml_options(),
+  f_test = FALSE, verbose = 0
 ) {
   ### Generate group-level coordinates by taking means
   model_desc <- parse_formula(formula)
@@ -156,9 +156,9 @@ hgwr.sf <- function(
 hgwr.data.frame <- function(
   formula, data, ..., coords, bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-  max_iters = 1e6, max_retries = 1e6,
-  ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
+  eps_iter = 1e-6, max_iters = 1e6, max_retries = 1e6,
+  global_options = ml_options(),
+  f_test = FALSE, verbose = 0
 ) {
   model_desc <- parse_formula(formula)
   ### Order data accordig to group
@@ -176,19 +176,15 @@ hgwr.data.frame <- function(
 hgwr_fit <- function(
   formula, data, coords, bw = c("CV", "AIC"),
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
-  max_iters = 1e6, max_retries = 1e6,
-  ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
+  eps_iter = 1e-6, max_iters = 1e6, max_retries = 1e6,
+  global_options = ml_options(),
+  f_test = FALSE, verbose = 0
 ) {
   ### Extract variables
   kernel <- match.arg(kernel)
   kernel_index <- switch(kernel,
     "gaussian" = 0L,
     "bisquared" = 1L
-  )
-  ml_type <- switch(match.arg(ml_type),
-    "D_Only" = 0L,
-    "D_Beta" = 1L
   )
   model_desc <- parse_formula(formula)
   y <- as.vector(data[[model_desc$response]])
@@ -269,16 +265,36 @@ hgwr_fit <- function(
     bw_criterion <- 0L
   }
 
+  global_method <- global_options$method
   ### Call C
   hgwr_result <- tryCatch(
     {
-      hgwr_bfml(
-        g, x, z, y, as.matrix(coords),
-        group_index, bw_value, bw_criterion, kernel_index,
-        alpha, eps_iter, eps_gradient,
-        as.integer(max_iters), as.integer(max_retries),
-        as.integer(ml_type), f_test, as.integer(verbose)
-      )
+      if (global_method == "ML") {
+        alpha <- global_options$alpha
+        eps_gradient <- global_options$eps_gradient
+        ml_type <- switch(global_options$ml_type,
+          "D_Only" = 0L,
+          "D_Beta" = 1L
+        )
+        hgwr_bfml(
+          g, x, z, y, as.matrix(coords),
+          group_index, bw_value, bw_criterion, kernel_index,
+          alpha, eps_iter, eps_gradient,
+          as.integer(max_iters), as.integer(max_retries),
+          as.integer(ml_type), f_test, as.integer(verbose)
+        )
+      } else if (global_method == "MCMC") {
+        mcmc_iters <- global_options$mcmc_iters
+        mcmc_burnin <- global_options$mcmc_burnin
+        hgwr_mcmc(
+          g, x, z, y, as.matrix(coords),
+          group_index, bw_value, bw_criterion, kernel_index,
+          eps_iter, as.integer(max_iters), as.integer(max_retries),
+          mcmc_iters, mcmc_burnin, f_test, as.integer(verbose)
+        )
+      } else {
+        stop("Method must be either ML or MCMC.")
+      }
     },
     error = function(e) {
       stop("Error occurred when estimating HGWR parameters.")

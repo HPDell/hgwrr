@@ -36,7 +36,7 @@ test_that("spatial heterogeneity: HGWR", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = 10,
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error({

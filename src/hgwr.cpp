@@ -64,3 +64,64 @@ List hgwr_bfml(
 
     return results;
 }
+
+// [[Rcpp::export]]
+List hgwr_mcmc(
+    const arma::mat& g,
+    const arma::mat& x,
+    const arma::mat& z,
+    const arma::vec& y,
+    const arma::mat& u,
+    const arma::vec& group,
+    double bw,
+    int bw_optim,
+    size_t kernel,
+    double eps_iter,
+    size_t max_iters,
+    size_t max_retries,
+    size_t mcmc_iters,
+    size_t mcmc_burnin,
+    bool f_test,
+    size_t verbose
+) {
+    arma::uvec mgroup = arma::conv_to<arma::uvec>::from(group) - 1;
+    auto mkernel = HGWR::KernelType(size_t(kernel));
+    HGWR::Options options;
+    options.eps_iter = eps_iter;
+    options.max_iters = max_iters;
+    options.max_retries = max_retries;
+    options.verbose = verbose;
+    HGWR algorithm(g, x, z, y, u, mgroup, mkernel, options);
+    if (bw_optim < 0) {
+        algorithm.set_bw(bw);
+    } else {
+        algorithm.set_bw_optim(true);
+        algorithm.set_bw_criterion_type(HGWR::BwOptimCriterionType(bw_optim));
+    }
+    algorithm.set_printer(&prcout);
+    algorithm.set_canceler(&prcancel);
+    auto hgwr_result = algorithm.fit_mcmc_backfitting(f_test, mcmc_iters, mcmc_burnin);
+
+    auto results = List::create(
+        Named("gamma") = hgwr_result.gamma,
+        Named("beta") = hgwr_result.beta,
+        Named("mu") = hgwr_result.mu,
+        Named("D") = hgwr_result.D,
+        Named("sigma") = hgwr_result.sigma,
+        Named("bw") = hgwr_result.bw,
+        Named("gamma_se") = algorithm.get_gamma_se(),
+        Named("logLik") = algorithm.get_loglik(),
+        Named("trS") = algorithm.get_trS(),
+        Named("var_beta") = algorithm.get_var_beta(),
+        Named("edf") = algorithm.edf(),
+        Named("enp") = algorithm.enp()
+    );
+
+    if (f_test)
+    {
+        auto ftest_result = algorithm.test_glsw();
+        results["f_test"] = ftest_result;
+    }
+
+    return results;
+}

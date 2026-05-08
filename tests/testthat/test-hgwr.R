@@ -8,7 +8,7 @@ test_that("hgwr fit", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = 10,
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
 })
@@ -20,21 +20,21 @@ test_that("hgwr fit no intercept", {
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    alpha = 1e-8
+    global_options = ml_options(alpha = 1e-8)
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    alpha = 1e-8
+    global_options = ml_options(alpha = 1e-8)
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    alpha = 1e-8
+    global_options = ml_options(alpha = 1e-8)
   ))
 })
 
@@ -46,7 +46,7 @@ test_that("hgwr fit sf", {
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = ms_sf,
     bw = 10,
-    alpha = 1e-8
+    global_options = ml_options(alpha = 1e-8)
   ))
 })
 
@@ -74,7 +74,7 @@ test_that("hgwr data.frame coords check", {
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = mulsam.test$data,
     bw = 10,
-    alpha = 1e-8
+    global_options = ml_options(alpha = 1e-8)
   ))
 })
 
@@ -85,7 +85,7 @@ test_that("hgwr bandwidth optimisation", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
 })
@@ -104,7 +104,7 @@ test_that("hgwr s3 methods with no random slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_rn))
@@ -122,7 +122,7 @@ test_that("hgwr s3 methods with no random slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_rn))
@@ -143,7 +143,7 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_fn))
@@ -161,7 +161,7 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_fn))
@@ -182,7 +182,7 @@ test_that("hgwr s3 methods with no GLSW slop", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_gn))
@@ -200,7 +200,7 @@ test_that("hgwr s3 methods with no GLSW slop", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_no_error(print(m_gn))
@@ -220,7 +220,7 @@ test_that("hgwr order data", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = 10,
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   set.seed(1)
@@ -234,7 +234,7 @@ test_that("hgwr order data", {
       data = data_perm,
       coords = mulsam.test$coords,
       bw = 10,
-      alpha = 1e-8
+      global_options = ml_options(alpha = 1e-8)
     )
   })
   expect_equal(m_perm$gamma, m0$gamma)

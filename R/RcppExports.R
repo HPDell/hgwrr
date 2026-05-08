@@ -9,3 +9,7 @@ hgwr_bfml <- function(g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_ite
     .Call(`_hgwrr_hgwr_bfml`, g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose)
 }
 
+hgwr_mcmc <- function(g, x, z, y, u, group, bw, bw_optim, kernel, eps_iter, max_iters, max_retries, mcmc_iters, mcmc_burnin, f_test, verbose) {
+    .Call(`_hgwrr_hgwr_mcmc`, g, x, z, y, u, group, bw, bw_optim, kernel, eps_iter, max_iters, max_retries, mcmc_iters, mcmc_burnin, f_test, verbose)
+}
+
