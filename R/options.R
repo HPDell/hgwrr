@@ -1,3 +1,6 @@
+#' Maximum likelihood options
+#' 
+#' @export 
 ml_options <- function(
   alpha = 0.01,
   eps_gradient = 1e-6,
@@ -9,6 +12,9 @@ ml_options <- function(
   ml_type = match.arg(ml_type)
 )
 
+#' Markov Chain Monte Carlo Esitmator Options
+#' 
+#' @export 
 mcmc_options <- function(
   mcmc_iters = 5000,
   mcmc_burnin = 400

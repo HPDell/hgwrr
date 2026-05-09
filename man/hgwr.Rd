@@ -23,12 +23,10 @@ hgwr(
   ...,
   bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01,
   eps_iter = 1e-06,
-  eps_gradient = 1e-06,
   max_iters = 1e+06,
   max_retries = 1e+06,
-  ml_type = c("D_Only", "D_Beta"),
+  global_options = ml_options(),
   f_test = FALSE,
   verbose = 0
 )
@@ -39,12 +37,10 @@ hgwr(
   ...,
   bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01,
   eps_iter = 1e-06,
-  eps_gradient = 1e-06,
   max_iters = 1e+06,
   max_retries = 1e+06,
-  ml_type = c("D_Only", "D_Beta"),
+  global_options = ml_options(),
   f_test = FALSE,
   verbose = 0
 )
@@ -56,12 +52,10 @@ hgwr(
   coords,
   bw = "CV",
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01,
   eps_iter = 1e-06,
-  eps_gradient = 1e-06,
   max_iters = 1e+06,
   max_retries = 1e+06,
-  ml_type = c("D_Only", "D_Beta"),
+  global_options = ml_options(),
   f_test = FALSE,
   verbose = 0
 )
@@ -72,12 +66,10 @@ hgwr_fit(
   coords,
   bw = c("CV", "AIC"),
   kernel = c("gaussian", "bisquared"),
-  alpha = 0.01,
   eps_iter = 1e-06,
-  eps_gradient = 1e-06,
   max_iters = 1e+06,
   max_retries = 1e+06,
-  ml_type = c("D_Only", "D_Beta"),
+  global_options = ml_options(),
   f_test = FALSE,
   verbose = 0
 )
@@ -128,25 +120,12 @@ in GWR part. Possible values are
 \item{\code{bisquared}}{Bi-squared kernel function. If \eqn{d<b} then \eqn{k(d)=\left(1-\frac{d^2}{b^2}\right)^2} else \eqn{k(d)=0}}
 }}
 
-\item{alpha}{A numeric value. It is the size of the first trial step in
-maximum likelihood algorithm.}
-
 \item{eps_iter}{A numeric value. Terminate threshold of back-fitting.}
-
-\item{eps_gradient}{A numeric value. Terminate threshold of
-maximum likelihood algorithm.}
 
 \item{max_iters}{An integer value. The maximum of iteration.}
 
 \item{max_retries}{An integer value. If the algorithm tends to be diverge,
 it stops automatically after trying \emph{max_retires} times.}
-
-\item{ml_type}{An integer value. Represent which maximum likelihood
-algorithm is used. Possible values are:
-\describe{
-\item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
-\item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
-}}
 
 \item{f_test}{A logical value. Determine whether to do F test on GLSW effects.
 If \code{f_test=TURE}, there will be a \code{f_test} item in the returned object
@@ -154,6 +133,19 @@ showing the F test for each GLSW effect.}
 
 \item{coords}{A 2-column matrix.
 It consists of coordinates for each group.}
+
+\item{alpha}{A numeric value. It is the size of the first trial step in
+maximum likelihood algorithm.}
+
+\item{eps_gradient}{A numeric value. Terminate threshold of
+maximum likelihood algorithm.}
+
+\item{ml_type}{An integer value. Represent which maximum likelihood
+algorithm is used. Possible values are:
+\describe{
+\item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
+\item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
+}}
 }
 \value{
 A list describing the model with following fields.
