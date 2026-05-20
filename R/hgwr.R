@@ -102,7 +102,7 @@
 #'
 #' @export
 hgwr <- function(
-  formula, data, ..., bw = "CV",
+  formula, data, ..., bw = "CV", multiscale = FALSE,
   kernel = c("gaussian", "bisquared"),
   alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
   max_iters = 1e6, max_retries = 1e6,
@@ -119,7 +119,7 @@ hgwr <- function(
 #'
 #' @export
 hgwr.sf <- function(
-  formula, data, ..., bw = "CV",
+  formula, data, ..., bw = "CV", multiscale = FALSE,
   kernel = c("gaussian", "bisquared"),
   alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
   max_iters = 1e6, max_retries = 1e6,
@@ -154,7 +154,7 @@ hgwr.sf <- function(
 #'
 #' @export
 hgwr.data.frame <- function(
-  formula, data, ..., coords, bw = "CV",
+  formula, data, ..., coords, bw = "CV", multiscale = FALSE,
   kernel = c("gaussian", "bisquared"),
   alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
   max_iters = 1e6, max_retries = 1e6,
@@ -174,7 +174,7 @@ hgwr.data.frame <- function(
 #' @describeIn hgwr Fit a HGWR model
 #' @export
 hgwr_fit <- function(
-  formula, data, coords, bw = c("CV", "AIC"),
+  formula, data, coords, bw = c("CV", "AIC"), multiscale = FALSE,
   kernel = c("gaussian", "bisquared"),
   alpha = 0.01, eps_iter = 1e-6, eps_gradient = 1e-6,
   max_iters = 1e6, max_retries = 1e6,
@@ -251,34 +251,82 @@ hgwr_fit <- function(
     }
   }
   ### Get bandwidth value
-  if (is.character(bw)) {
-    bw <- match.arg(bw)
-    bw_value <- NA_real_
-    optim_bw <- TRUE
-    bw_criterion <- switch(bw,
-      "CV" = 0L,
-      "AIC" = 1L
-    )
-  } else if (is.numeric(bw) || is.integer(bw)) {
-    bw_value <- bw
-    optim_bw <- FALSE
-    bw_criterion <- -1L
+  if (multiscale) {
+    if (length(bw) == 1) {
+      if (is.character(bw)) {
+        bw <- match.arg(bw)
+        bw_value <- NA_real_
+        optim_bw <- TRUE
+        bw_criterion <- switch(bw,
+          "CV" = 0L,
+          "AIC" = 1L
+        )
+      } else if (is.numeric(bw) || is.integer(bw)) {
+        bw_value <- bw
+        optim_bw <- FALSE
+        bw_criterion <- -1L
+      } else {
+        bw_value <- Inf
+        optim_bw <- TRUE
+        bw_criterion <- 0L
+      }
+      bw_value <- rep(bw_value, ncol(g))
+    } else {
+      if (length(bw) == ncol(g)) {
+        if (is.numeric(bw) || is.integer(bw)) {
+          bw_value <- bw
+          optim_bw <- FALSE
+          bw_criterion <- -1L
+        } else {
+          stop("Bandwidth must be specified by numbers, unless its value is a single character being `CV` or `AIC`.")
+        }
+      } else {
+        stop(sprintf(
+          "Length of bw (%d) does not match number of GLSW variables (%d, including intercept) in multiscale mode.",
+          length(bw), n_glsw
+        ))
+      }
+    }
   } else {
-    bw_value <- Inf
-    optim_bw <- TRUE
-    bw_criterion <- 0L
+    if (is.character(bw)) {
+      bw <- match.arg(bw)
+      bw_value <- NA_real_
+      optim_bw <- TRUE
+      bw_criterion <- switch(bw,
+        "CV" = 0L,
+        "AIC" = 1L
+      )
+    } else if (is.numeric(bw) || is.integer(bw)) {
+      bw_value <- bw[1]
+      optim_bw <- FALSE
+      bw_criterion <- -1L
+    } else {
+      bw_value <- Inf
+      optim_bw <- TRUE
+      bw_criterion <- 0L
+    }
   }
 
   ### Call C
   hgwr_result <- tryCatch(
     {
-      hgwr_bfml(
-        g, x, z, y, as.matrix(coords),
-        group_index, bw_value, bw_criterion, kernel_index,
-        alpha, eps_iter, eps_gradient,
-        as.integer(max_iters), as.integer(max_retries),
-        as.integer(ml_type), f_test, as.integer(verbose)
-      )
+      if (multiscale) {
+        hgwr_bfml_multiscale(
+          g, x, z, y, as.matrix(coords),
+          group_index, bw_value, bw_criterion, kernel_index,
+          alpha, eps_iter, eps_gradient,
+          as.integer(max_iters), as.integer(max_retries),
+          as.integer(ml_type), f_test, as.integer(verbose)
+        )
+      } else {
+        hgwr_bfml(
+          g, x, z, y, as.matrix(coords),
+          group_index, bw_value, bw_criterion, kernel_index,
+          alpha, eps_iter, eps_gradient,
+          as.integer(max_iters), as.integer(max_retries),
+          as.integer(ml_type), f_test, as.integer(verbose)
+        )
+      }
     },
     error = function(e) {
       stop("Error occurred when estimating HGWR parameters.")

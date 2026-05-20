@@ -31,13 +31,12 @@ List hgwr_bfml_multiscale(
     auto mkernel = HGWR::KernelType(size_t(kernel));
     HGWR::Options options { alpha, eps_iter, eps_gradient, max_iters, max_retries, verbose, ml_type, true };
     HGWR algorithm(g, x, z, y, u, mgroup, mkernel, options);
-    if (bw_optim < 0) {
-        if (bws.n_elem == 1) {
-            algorithm.set_bw(bws(0));
-        } else {
-            algorithm.set_bw(bws);
-        }
+    if (bws.n_elem == 1) {
+        algorithm.set_bw(bws(0));
     } else {
+        algorithm.set_bw(bws);
+    }
+    if (bw_optim >= 0) {
         algorithm.set_bw_optim(true);
         algorithm.set_bw_criterion_type(HGWR::BwOptimCriterionType(bw_optim));
     }
