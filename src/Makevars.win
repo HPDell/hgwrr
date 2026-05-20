@@ -23,6 +23,7 @@ OBJECTS_LIBHGWR = \
 
 OBJECTS_HGWRR = \
 	hgwr.o \
+	hgwr_multiscale.o \
 	hetero_test.o \
 	RcppExports.o
 

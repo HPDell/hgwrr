@@ -55,10 +55,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// hgwr_bfml_multiscale
+List hgwr_bfml_multiscale(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, const arma::vec& bws, int bw_optim, size_t kernel, double alpha, double eps_iter, double eps_gradient, size_t max_iters, size_t max_retries, size_t ml_type, bool f_test, size_t verbose);
+RcppExport SEXP _hgwrr_hgwr_bfml_multiscale(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwsSEXP, SEXP bw_optimSEXP, SEXP kernelSEXP, SEXP alphaSEXP, SEXP eps_iterSEXP, SEXP eps_gradientSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP ml_typeSEXP, SEXP f_testSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type g(gSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type group(groupSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type bws(bwsSEXP);
+    Rcpp::traits::input_parameter< int >::type bw_optim(bw_optimSEXP);
+    Rcpp::traits::input_parameter< size_t >::type kernel(kernelSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_iter(eps_iterSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_gradient(eps_gradientSEXP);
+    Rcpp::traits::input_parameter< size_t >::type max_iters(max_itersSEXP);
+    Rcpp::traits::input_parameter< size_t >::type max_retries(max_retriesSEXP);
+    Rcpp::traits::input_parameter< size_t >::type ml_type(ml_typeSEXP);
+    Rcpp::traits::input_parameter< bool >::type f_test(f_testSEXP);
+    Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(hgwr_bfml_multiscale(g, x, z, y, u, group, bws, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hgwrr_spatial_hetero_bootstrap", (DL_FUNC) &_hgwrr_spatial_hetero_bootstrap, 7},
     {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 17},
+    {"_hgwrr_hgwr_bfml_multiscale", (DL_FUNC) &_hgwrr_hgwr_bfml_multiscale, 17},
     {NULL, NULL, 0}
 };
 

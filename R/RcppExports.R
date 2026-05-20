@@ -9,3 +9,7 @@ hgwr_bfml <- function(g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_ite
     .Call(`_hgwrr_hgwr_bfml`, g, x, z, y, u, group, bw, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose)
 }
 
+hgwr_bfml_multiscale <- function(g, x, z, y, u, group, bws, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose) {
+    .Call(`_hgwrr_hgwr_bfml_multiscale`, g, x, z, y, u, group, bws, bw_optim, kernel, alpha, eps_iter, eps_gradient, max_iters, max_retries, ml_type, f_test, verbose)
+}
+
