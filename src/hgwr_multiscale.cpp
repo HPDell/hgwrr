@@ -59,11 +59,11 @@ List hgwr_bfml_multiscale(
         Named("enp") = algorithm.enp()
     );
 
-    if (f_test)
-    {
-        auto ftest_result = algorithm.test_glsw_multiscale();
-        results["f_test"] = ftest_result;
-    }
+    // if (f_test)
+    // {
+    //     auto ftest_result = algorithm.test_glsw_multiscale();
+    //     results["f_test"] = ftest_result;
+    // }
 
     return results;
 }

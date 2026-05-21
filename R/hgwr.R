@@ -180,6 +180,9 @@ hgwr_fit <- function(
   max_iters = 1e6, max_retries = 1e6,
   ml_type = c("D_Only", "D_Beta"), f_test = FALSE, verbose = 0
 ) {
+  if (multiscale && f_test) {
+    stop("F test for multiscale model has not been implemented")
+  }
   ### Extract variables
   kernel <- match.arg(kernel)
   kernel_index <- switch(kernel,
