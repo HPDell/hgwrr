@@ -52,7 +52,7 @@ test_that("hgwr fit sf", {
 
 test_that("hgwr parse formula", {
   expect_setequal(m$effects$glsw, c("Intercept", "g1", "g2"))
-  expect_setequal(m$effects$fixed, c("Intercept", "x1"))
+  expect_setequal(m$effects$fixed, c("Intercept", "x1", "z1"))
   expect_setequal(m$effects$slr, c("Intercept", "z1"))
   expect_equal(m$effects$group, c("group"))
   expect_equal(m$effects$response, c("y"))

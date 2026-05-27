@@ -79,6 +79,9 @@
 #' where `g1` and `g2` are GLSW effects,
 #' `x1` is the fixed effects,
 #' and `z1` is the SLR effects grouped by the group indicator `group`.
+#' Non-intercept SLR effects are also included as fixed effects internally,
+#' so the fixed effect estimates their population mean and the SLR term
+#' estimates group-level deviations around that mean.
 #' Note that SLR effects can only be specified once!
 #'
 #' @examples
@@ -209,9 +212,13 @@ hgwr_fit <- function(
       stop("Please provide a SLR effect (including intercept) or use other models.")
     }
   }
-  gfe <- model_desc$fixed.effects
-  if (length(model_desc$fixed.effects) > 0) {
-    x <- as.matrix(make_dummy(data[model_desc$fixed.effects]))
+  fixed_effects <- c(
+    model_desc$fixed.effects,
+    setdiff(model_desc$slr.effects, model_desc$fixed.effects)
+  )
+  gfe <- fixed_effects
+  if (length(fixed_effects) > 0) {
+    x <- as.matrix(make_dummy(data[fixed_effects]))
     if (model_desc$intercept$fixed > 0) {
       gfe <- c("Intercept", gfe)
       x <- cbind(model_desc$intercept$fixed, x)
@@ -221,7 +228,7 @@ hgwr_fit <- function(
       gfe <- c("Intercept", gfe)
       x <- matrix(rep(model_desc$intercept$fixed, times = nrow(data)), ncol = 1)
     } else {
-      stop("Please provide a fixed effect (including intercept) or use other models.")
+      stop("Please provide a fixed effect (including intercept), a random slope, or use other models.")
     }
   }
   lfe <- model_desc$glsw.effects
