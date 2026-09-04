@@ -204,38 +204,127 @@ spatial_hetero_test.sf <- function(x, ...) {
 #' @importFrom stats var
 stat_glsw <- function(g, sd) diag(var(g / sd))
 
+.effect_terms <- function(intercept, effects) {
+  c(if (isTRUE(intercept != 0)) "1" else "0", effects)
+}
+
+.effectwise_null_formula <- function(x, effect) {
+  glsw <- setdiff(x$effects$glsw, c("Intercept", effect))
+  fixed <- setdiff(x$effects$fixed, "Intercept")
+  slr <- setdiff(x$effects$slr, "Intercept")
+  if (!identical(effect, "Intercept")) {
+    fixed <- unique(c(fixed, effect))
+  }
+
+  glsw_intercept <- x$intercept$glsw
+  if (identical(effect, "Intercept")) {
+    glsw_intercept <- 0
+  }
+  if (length(glsw) == 0 && glsw_intercept == 0) {
+    stop(
+      "The effect-wise null model must retain at least one GLSW effect.",
+      call. = FALSE
+    )
+  }
+
+  stats::as.formula(sprintf(
+    "%s ~ %s + L(%s) + (%s | %s)",
+    x$effects$response,
+    paste(.effect_terms(x$intercept$fixed, fixed), collapse = " + "),
+    paste(.effect_terms(glsw_intercept, glsw), collapse = " + "),
+    paste(.effect_terms(x$intercept$slr, slr), collapse = " + "),
+    x$effects$group
+  ))
+}
+
+.simulate_hgwr_error <- function(model, legacy_sigma = FALSE) {
+  data0 <- model$frame
+  ge <- model$effects$group
+  groups <- unique(data0[[ge]])
+  z0 <- model$frame.parsed$z
+  sigma2 <- if (legacy_sigma) model$sigma else model$sigma^2
+  simulated <- numeric(nrow(data0))
+  for (gr in groups) {
+    index <- which(data0[[ge]] == gr)
+    zi <- as.matrix(z0[index, , drop = FALSE])
+    simulated[index] <- MASS::mvrnorm(
+      mu = rep(0, nrow(zi)),
+      Sigma = zi %*% model$D %*% t(zi) + diag(sigma2, nrow(zi))
+    )
+  }
+  simulated
+}
+
 #' @describeIn hgwr
 #' Test the spatial heterogeneity with bootstrapping.
 #'
 #' @param x An `hgwrm` object
-#' @param round The number of times to sampling from model.
-#' @param statistic A function used to calculate the statistics
-#' on the original data and bootstrapped data.
-#' Default to the variance of standardlised GLSW estimates.
-#' @param parallel If TRUE, use `furrr` package to parallel.
-#' @param verbose Override the verbose setting
-#' in the `hgwrm` model with this value.
-#' @param \dots Arguments to be used in re-fitting the model
-#' with function [hgwrr::hgwr].
+#' @param round The number of times to sample from the model.
+#' @param statistic A function used to calculate the statistics on the
+#' original data and bootstrapped data. Defaults to the variance of
+#' standardised GLSW estimates.
+#' @param null Bootstrap null-generating mechanism. `"fitted"` preserves the
+#' historical behaviour centred on the fitted spatially varying model.
+#' `"effectwise"` fits a spatially constant null model for each tested effect.
+#' @param effects Character vector naming GLSW effects to test. `NULL` tests
+#' all GLSW effects.
+#' @param refit_bw Whether to re-select the bandwidth in every bootstrap fit.
+#' @param p_correction Bootstrap p-value convention. `"none"` returns the
+#' empirical proportion; `"plus_one"` adds one to numerator and denominator.
+#' @param fail_on_nonconvergence Whether a non-converged null or bootstrap
+#' HGWR fit should stop the test. Defaults to `FALSE` for compatibility.
+#' @param parallel If TRUE, use `furrr` package to parallelise resamples.
+#' @param verbose Override the verbose setting in the `hgwrm` model.
+#' @param \dots Arguments to be used in re-fitting the model with
+#' [hgwrr::hgwr()].
 #'
 #' @importFrom MASS mvrnorm
-#' @importFrom stats fitted
+#' @importFrom stats as.formula fitted
 #' @method spatial_hetero_test hgwrm
 #' @export
 spatial_hetero_test.hgwrm <- function(
   x,
   round = 99,
   statistic = stat_glsw,
+  null = c("fitted", "effectwise"),
+  effects = NULL,
+  refit_bw = FALSE,
+  p_correction = c("none", "plus_one"),
+  fail_on_nonconvergence = FALSE,
   parallel = FALSE,
   verbose = 0,
   ...
 ) {
-  t0 <- with(x, statistic(gamma, gamma_se))
+  null <- match.arg(null)
+  p_correction <- match.arg(p_correction)
+  if (!inherits(x, "hgwrm")) {
+    stop("Argument x must be an hgwrm object.", call. = FALSE)
+  }
+  if (length(round) != 1 || !is.numeric(round) || round < 1) {
+    stop("round must be a positive integer.", call. = FALSE)
+  }
+  round <- as.integer(round)
+
+  all_t0 <- with(x, statistic(gamma, gamma_se))
+  names(all_t0) <- x$effects$glsw
+  if (is.null(effects)) {
+    effects <- x$effects$glsw
+  }
+  if (!is.character(effects) || length(effects) < 1 ||
+      any(!effects %in% x$effects$glsw)) {
+    stop("effects must name one or more GLSW effects in x.", call. = FALSE)
+  }
+  effects <- unique(effects)
+  effect_index <- match(effects, x$effects$glsw)
+  t0 <- all_t0[effect_index]
+
   args <- as.list(x$call[-1])
   args$coords <- x$coords
+  args$data <- x$frame
   args$f_test <- FALSE
   args$max_iters <- 100
-  args$bw <- x$bw
+  args$max_retries <- 10
+  args$bw <- if (refit_bw) "CV" else x$bw
   args$verbose <- verbose
   if (...length() > 0) {
     settings <- list(...)
@@ -243,56 +332,93 @@ spatial_hetero_test.hgwrm <- function(
       args[[key]] <- settings[[key]]
     }
   }
-  yhat <- fitted(x)
-  covar0 <- x$D
-  sigma0 <- x$sigma
-  data0 <- x$frame
-  resp <- x$effects$response
-  ge <- x$effects$group
-  groups <- unique(data0[[ge]])
-  z0 <- x$frame.parsed$z
-  z_group <- lapply(groups, function(gr) as.matrix(z0[data0[[ge]] == gr, ]))
+
   pgb <- NULL
   if (requireNamespace("progressr", quietly = TRUE)) {
-    pgb <- progressr::progressor(round)
+    nticks <- round * ifelse(null == "effectwise", length(effects), 1)
+    pgb <- progressr::progressor(nticks)
   }
-  worker <- function(i, pgb = NULL) {
-    ei <- do.call(c, lapply(z_group, function(zi) {
-      MASS::mvrnorm(mu = rep(0, nrow(zi)),
-                    Sigma = zi %*% covar0 %*% t(zi) + diag(sigma0, nrow(zi)))
-    }))
-    ysi <- ei + yhat
-    datai <- data0
-    datai[[resp]] <- ysi
-    argsi <- args
-    argsi$data <- datai
-    modeli <- do.call(hgwrr::hgwr_fit, argsi)
-    stati <- with(modeli, statistic(gamma, gamma_se))
-    if (!is.null(pgb)) pgb()
-    stati
-  }
-  if (is.logical(parallel) && parallel) {
-    if (requireNamespace("furrr", quietly = TRUE)) {
-      t <- do.call(rbind, furrr::future_map(
+
+  map_bootstrap <- function(null_model, selected_index, legacy_sigma) {
+    worker <- function(i, pgb = NULL) {
+      datai <- x$frame
+      datai[[x$effects$response]] <-
+        fitted(null_model) + .simulate_hgwr_error(null_model, legacy_sigma)
+      argsi <- args
+      argsi$data <- datai
+      modeli <- do.call(hgwrr::hgwr_fit, argsi)
+      if (isTRUE(fail_on_nonconvergence) && identical(modeli$converged, FALSE)) {
+        stop(
+          "A bootstrap HGWR fit reached its iteration or retry limit.",
+          call. = FALSE
+        )
+      }
+      stati <- with(modeli, statistic(gamma, gamma_se))[selected_index]
+      if (!is.null(pgb)) pgb()
+      stati
+    }
+    if (is.logical(parallel) && parallel) {
+      if (!requireNamespace("furrr", quietly = TRUE)) {
+        stop("Package \"furrr\" must be installed to parallel", call. = FALSE)
+      }
+      draws <- furrr::future_map(
         seq_len(round), worker,
         pgb = pgb,
         .options = furrr::furrr_options(seed = TRUE)
-      ))
+      )
     } else {
-      stop("Package \"furrr\" must be installed to parallel",
-           call. = FALSE)
+      draws <- lapply(seq_len(round), worker, pgb = pgb)
     }
-  } else {
-    t <- do.call(rbind, lapply(seq_len(round), worker, pgb = pgb))
+    matrix(unlist(draws), nrow = round, byrow = TRUE)
   }
-  pv <- sapply(seq_along(t0), function(i) {
-    mean(abs(t[, i]) > abs(t0[i]))
-  })
+
+  if (null == "fitted") {
+    # The historical fitted-model bootstrap uses one simulated data set per
+    # round and evaluates every requested GLSW effect on that same refit.
+    t <- map_bootstrap(x, effect_index, legacy_sigma = TRUE)
+  } else {
+    t <- vapply(seq_along(effect_index), function(j) {
+      null_args <- args
+      null_args$formula <- .effectwise_null_formula(x, effects[j])
+      null_model <- do.call(hgwrr::hgwr_fit, null_args)
+      if (isTRUE(fail_on_nonconvergence) && identical(null_model$converged, FALSE)) {
+        stop(
+          "An effectwise null HGWR fit reached its iteration or retry limit.",
+          call. = FALSE
+        )
+      }
+      as.numeric(map_bootstrap(null_model, effect_index[j], legacy_sigma = FALSE))
+    }, numeric(round))
+  }
+  if (length(effects) == 1) {
+    t <- matrix(t, ncol = 1)
+  }
+  colnames(t) <- effects
+
+  exceedances <- vapply(seq_along(t0), function(i) {
+    if (p_correction == "plus_one") {
+      sum(abs(t[, i]) >= abs(t0[i]))
+    } else {
+      sum(abs(t[, i]) > abs(t0[i]))
+    }
+  }, numeric(1))
+  if (p_correction == "plus_one") {
+    pv <- (1 + exceedances) / (round + 1)
+  } else {
+    pv <- exceedances / round
+  }
+  names(pv) <- effects
+
   res <- list(
     t0 = t0,
     t = t,
-    vars = x$effects$glsw,
-    pv = pv
+    vars = effects,
+    pv = pv,
+    null = null,
+    round = round,
+    refit_bw = refit_bw,
+    p_correction = p_correction,
+    fail_on_nonconvergence = fail_on_nonconvergence
   )
   class(res) <- "spahetbootres"
   res

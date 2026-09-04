@@ -1,3 +1,13 @@
+# Version 0.6.2.9000
+
+- Add an effect-wise null bootstrap for GLSW spatial-heterogeneity tests.
+- Allow selected GLSW effects and optional bandwidth re-selection.
+- Add finite-bootstrap p-value correction and bootstrap metadata.
+- Preserve the historical fitted-model bootstrap as a compatibility mode.
+- Report HGWR iteration, retry, and convergence diagnostics.
+- Allow strict failure on non-converged bootstrap refits when requested.
+- Fix bandwidth re-selection when the original model call stores a local symbol.
+
 # Version 0.6.2
 
 - Fix: deprecated usage of Armadillo function `pow()`

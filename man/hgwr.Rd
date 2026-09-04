@@ -12,6 +12,11 @@
   x,
   round = 99,
   statistic = stat_glsw,
+  null = c("fitted", "effectwise"),
+  effects = NULL,
+  refit_bw = FALSE,
+  p_correction = c("none", "plus_one"),
+  fail_on_nonconvergence = FALSE,
   parallel = FALSE,
   verbose = 0,
   ...
@@ -90,6 +95,21 @@ hgwr_fit(
 \item{statistic}{A function used to calculate the statistics
 on the original data and bootstrapped data.
 Default to the variance of standardlised GLSW estimates.}
+
+\item{null}{Bootstrap null-generating mechanism. \code{"fitted"} preserves
+the historical fitted-model bootstrap; \code{"effectwise"} fits a spatially
+constant null model for each tested GLSW effect.}
+
+\item{effects}{Character vector naming GLSW effects to test. \code{NULL}
+tests every GLSW effect.}
+
+\item{refit_bw}{Whether to re-select the bandwidth in every bootstrap fit.}
+
+\item{p_correction}{Bootstrap p-value convention. \code{"plus_one"} adds
+one to the exceedance count and the number of resamples.}
+
+\item{fail_on_nonconvergence}{Whether a non-converged null or bootstrap
+HGWR fit should stop the test. Defaults to \code{FALSE} for compatibility.}
 
 \item{parallel}{If TRUE, use \code{furrr} package to parallel.}
 
