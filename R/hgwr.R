@@ -139,9 +139,9 @@ hgwr.sf <- function(
                             FUN = mean)[, -1]
   mc0 <- mc <- match.call(expand.dots = TRUE)
   mc[[1]] <- as.name("hgwr_fit")
-  mc[["data"]] <- data
-  mc[["coords"]] <- group_coords
-  mev <- eval.parent(mc)
+  mc[["data"]] <- as.name("data")
+  mc[["coords"]] <- as.name("group_coords")
+  mev <- eval(mc)
   mev$call <- mc0
   mev
 }
@@ -165,8 +165,8 @@ hgwr.data.frame <- function(
   data <- data[order(data[[model_desc$group]]), ]
   mc0 <- mc <- match.call(expand.dots = TRUE)
   mc[[1]] <- as.name("hgwr_fit")
-  mc[["data"]] <- data
-  mev <- eval.parent(mc)
+  mc[["data"]] <- as.name("data")
+  mev <- eval(mc)
   mev$call <- mc0
   mev
 }
