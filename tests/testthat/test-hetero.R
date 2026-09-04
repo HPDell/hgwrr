@@ -42,4 +42,58 @@ test_that("spatial heterogeneity: HGWR", {
   expect_no_error({
     spatial_hetero_test(m)
   })
+
+  set.seed(123)
+  legacy <- spatial_hetero_test(
+    m,
+    round = 3,
+    effects = "g2",
+    null = "fitted",
+    p_correction = "none"
+  )
+  expect_s3_class(legacy, "spahetbootres")
+  expect_identical(legacy$vars, "g2")
+  expect_identical(dim(legacy$t), c(3L, 1L))
+
+  set.seed(123)
+  legacy_both <- spatial_hetero_test(
+    m,
+    round = 2,
+    effects = c("g1", "g2"),
+    null = "fitted"
+  )
+  expect_identical(dim(legacy_both$t), c(2L, 2L))
+  expect_identical(colnames(legacy_both$t), c("g1", "g2"))
+
+  set.seed(123)
+  corrected <- spatial_hetero_test(
+    m,
+    round = 3,
+    effects = "g2",
+    null = "effectwise",
+    p_correction = "plus_one"
+  )
+  expect_s3_class(corrected, "spahetbootres")
+  expect_identical(corrected$null, "effectwise")
+  expect_identical(corrected$vars, "g2")
+  expect_gte(corrected$pv[[1]], 1 / 4)
+  expect_lte(corrected$pv[[1]], 1)
+
+  set.seed(123)
+  refitted_bw <- spatial_hetero_test(
+    m,
+    round = 1,
+    effects = "g2",
+    null = "effectwise",
+    refit_bw = TRUE,
+    max_iters = 100,
+    max_retries = 10
+  )
+  expect_true(refitted_bw$refit_bw)
+  expect_identical(dim(refitted_bw$t), c(1L, 1L))
+
+  expect_error(
+    spatial_hetero_test(m, effects = "missing"),
+    "effects must name"
+  )
 })

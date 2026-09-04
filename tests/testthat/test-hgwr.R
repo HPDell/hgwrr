@@ -1,6 +1,23 @@
 data(mulsam.test)
 m <- NULL
 
+test_that("HGWR reports bounded-iteration diagnostics", {
+  model <- hgwr(
+    y ~ L(g1 + g2) + x1 + (z1 | group),
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
+    bw = 10,
+    alpha = 1e-8,
+    max_iters = 20,
+    max_retries = 10
+  )
+  expect_true(is.numeric(model$iterations))
+  expect_true(is.numeric(model$retries))
+  expect_type(model$converged, "logical")
+  expect_lte(model$iterations, 20L)
+  expect_lte(model$retries, 10L)
+})
+
 test_that("hgwr fit", {
   m <<- expect_no_error({
     hgwr(
