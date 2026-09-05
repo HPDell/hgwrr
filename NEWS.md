@@ -1,3 +1,9 @@
+# Version 0.6.2.9002
+
+* Generate bootstrap responses from the null-model GLSW and fixed-effect mean,
+  excluding fitted group random effects, while holding the observed design and
+  drawing new group random effects and residuals.
+
 # Version 0.6.2.9001
 
 * Reparameterize the random-effect covariance as a jittered Cholesky product

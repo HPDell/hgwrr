@@ -237,21 +237,37 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
   ))
 }
 
+.hgwr_null_mean <- function(model) {
+  parsed <- model$frame.parsed
+  rowSums(parsed$g * model$gamma)[parsed$group] +
+    as.vector(parsed$x %*% model$beta)
+}
+
 .simulate_hgwr_error <- function(model, legacy_sigma = FALSE) {
   data0 <- model$frame
   ge <- model$effects$group
   groups <- unique(data0[[ge]])
   z0 <- model$frame.parsed$z
-  sigma2 <- if (legacy_sigma) model$sigma else model$sigma^2
+  variance_scale <- if (legacy_sigma) model$sigma else model$sigma^2
   simulated <- numeric(nrow(data0))
   for (gr in groups) {
     index <- which(data0[[ge]] == gr)
     zi <- as.matrix(z0[index, , drop = FALSE])
-    simulated[index] <- MASS::mvrnorm(
-      mu = rep(0, nrow(zi)),
-      Sigma = zi %*% model$D %*% t(zi) + diag(sigma2, nrow(zi))
-    )
+    random_effect <- drop(MASS::mvrnorm(
+      n = 1,
+      mu = rep(0, ncol(zi)),
+      Sigma = model$D * variance_scale
+    ))
+    simulated[index] <- as.vector(zi %*% random_effect) +
+      stats::rnorm(length(index), sd = sqrt(variance_scale))
   }
+  simulated
+}
+
+.bootstrap_hgwr_data <- function(template, model, response, legacy_sigma) {
+  simulated <- template
+  simulated[[response]] <- .hgwr_null_mean(model) +
+    .simulate_hgwr_error(model, legacy_sigma)
   simulated
 }
 
@@ -263,9 +279,12 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #' @param statistic A function used to calculate the statistics on the
 #' original data and bootstrapped data. Defaults to the variance of
 #' standardised GLSW estimates.
-#' @param null Bootstrap null-generating mechanism. `"fitted"` preserves the
-#' historical behaviour centred on the fitted spatially varying model.
+#' @param null Bootstrap null-generating mechanism. `"fitted"` uses the
+#' spatially varying and fixed-effect part of the fitted model as its mean.
 #' `"effectwise"` fits a spatially constant null model for each tested effect.
+#' Both mechanisms exclude the empirical group random effects from the mean
+#' and draw new group random effects and residuals while holding the observed
+#' design fixed.
 #' @param effects Character vector naming GLSW effects to test. `NULL` tests
 #' all GLSW effects.
 #' @param refit_bw Whether to re-select the bandwidth in every bootstrap fit.
@@ -339,9 +358,9 @@ spatial_hetero_test.hgwrm <- function(
 
   map_bootstrap <- function(null_model, selected_index, legacy_sigma) {
     worker <- function(i, pgb = NULL) {
-      datai <- x$frame
-      datai[[x$effects$response]] <-
-        fitted(null_model) + .simulate_hgwr_error(null_model, legacy_sigma)
+      datai <- .bootstrap_hgwr_data(
+        x$frame, null_model, x$effects$response, legacy_sigma
+      )
       argsi <- args
       argsi$data <- datai
       modeli <- do.call(hgwrr::hgwr_fit, argsi)

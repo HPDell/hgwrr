@@ -43,6 +43,34 @@ test_that("spatial heterogeneity: HGWR", {
     spatial_hetero_test(m)
   })
 
+  parsed <- m$frame.parsed
+  random_fit <- rowSums(parsed$z * m$mu[parsed$group, ])
+  expect_equal(
+    fitted(m) - hgwrr:::.hgwr_null_mean(m),
+    random_fit
+  )
+
+  frame_before <- m$frame
+  coords_before <- m$coords
+  model_with_other_mu <- m
+  model_with_other_mu$mu <- model_with_other_mu$mu + 100
+  set.seed(321)
+  bootstrap_data <- hgwrr:::.bootstrap_hgwr_data(
+    m$frame, m, m$effects$response, legacy_sigma = FALSE
+  )
+  set.seed(321)
+  bootstrap_data_other_mu <- hgwrr:::.bootstrap_hgwr_data(
+    m$frame, model_with_other_mu, m$effects$response, legacy_sigma = FALSE
+  )
+  expect_identical(
+    bootstrap_data[[m$effects$response]],
+    bootstrap_data_other_mu[[m$effects$response]]
+  )
+  unchanged <- setdiff(names(m$frame), m$effects$response)
+  expect_identical(bootstrap_data[unchanged], m$frame[unchanged])
+  expect_identical(m$frame, frame_before)
+  expect_identical(m$coords, coords_before)
+
   set.seed(123)
   legacy <- spatial_hetero_test(
     m,

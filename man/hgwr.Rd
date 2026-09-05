@@ -96,9 +96,12 @@ hgwr_fit(
 on the original data and bootstrapped data.
 Default to the variance of standardlised GLSW estimates.}
 
-\item{null}{Bootstrap null-generating mechanism. \code{"fitted"} preserves
-the historical fitted-model bootstrap; \code{"effectwise"} fits a spatially
-constant null model for each tested GLSW effect.}
+\item{null}{Bootstrap null-generating mechanism. \code{"fitted"} uses the
+spatially varying and fixed-effect part of the fitted model as its mean.
+\code{"effectwise"} fits a spatially constant null model for each tested effect.
+Both mechanisms exclude the empirical group random effects from the mean and
+draw new group random effects and residuals while holding the observed design
+fixed.}
 
 \item{effects}{Character vector naming GLSW effects to test. \code{NULL}
 tests every GLSW effect.}
