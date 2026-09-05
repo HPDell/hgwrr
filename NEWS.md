@@ -1,3 +1,10 @@
+# Version 0.6.2.9003
+
+* Include cross-group blocks in the second-order traces used by the approximate
+  F test for GLSW heterogeneity.
+* Evaluate the approximate F statistic with the residual-scale estimate from
+  the final GLSW surface rather than the preceding backfitting surface.
+
 # Version 0.6.2.9002
 
 * Generate bootstrap responses from the null-model GLSW and fixed-effect mean,
