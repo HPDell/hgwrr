@@ -24,7 +24,8 @@
 #'  \item{\code{bisquared}}{Bi-squared kernel function. If \eqn{d<b} then \eqn{k(d)=\left(1-\frac{d^2}{b^2}\right)^2} else \eqn{k(d)=0}}
 #' }
 #' @param alpha A numeric value. It is the size of the first trial step in
-#' maximum likelihood algorithm.
+#' the BFGS maximum likelihood algorithm. Subsequent steps are selected by
+#' line search.
 #' @param eps_iter A numeric value. Terminate threshold of back-fitting.
 #' @param eps_gradient A numeric value. Terminate threshold of
 #' maximum likelihood algorithm.
@@ -54,6 +55,11 @@
 #'  \item{\code{beta}}{Coefficients of fixed effects.}
 #'  \item{\code{mu}}{Coefficients of sample-level random effects.}
 #'  \item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
+#'  \item{\code{ml_converged}}{Whether the final maximum likelihood update converged.}
+#'  \item{\code{ml_status}}{Integer GSL status from the final maximum likelihood update.}
+#'  \item{\code{ml_iterations}}{Total number of maximum likelihood iterations.}
+#'  \item{\code{ml_failures}}{Number of maximum likelihood updates that did not converge.}
+#'  \item{\code{min_eigen_D}}{Smallest eigenvalue of the fitted \eqn{D} matrix.}
 #'  \item{\code{sigma}}{Variance of errors.}
 #'  \item{\code{effects}}{A list including names of all effects.}
 #'  \item{\code{call}}{Calling of this function.}
@@ -281,7 +287,11 @@ hgwr_fit <- function(
       )
     },
     error = function(e) {
-      stop("Error occurred when estimating HGWR parameters.")
+      stop(
+        "Error occurred when estimating HGWR parameters: ",
+        conditionMessage(e),
+        call. = FALSE
+      )
     }
   )
   rownames(hgwr_result$beta) <- c(gfe)

@@ -1,3 +1,11 @@
+# Version 0.6.2.9001
+
+* Reparameterize the random-effect covariance as a jittered Cholesky product
+  and use BFGS line search for stable maximum likelihood updates.
+* Correct the covariance and joint covariance/fixed-effect gradients, preserve
+  the last valid estimate after optimizer failures, and expose ML diagnostics.
+* Avoid direct inversion of the random-effect covariance matrix.
+
 # Version 0.6.2.9000
 
 - Add an effect-wise null bootstrap for GLSW spatial-heterogeneity tests.

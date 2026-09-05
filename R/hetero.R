@@ -322,8 +322,6 @@ spatial_hetero_test.hgwrm <- function(
   args$coords <- x$coords
   args$data <- x$frame
   args$f_test <- FALSE
-  args$max_iters <- 100
-  args$max_retries <- 10
   args$bw <- if (refit_bw) "CV" else x$bw
   args$verbose <- verbose
   if (...length() > 0) {
@@ -349,7 +347,15 @@ spatial_hetero_test.hgwrm <- function(
       modeli <- do.call(hgwrr::hgwr_fit, argsi)
       if (isTRUE(fail_on_nonconvergence) && identical(modeli$converged, FALSE)) {
         stop(
-          "A bootstrap HGWR fit reached its iteration or retry limit.",
+          sprintf(
+            paste0(
+              "A bootstrap HGWR fit did not converge ",
+              "(outer iterations=%d, retries=%d, ML status=%d, ",
+              "ML iterations=%d, ML failures=%d, min eigen(D)=%.6g)."
+            ),
+            modeli$iterations, modeli$retries, modeli$ml_status,
+            modeli$ml_iterations, modeli$ml_failures, modeli$min_eigen_D
+          ),
           call. = FALSE
         )
       }
@@ -383,7 +389,16 @@ spatial_hetero_test.hgwrm <- function(
       null_model <- do.call(hgwrr::hgwr_fit, null_args)
       if (isTRUE(fail_on_nonconvergence) && identical(null_model$converged, FALSE)) {
         stop(
-          "An effectwise null HGWR fit reached its iteration or retry limit.",
+          sprintf(
+            paste0(
+              "An effectwise null HGWR fit did not converge ",
+              "(outer iterations=%d, retries=%d, ML status=%d, ",
+              "ML iterations=%d, ML failures=%d, min eigen(D)=%.6g)."
+            ),
+            null_model$iterations, null_model$retries, null_model$ml_status,
+            null_model$ml_iterations, null_model$ml_failures,
+            null_model$min_eigen_D
+          ),
           call. = FALSE
         )
       }

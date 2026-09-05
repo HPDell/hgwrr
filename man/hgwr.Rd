@@ -149,7 +149,8 @@ in GWR part. Possible values are
 }}
 
 \item{alpha}{A numeric value. It is the size of the first trial step in
-maximum likelihood algorithm.}
+the BFGS maximum likelihood algorithm. Subsequent steps are selected by
+line search.}
 
 \item{eps_iter}{A numeric value. Terminate threshold of back-fitting.}
 
@@ -182,6 +183,11 @@ A list describing the model with following fields.
 \item{\code{beta}}{Coefficients of fixed effects.}
 \item{\code{mu}}{Coefficients of sample-level random effects.}
 \item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
+\item{\code{ml_converged}}{Whether the final maximum likelihood update converged.}
+\item{\code{ml_status}}{Integer GSL status from the final maximum likelihood update.}
+\item{\code{ml_iterations}}{Total number of maximum likelihood iterations.}
+\item{\code{ml_failures}}{Number of maximum likelihood updates that did not converge.}
+\item{\code{min_eigen_D}}{Smallest eigenvalue of the fitted \eqn{D} matrix.}
 \item{\code{sigma}}{Variance of errors.}
 \item{\code{effects}}{A list including names of all effects.}
 \item{\code{call}}{Calling of this function.}
