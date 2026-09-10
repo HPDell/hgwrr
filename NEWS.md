@@ -1,3 +1,11 @@
+# Version 0.6.2.9005
+
+* Add a joint-null full-model bootstrap that treats every GLSW variable as a
+  global fixed effect in one linear mixed generating model, then tests all
+  requested GLSW variables from each common full-HGWR bootstrap refit.
+* Make the joint-null full-model bootstrap the default while retaining the
+  historical fitted-surface generator as `null = "fitted"`.
+
 # Version 0.6.2.9003
 
 * Include cross-group blocks in the second-order traces used by the approximate

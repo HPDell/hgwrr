@@ -12,7 +12,7 @@
   x,
   round = 99,
   statistic = stat_glsw,
-  null = c("fitted", "effectwise"),
+  null = c("fullmodel", "effectwise", "fitted"),
   effects = NULL,
   refit_bw = FALSE,
   p_correction = c("none", "plus_one"),
@@ -96,12 +96,15 @@ hgwr_fit(
 on the original data and bootstrapped data.
 Default to the variance of standardlised GLSW estimates.}
 
-\item{null}{Bootstrap null-generating mechanism. \code{"fitted"} uses the
-spatially varying and fixed-effect part of the fitted model as its mean.
-\code{"effectwise"} fits a spatially constant null model for each tested effect.
-Both mechanisms exclude the empirical group random effects from the mean and
-draw new group random effects and residuals while holding the observed design
-fixed.}
+\item{null}{Bootstrap null-generating mechanism. \code{"fullmodel"} fits one
+linear mixed null model in which every GLSW variable is a global fixed effect,
+then tests all requested GLSW variables together using each common bootstrap
+response and full HGWR refit. \code{"effectwise"} fits a separate spatially
+constant null model for each tested effect. \code{"fitted"} retains the
+historical behaviour centred on the fitted spatially varying model. All
+mechanisms draw new group random effects and residuals while holding the
+observed design fixed. The \code{"fullmodel"} mechanism requires package
+\code{lme4}.}
 
 \item{effects}{Character vector naming GLSW effects to test. \code{NULL}
 tests every GLSW effect.}

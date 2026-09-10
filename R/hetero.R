@@ -78,6 +78,7 @@ print.spahetbootres <- function(x, ...) {
   if (!inherits(x, "spahetbootres")) {
     stop("The `x` must be an spahetbootres object.")
   }
+  p_values <- if (!is.null(x$pv)) x$pv else x$p
   cat("Spatial Heterogeneity Test\n", fill = TRUE)
   show_tbl <- data.frame(
     t0 = matrix2char(as.vector(x$t0)),
@@ -85,8 +86,8 @@ print.spahetbootres <- function(x, ...) {
       x$t, 2,
       function(r) sprintf("[%s,%s]", matrix2char(min(r)), matrix2char(max(r)))
     ),
-    P = matrix2char(x$p),
-    stars = sapply(x$p, pv2stars)
+    P = matrix2char(p_values),
+    stars = sapply(p_values, pv2stars)
   )
   colnames(show_tbl) <- c("t0", "t", "Pr(t>t0)", "")
   rownames(show_tbl) <- x$vars
@@ -208,6 +209,23 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
   c(if (isTRUE(intercept != 0)) "1" else "0", effects)
 }
 
+.fullmodel_null_formula <- function(x) {
+  glsw <- setdiff(x$effects$glsw, "Intercept")
+  fixed <- unique(c(setdiff(x$effects$fixed, "Intercept"), glsw))
+  slr <- setdiff(x$effects$slr, "Intercept")
+  fixed_intercept <- as.integer(
+    isTRUE(x$intercept$fixed != 0) || isTRUE(x$intercept$glsw != 0)
+  )
+
+  stats::as.formula(sprintf(
+    "%s ~ %s + (%s | %s)",
+    x$effects$response,
+    paste(.effect_terms(fixed_intercept, fixed), collapse = " + "),
+    paste(.effect_terms(x$intercept$slr, slr), collapse = " + "),
+    x$effects$group
+  ))
+}
+
 .effectwise_null_formula <- function(x, effect) {
   glsw <- setdiff(x$effects$glsw, c("Intercept", effect))
   fixed <- setdiff(x$effects$fixed, "Intercept")
@@ -266,6 +284,15 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 
 .bootstrap_hgwr_data <- function(template, model, response, legacy_sigma) {
   simulated <- template
+  if (inherits(model, "merMod")) {
+    simulated[[response]] <- as.numeric(stats::simulate(
+      model,
+      nsim = 1,
+      re.form = NA,
+      allow.new.levels = TRUE
+    )[[1]])
+    return(simulated)
+  }
   simulated[[response]] <- .hgwr_null_mean(model) +
     .simulate_hgwr_error(model, legacy_sigma)
   simulated
@@ -279,12 +306,15 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #' @param statistic A function used to calculate the statistics on the
 #' original data and bootstrapped data. Defaults to the variance of
 #' standardised GLSW estimates.
-#' @param null Bootstrap null-generating mechanism. `"fitted"` uses the
-#' spatially varying and fixed-effect part of the fitted model as its mean.
-#' `"effectwise"` fits a spatially constant null model for each tested effect.
-#' Both mechanisms exclude the empirical group random effects from the mean
-#' and draw new group random effects and residuals while holding the observed
-#' design fixed.
+#' @param null Bootstrap null-generating mechanism. `"fullmodel"` fits one
+#' linear mixed null model in which every GLSW variable is a global fixed
+#' effect, then tests all requested GLSW variables together using each common
+#' bootstrap response and full HGWR refit. `"effectwise"` fits a separate
+#' spatially constant null model for each tested effect. `"fitted"` retains
+#' the historical behaviour centred on the fitted spatially varying model.
+#' All mechanisms draw new group random effects and residuals while holding
+#' the observed design fixed. The `"fullmodel"` mechanism requires package
+#' `lme4`.
 #' @param effects Character vector naming GLSW effects to test. `NULL` tests
 #' all GLSW effects.
 #' @param refit_bw Whether to re-select the bandwidth in every bootstrap fit.
@@ -305,7 +335,7 @@ spatial_hetero_test.hgwrm <- function(
   x,
   round = 99,
   statistic = stat_glsw,
-  null = c("fitted", "effectwise"),
+  null = c("fullmodel", "effectwise", "fitted"),
   effects = NULL,
   refit_bw = FALSE,
   p_correction = c("none", "plus_one"),
@@ -401,6 +431,32 @@ spatial_hetero_test.hgwrm <- function(
     # The historical fitted-model bootstrap uses one simulated data set per
     # round and evaluates every requested GLSW effect on that same refit.
     t <- map_bootstrap(x, effect_index, legacy_sigma = TRUE)
+  } else if (null == "fullmodel") {
+    if (!requireNamespace("lme4", quietly = TRUE)) {
+      stop(
+        "The fullmodel bootstrap requires package \"lme4\".",
+        call. = FALSE
+      )
+    }
+    null_model <- lme4::lmer(
+      .fullmodel_null_formula(x),
+      data = x$frame,
+      REML = FALSE
+    )
+    convergence_messages <- null_model@optinfo$conv$lme4$messages
+    optimiser_code <- null_model@optinfo$conv$opt
+    null_converged <- is.null(convergence_messages) &&
+      (is.null(optimiser_code) || identical(as.integer(optimiser_code), 0L))
+    if (isTRUE(fail_on_nonconvergence) && !null_converged) {
+      stop(
+        paste(
+          "The fullmodel null mixed model did not converge.",
+          paste(convergence_messages, collapse = " | ")
+        ),
+        call. = FALSE
+      )
+    }
+    t <- map_bootstrap(null_model, effect_index, legacy_sigma = FALSE)
   } else {
     t <- vapply(seq_along(effect_index), function(j) {
       null_args <- args

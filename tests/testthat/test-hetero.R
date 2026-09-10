@@ -43,6 +43,25 @@ test_that("spatial heterogeneity: HGWR", {
     spatial_hetero_test(m)
   })
 
+  fullmodel_formula <- hgwrr:::.fullmodel_null_formula(m)
+  fullmodel_terms <- hgwrr:::parse_formula(fullmodel_formula)
+  expect_setequal(fullmodel_terms$fixed.effects, c("g1", "g2", "x1"))
+  expect_length(fullmodel_terms$glsw.effects, 0)
+
+  set.seed(123)
+  fullmodel <- spatial_hetero_test(
+    m,
+    round = 2,
+    effects = c("g1", "g2"),
+    null = "fullmodel",
+    p_correction = "plus_one"
+  )
+  expect_s3_class(fullmodel, "spahetbootres")
+  expect_identical(fullmodel$null, "fullmodel")
+  expect_identical(fullmodel$vars, c("g1", "g2"))
+  expect_identical(dim(fullmodel$t), c(2L, 2L))
+  expect_true(all(fullmodel$pv >= 1 / 3))
+
   parsed <- m$frame.parsed
   random_fit <- rowSums(parsed$z * m$mu[parsed$group, ])
   expect_equal(
@@ -82,6 +101,7 @@ test_that("spatial heterogeneity: HGWR", {
   expect_s3_class(legacy, "spahetbootres")
   expect_identical(legacy$vars, "g2")
   expect_identical(dim(legacy$t), c(3L, 1L))
+  expect_no_error(print(legacy))
 
   set.seed(123)
   legacy_both <- spatial_hetero_test(
