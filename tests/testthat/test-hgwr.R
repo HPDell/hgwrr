@@ -113,6 +113,33 @@ test_that("hgwr summary with spatial heterogeneity test", {
   })
 })
 
+test_that("single-model F3 experiment returns aligned diagnostics", {
+  model <- hgwr(
+    formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
+    bw = 10,
+    alpha = 1e-8,
+    f_test = TRUE
+  )
+  variants <- c(
+    "f_test", "f_test_scale", "f_test_nuisance",
+    "f_test_combined", "f_test_orthogonal"
+  )
+  for (variant in variants) {
+    expect_identical(names(model[[variant]]), model$effects$glsw)
+    expect_true(all(vapply(model[[variant]], function(x) {
+      length(x) == 4L && all(is.finite(x)) && x[[4L]] >= 0 && x[[4L]] <= 1
+    }, logical(1))))
+  }
+  expect_identical(
+    rownames(model$f_test_diagnostics),
+    model$effects$glsw
+  )
+  expect_true(all(is.finite(model$f_test_diagnostics)))
+  expect_lt(max(model$f_test_diagnostics[, "map_identity_error"]), 1e-8)
+})
+
 test_that("hgwr s3 methods with no random slop or intercept", {
   m_rn <- NULL
   expect_no_error({

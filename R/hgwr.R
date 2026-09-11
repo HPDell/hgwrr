@@ -297,6 +297,19 @@ hgwr_fit <- function(
   rownames(hgwr_result$beta) <- c(gfe)
   colnames(hgwr_result$gamma) <- c(lfe)
   colnames(hgwr_result$mu) <- c(re)
+  if (isTRUE(f_test)) {
+    names(hgwr_result$f_test) <- lfe
+    names(hgwr_result$f_test_scale) <- lfe
+    names(hgwr_result$f_test_nuisance) <- lfe
+    names(hgwr_result$f_test_combined) <- lfe
+    names(hgwr_result$f_test_orthogonal) <- lfe
+    rownames(hgwr_result$f_test_diagnostics) <- lfe
+    colnames(hgwr_result$f_test_diagnostics) <- c(
+      "sigma_ml_sq", "sigma_f3_sq", "rss_g", "variance_legacy",
+      "variance_nuisance", "leakage_fraction", "map_identity_error",
+      "quadratic_correlation", "orthogonal_rss", "orthogonal_df_den"
+    )
+  }
   if (optim_bw) {
     bw_value <- hgwr_result$bw
   }

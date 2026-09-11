@@ -68,6 +68,11 @@ List hgwr_bfml(
     {
         auto ftest_result = algorithm.test_glsw();
         results["f_test"] = ftest_result;
+        results["f_test_scale"] = algorithm.get_f_test_scale();
+        results["f_test_nuisance"] = algorithm.get_f_test_nuisance();
+        results["f_test_combined"] = algorithm.get_f_test_combined();
+        results["f_test_orthogonal"] = algorithm.get_f_test_orthogonal();
+        results["f_test_diagnostics"] = algorithm.get_f_test_diagnostics();
     }
 
     return results;
