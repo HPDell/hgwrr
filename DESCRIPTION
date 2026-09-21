@@ -30,6 +30,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    future,
     furrr,
     progressr,
 SystemRequirements: GNU make

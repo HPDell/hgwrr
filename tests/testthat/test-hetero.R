@@ -1,5 +1,23 @@
 library(testthat)
 
+test_that("parallel bootstrap thread settings are reversible", {
+  thread_vars <- hgwrr:::.parallel_math_thread_vars
+  original <- Sys.getenv(thread_vars, unset = NA_character_)
+  on.exit(hgwrr:::.restore_parallel_math_threads(original), add = TRUE)
+
+  Sys.setenv(OMP_NUM_THREADS = "7")
+  Sys.unsetenv("OPENBLAS_NUM_THREADS")
+  previous <- hgwrr:::.limit_parallel_math_threads()
+  expect_true(all(Sys.getenv(thread_vars) == "1"))
+
+  hgwrr:::.restore_parallel_math_threads(previous)
+  expect_identical(Sys.getenv("OMP_NUM_THREADS"), "7")
+  expect_true(is.na(Sys.getenv(
+    "OPENBLAS_NUM_THREADS",
+    unset = NA_character_
+  )))
+})
+
 test_that("spatial heterogeneity: vector matrix data.frame", {
   data(mulsam.test)
   g <- with(mulsam.test, {
@@ -143,5 +161,39 @@ test_that("spatial heterogeneity: HGWR", {
   expect_error(
     spatial_hetero_test(m, effects = "missing"),
     "effects must name"
+  )
+})
+
+test_that("HGWR bootstrap supports multisession futures", {
+  skip_if_not_installed("future")
+  skip_if_not_installed("furrr")
+  data(mulsam.test)
+  m <- hgwr(
+    formula = y ~ L(g1 + g2) + x1 + (z1 | group),
+    data = mulsam.test$data,
+    coords = mulsam.test$coords,
+    bw = 10,
+    alpha = 1e-8
+  )
+
+  old_plan <- future::plan()
+  on.exit(future::plan(old_plan), add = TRUE)
+  future::plan(future::multisession, workers = 2)
+  thread_env_before <- Sys.getenv(
+    hgwrr:::.parallel_math_thread_vars,
+    unset = NA_character_
+  )
+  parallel_fullmodel <- spatial_hetero_test(
+    m,
+    round = 2,
+    effects = "g1",
+    null = "fullmodel",
+    parallel = TRUE
+  )
+
+  expect_identical(dim(parallel_fullmodel$t), c(2L, 1L))
+  expect_identical(
+    Sys.getenv(hgwrr:::.parallel_math_thread_vars, unset = NA_character_),
+    thread_env_before
   )
 })

@@ -298,6 +298,37 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
   simulated
 }
 
+.parallel_math_thread_vars <- c(
+  "OMP_NUM_THREADS",
+  "OPENBLAS_NUM_THREADS",
+  "MKL_NUM_THREADS",
+  "BLIS_NUM_THREADS",
+  "VECLIB_MAXIMUM_THREADS",
+  "GOTO_NUM_THREADS",
+  "NUMEXPR_NUM_THREADS"
+)
+
+.limit_parallel_math_threads <- function() {
+  previous <- Sys.getenv(.parallel_math_thread_vars, unset = NA_character_)
+  values <- stats::setNames(
+    rep.int("1", length(.parallel_math_thread_vars)),
+    .parallel_math_thread_vars
+  )
+  do.call(Sys.setenv, as.list(values))
+  previous
+}
+
+.restore_parallel_math_threads <- function(previous) {
+  present <- !is.na(previous)
+  if (any(present)) {
+    do.call(Sys.setenv, as.list(previous[present]))
+  }
+  if (any(!present)) {
+    Sys.unsetenv(names(previous)[!present])
+  }
+  invisible(NULL)
+}
+
 #' @describeIn hgwr
 #' Test the spatial heterogeneity with bootstrapping.
 #'
@@ -323,6 +354,8 @@ stat_glsw <- function(g, sd) diag(var(g / sd))
 #' @param fail_on_nonconvergence Whether a non-converged null or bootstrap
 #' HGWR fit should stop the test. Defaults to `FALSE` for compatibility.
 #' @param parallel If TRUE, use `furrr` package to parallelise resamples.
+#' To avoid unsafe nested parallelism, each future worker uses one thread for
+#' OpenMP and common BLAS implementations while fitting bootstrap models.
 #' @param verbose Override the verbose setting in the `hgwrm` model.
 #' @param \dots Arguments to be used in re-fitting the model with
 #' [hgwrr::hgwr()].
@@ -387,7 +420,14 @@ spatial_hetero_test.hgwrm <- function(
   }
 
   map_bootstrap <- function(null_model, selected_index, legacy_sigma) {
-    worker <- function(i, pgb = NULL) {
+    worker <- function(i, pgb = NULL, limit_math_threads = FALSE) {
+      if (isTRUE(limit_math_threads)) {
+        previous_thread_env <- .limit_parallel_math_threads()
+        on.exit(
+          .restore_parallel_math_threads(previous_thread_env),
+          add = TRUE
+        )
+      }
       datai <- .bootstrap_hgwr_data(
         x$frame, null_model, x$effects$response, legacy_sigma
       )
@@ -416,9 +456,18 @@ spatial_hetero_test.hgwrm <- function(
       if (!requireNamespace("furrr", quietly = TRUE)) {
         stop("Package \"furrr\" must be installed to parallel", call. = FALSE)
       }
+      # Limit numerical-library threads before futures are launched so forked
+      # workers inherit a safe setting. The worker repeats this step for
+      # already-running multisession workers, then restores their prior state.
+      previous_thread_env <- .limit_parallel_math_threads()
+      on.exit(
+        .restore_parallel_math_threads(previous_thread_env),
+        add = TRUE
+      )
       draws <- furrr::future_map(
         seq_len(round), worker,
         pgb = pgb,
+        limit_math_threads = TRUE,
         .options = furrr::furrr_options(seed = TRUE)
       )
     } else {

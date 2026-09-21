@@ -90,34 +90,36 @@ hgwr_fit(
 \arguments{
 \item{x}{An \code{hgwrm} object}
 
-\item{round}{The number of times to sampling from model.}
+\item{round}{The number of times to sample from the model.}
 
-\item{statistic}{A function used to calculate the statistics
-on the original data and bootstrapped data.
-Default to the variance of standardlised GLSW estimates.}
+\item{statistic}{A function used to calculate the statistics on the
+original data and bootstrapped data. Defaults to the variance of
+standardised GLSW estimates.}
 
 \item{null}{Bootstrap null-generating mechanism. \code{"fullmodel"} fits one
-linear mixed null model in which every GLSW variable is a global fixed effect,
-then tests all requested GLSW variables together using each common bootstrap
-response and full HGWR refit. \code{"effectwise"} fits a separate spatially
-constant null model for each tested effect. \code{"fitted"} retains the
-historical behaviour centred on the fitted spatially varying model. All
-mechanisms draw new group random effects and residuals while holding the
-observed design fixed. The \code{"fullmodel"} mechanism requires package
+linear mixed null model in which every GLSW variable is a global fixed
+effect, then tests all requested GLSW variables together using each common
+bootstrap response and full HGWR refit. \code{"effectwise"} fits a separate
+spatially constant null model for each tested effect. \code{"fitted"} retains
+the historical behaviour centred on the fitted spatially varying model.
+All mechanisms draw new group random effects and residuals while holding
+the observed design fixed. The \code{"fullmodel"} mechanism requires package
 \code{lme4}.}
 
-\item{effects}{Character vector naming GLSW effects to test. \code{NULL}
-tests every GLSW effect.}
+\item{effects}{Character vector naming GLSW effects to test. \code{NULL} tests
+all GLSW effects.}
 
 \item{refit_bw}{Whether to re-select the bandwidth in every bootstrap fit.}
 
-\item{p_correction}{Bootstrap p-value convention. \code{"plus_one"} adds
-one to the exceedance count and the number of resamples.}
+\item{p_correction}{Bootstrap p-value convention. \code{"none"} returns the
+empirical proportion; \code{"plus_one"} adds one to numerator and denominator.}
 
 \item{fail_on_nonconvergence}{Whether a non-converged null or bootstrap
 HGWR fit should stop the test. Defaults to \code{FALSE} for compatibility.}
 
-\item{parallel}{If TRUE, use \code{furrr} package to parallel.}
+\item{parallel}{If TRUE, use \code{furrr} package to parallelise resamples.
+To avoid unsafe nested parallelism, each future worker uses one thread for
+OpenMP and common BLAS implementations while fitting bootstrap models.}
 
 \item{verbose}{An integer value. Determine the log level.
 Possible values are:

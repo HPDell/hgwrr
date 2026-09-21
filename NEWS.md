@@ -1,3 +1,9 @@
+# Version 0.6.2.9006
+
+* Prevent future workers from crashing during parallel bootstrap tests by
+  limiting nested OpenMP and BLAS threading within each bootstrap fit and
+  restoring the caller's thread environment afterwards.
+
 # Version 0.6.2.9005
 
 * Add a joint-null full-model bootstrap that treats every GLSW variable as a
