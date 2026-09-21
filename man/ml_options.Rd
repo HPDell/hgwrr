@@ -6,6 +6,18 @@
 \usage{
 ml_options(alpha = 0.01, eps_gradient = 1e-06, ml_type = c("D_Only", "D_Beta"))
 }
+\arguments{
+\item{alpha}{Initial step size used by the maximum likelihood optimizer.}
+
+\item{eps_gradient}{Gradient convergence threshold for the optimizer.}
+
+\item{ml_type}{Maximum likelihood variant. \code{"D_Only"} estimates the random
+effect covariance with \code{beta} updated by GLS; \code{"D_Beta"} estimates \code{D} and
+\code{beta} jointly.}
+}
+\value{
+A list passed to \code{\link[=hgwr]{hgwr()}} through \code{global_options}.
+}
 \description{
 Maximum likelihood options
 }

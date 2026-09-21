@@ -12,33 +12,23 @@
 #' For more information, please see the `formula` subsection in details.
 #' @param data The data.
 #' @param \dots Further arguments for the specified type of `data`.
-#' @param bw A numeric value. It is the value of bandwidth or `"CV"`.
-#' In this stage this function only support adaptive bandwidth.
-#' And its unit must be the number of nearest neighbours.
-#' If `"CV"` is specified, the algorithm will automatically select an
-#' optimized bandwidth value.
-#' @param kernel A character value. It specify which kernel function is used
-#' in GWR part. Possible values are
+#' @param bw A numeric value, `"CV"`, or `"AIC"`. Numeric values are adaptive
+#' bandwidths measured by number of nearest neighbours. `"CV"` or `"AIC"`
+#' requests automatic bandwidth selection with the corresponding criterion.
+#' @param kernel A character value specifying which kernel function is used
+#' in the GWR part. Possible values are
 #' \describe{
 #'  \item{\code{gaussian}}{Gaussian kernel function \eqn{k(d)=\exp\left(-\frac{d^2}{b^2}\right)}}
 #'  \item{\code{bisquared}}{Bi-squared kernel function. If \eqn{d<b} then \eqn{k(d)=\left(1-\frac{d^2}{b^2}\right)^2} else \eqn{k(d)=0}}
 #' }
-#' @param alpha A numeric value. It is the size of the first trial step in
-#' maximum likelihood algorithm.
 #' @param eps_iter A numeric value. Terminate threshold of back-fitting.
-#' @param eps_gradient A numeric value. Terminate threshold of
-#' maximum likelihood algorithm.
 #' @param max_iters An integer value. The maximum of iteration.
 #' @param max_retries An integer value. If the algorithm tends to be diverge,
 #' it stops automatically after trying *max_retires* times.
-#' @param ml_type An integer value. Represent which maximum likelihood
-#' algorithm is used. Possible values are:
-#' \describe{
-#'  \item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
-#'  \item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
-#' }
+#' @param global_options Estimation options created by [ml_options()],
+#' [mcmc_options()], or [cm_options()].
 #' @param f_test A logical value. Determine whether to do F test on GLSW effects.
-#' If `f_test=TURE`, there will be a `f_test` item in the returned object
+#' If `f_test=TRUE`, there will be a `f_test` item in the returned object
 #' showing the F test for each GLSW effect.
 #' @param verbose An integer value. Determine the log level.
 #' Possible values are:
@@ -53,8 +43,8 @@
 #'  \item{\code{gamma}}{Coefficients of group-level spatially weighted effects.}
 #'  \item{\code{beta}}{Coefficients of fixed effects.}
 #'  \item{\code{mu}}{Coefficients of sample-level random effects.}
-#'  \item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
-#'  \item{\code{sigma}}{Variance of errors.}
+#'  \item{\code{D}}{Relative variance-covariance matrix of sample-level random effects. The covariance matrix is `sigma^2 * D`.}
+#'  \item{\code{sigma}}{Residual standard deviation.}
 #'  \item{\code{effects}}{A list including names of all effects.}
 #'  \item{\code{call}}{Calling of this function.}
 #'  \item{\code{frame}}{The DataFrame object sent to this call.}
@@ -290,26 +280,40 @@ hgwr_fit <- function(
           as.integer(max_iters), as.integer(max_retries),
           as.integer(ml_type), f_test, as.integer(verbose)
         )
-      } else if (global_method == "MCMC") {
+      } else if (global_method %in% c("MCMC", "CM")) {
         mcmc_iters <- global_options$mcmc_iters
         mcmc_burnin <- global_options$mcmc_burnin
         hgwr_mcmc(
           g, x, z, y, as.matrix(coords),
           group_index, bw_value, bw_criterion, kernel_index,
           eps_iter, as.integer(max_iters), as.integer(max_retries),
-          mcmc_iters, mcmc_burnin, f_test, as.integer(verbose)
+          mcmc_iters, mcmc_burnin,
+          global_options$beta_prior_variance,
+          global_options$d_prior_df_offset,
+          global_options$d_prior_mean,
+          global_options$sigma_prior_shape,
+          global_options$sigma_prior_scale,
+          global_options$inner_tolerance,
+          isTRUE(global_options$save_draws),
+          identical(global_method, "CM"),
+          f_test, as.integer(verbose)
         )
       } else {
-        stop("Method must be either ML or MCMC.")
+        stop("Method must be ML, MCMC, or CM.")
       }
     },
     error = function(e) {
-      stop("Error occurred when estimating HGWR parameters.")
+      stop(conditionMessage(e), call. = FALSE)
     }
   )
   rownames(hgwr_result$beta) <- c(gfe)
   colnames(hgwr_result$gamma) <- c(lfe)
   colnames(hgwr_result$mu) <- c(re)
+  if (!is.null(hgwr_result$conditional_draws)) {
+    colnames(hgwr_result$conditional_draws$beta) <- gfe
+    d_names <- as.vector(outer(re, re, paste, sep = ":"))
+    colnames(hgwr_result$conditional_draws$D) <- d_names
+  }
   if (optim_bw) {
     bw_value <- hgwr_result$bw
   }

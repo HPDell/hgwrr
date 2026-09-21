@@ -2,10 +2,47 @@
 % Please edit documentation in R/options.R
 \name{mcmc_options}
 \alias{mcmc_options}
-\title{Markov Chain Monte Carlo Esitmator Options}
+\title{Markov Chain Monte Carlo estimator options}
 \usage{
-mcmc_options(mcmc_iters = 5000, mcmc_burnin = 400)
+mcmc_options(
+  mcmc_iters = 5000,
+  mcmc_burnin = 400,
+  beta_prior_variance = 100,
+  d_prior_df_offset = 5,
+  d_prior_mean = 1,
+  sigma_prior_shape = 0.001,
+  sigma_prior_scale = 0.001,
+  inner_tolerance = 1e-06,
+  save_draws = FALSE
+)
+}
+\arguments{
+\item{mcmc_iters}{Total MCMC iterations within each backfitting iteration.}
+
+\item{mcmc_burnin}{Number of initial MCMC iterations discarded as burn-in.}
+
+\item{beta_prior_variance}{Scalar variance multiplier in
+\verb{beta | sigma^2 ~ N(0, sigma^2 beta_prior_variance I)}.}
+
+\item{d_prior_df_offset}{Degrees-of-freedom offset in
+\code{D ~ IW(q + d_prior_df_offset, S0)}. It must exceed 1 so the prior mean
+exists.}
+
+\item{d_prior_mean}{Diagonal value of the inverse-Wishart prior mean.}
+
+\item{sigma_prior_shape, sigma_prior_scale}{Shape and scale in
+\code{sigma^2 ~ Inv-Gamma(shape, scale)}.}
+
+\item{inner_tolerance}{Parameter-change tolerance used only by conditional
+mode backfitting. It is ignored for stochastic MCMC updates.}
+
+\item{save_draws}{Save retained draws from the last conditional chain. These
+draws condition on the final spatial surface and are not draws from a
+joint HGWR posterior.}
+}
+\value{
+A list passed to \code{\link[=hgwr]{hgwr()}} through \code{global_options}.
 }
 \description{
-Markov Chain Monte Carlo Esitmator Options
+Markov Chain Monte Carlo estimator options
 }

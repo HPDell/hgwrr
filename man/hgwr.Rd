@@ -107,14 +107,12 @@ For more information, please see the \code{formula} subsection in details.}
 
 \item{data}{The data.}
 
-\item{bw}{A numeric value. It is the value of bandwidth or \code{"CV"}.
-In this stage this function only support adaptive bandwidth.
-And its unit must be the number of nearest neighbours.
-If \code{"CV"} is specified, the algorithm will automatically select an
-optimized bandwidth value.}
+\item{bw}{A numeric value, \code{"CV"}, or \code{"AIC"}. Numeric values are adaptive
+bandwidths measured by number of nearest neighbours. \code{"CV"} or \code{"AIC"}
+requests automatic bandwidth selection with the corresponding criterion.}
 
-\item{kernel}{A character value. It specify which kernel function is used
-in GWR part. Possible values are
+\item{kernel}{A character value specifying which kernel function is used
+in the GWR part. Possible values are
 \describe{
 \item{\code{gaussian}}{Gaussian kernel function \eqn{k(d)=\exp\left(-\frac{d^2}{b^2}\right)}}
 \item{\code{bisquared}}{Bi-squared kernel function. If \eqn{d<b} then \eqn{k(d)=\left(1-\frac{d^2}{b^2}\right)^2} else \eqn{k(d)=0}}
@@ -127,25 +125,15 @@ in GWR part. Possible values are
 \item{max_retries}{An integer value. If the algorithm tends to be diverge,
 it stops automatically after trying \emph{max_retires} times.}
 
+\item{global_options}{Estimation options created by \code{\link[=ml_options]{ml_options()}},
+\code{\link[=mcmc_options]{mcmc_options()}}, or \code{\link[=cm_options]{cm_options()}}.}
+
 \item{f_test}{A logical value. Determine whether to do F test on GLSW effects.
-If \code{f_test=TURE}, there will be a \code{f_test} item in the returned object
+If \code{f_test=TRUE}, there will be a \code{f_test} item in the returned object
 showing the F test for each GLSW effect.}
 
 \item{coords}{A 2-column matrix.
 It consists of coordinates for each group.}
-
-\item{alpha}{A numeric value. It is the size of the first trial step in
-maximum likelihood algorithm.}
-
-\item{eps_gradient}{A numeric value. Terminate threshold of
-maximum likelihood algorithm.}
-
-\item{ml_type}{An integer value. Represent which maximum likelihood
-algorithm is used. Possible values are:
-\describe{
-\item{\code{D_Only}}{Only \eqn{D} is specified by maximum likelihood.}
-\item{\code{D_Beta}}{Both \eqn{D} and \eqn{beta} is specified by maximum likelihood.}
-}}
 }
 \value{
 A list describing the model with following fields.
@@ -153,8 +141,8 @@ A list describing the model with following fields.
 \item{\code{gamma}}{Coefficients of group-level spatially weighted effects.}
 \item{\code{beta}}{Coefficients of fixed effects.}
 \item{\code{mu}}{Coefficients of sample-level random effects.}
-\item{\code{D}}{Variance-covariance matrix of sample-level random effects.}
-\item{\code{sigma}}{Variance of errors.}
+\item{\code{D}}{Relative variance-covariance matrix of sample-level random effects. The covariance matrix is \code{sigma^2 * D}.}
+\item{\code{sigma}}{Residual standard deviation.}
 \item{\code{effects}}{A list including names of all effects.}
 \item{\code{call}}{Calling of this function.}
 \item{\code{frame}}{The DataFrame object sent to this call.}
@@ -184,6 +172,9 @@ For example, the following formula in the example of this function below is writ
 where \code{g1} and \code{g2} are GLSW effects,
 \code{x1} is the fixed effects,
 and \code{z1} is the SLR effects grouped by the group indicator \code{group}.
+Non-intercept SLR effects are also included as fixed effects internally,
+so the fixed effect estimates their population mean and the SLR term
+estimates group-level deviations around that mean.
 Note that SLR effects can only be specified once!
 }
 }

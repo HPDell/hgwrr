@@ -8,9 +8,24 @@ test_that("hgwr fit", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = 10,
-      global_options = ml_options(alpha = 1e-8)
+      global_options = ml_options(alpha = 1e-4)
     )
   })
+})
+
+test_that("maximum likelihood fit reports optimizer state", {
+  expect_true(is.list(m$fit_diagnostics))
+  expect_true(m$fit_diagnostics$optimizer_status == 0L)
+  expect_equal(m$fit_diagnostics$optimizer_failures, 0)
+  expect_true(all(is.finite(m$D)))
+  expect_true(all(eigen(m$D, symmetric = TRUE, only.values = TRUE)$values > 0))
+})
+
+test_that("maximum-likelihood optimizer options validate step sizes", {
+  expect_error(ml_options(alpha = 0), "positive scalar")
+  expect_error(ml_options(alpha = NA_real_), "positive scalar")
+  expect_error(ml_options(eps_gradient = 0), "positive scalar")
+  expect_equal(ml_options(alpha = 1e-4)$alpha, 1e-4)
 })
 
 test_that("hgwr fit no intercept", {
@@ -20,21 +35,21 @@ test_that("hgwr fit no intercept", {
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    global_options = ml_options(alpha = 1e-8)
+    global_options = ml_options(alpha = 1e-4)
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + 0 + x1 + (z1 | group),
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    global_options = ml_options(alpha = 1e-8)
+    global_options = ml_options(alpha = 1e-4)
   ))
   expect_no_error(hgwr(
     formula = y ~ L(g1 + g2) + x1 + (0 + z1 | group),
     data = mulsam.test$data,
     coords = mulsam.test$coords,
     bw = 10,
-    global_options = ml_options(alpha = 1e-8)
+    global_options = ml_options(alpha = 1e-4)
   ))
 })
 
@@ -46,7 +61,7 @@ test_that("hgwr fit sf", {
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = ms_sf,
     bw = 10,
-    global_options = ml_options(alpha = 1e-8)
+    global_options = ml_options(alpha = 1e-4)
   ))
 })
 
@@ -74,7 +89,7 @@ test_that("hgwr data.frame coords check", {
     formula = y ~ L(g1 + g2) + x1 + (z1 | group),
     data = mulsam.test$data,
     bw = 10,
-    global_options = ml_options(alpha = 1e-8)
+    global_options = ml_options(alpha = 1e-4)
   ))
 })
 
@@ -85,7 +100,10 @@ test_that("hgwr bandwidth optimisation", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
 })
@@ -104,7 +122,10 @@ test_that("hgwr s3 methods with no random slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_rn))
@@ -122,7 +143,10 @@ test_that("hgwr s3 methods with no random slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_rn))
@@ -143,7 +167,10 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_fn))
@@ -161,7 +188,10 @@ test_that("hgwr s3 methods with no fixed slop or intercept", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_fn))
@@ -182,7 +212,10 @@ test_that("hgwr s3 methods with no GLSW slop", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_gn))
@@ -200,7 +233,10 @@ test_that("hgwr s3 methods with no GLSW slop", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = "CV",
-      global_options = ml_options(alpha = 1e-8)
+      eps_iter = 1e-3,
+      max_iters = 60,
+      max_retries = 8,
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_no_error(print(m_gn))
@@ -220,7 +256,7 @@ test_that("hgwr order data", {
       data = mulsam.test$data,
       coords = mulsam.test$coords,
       bw = 10,
-      global_options = ml_options(alpha = 1e-8)
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   set.seed(1)
@@ -234,7 +270,7 @@ test_that("hgwr order data", {
       data = data_perm,
       coords = mulsam.test$coords,
       bw = 10,
-      global_options = ml_options(alpha = 1e-8)
+      global_options = ml_options(alpha = 1e-4)
     )
   })
   expect_equal(m_perm$gamma, m0$gamma)

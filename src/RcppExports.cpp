@@ -56,8 +56,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // hgwr_mcmc
-List hgwr_mcmc(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, double bw, int bw_optim, size_t kernel, double eps_iter, size_t max_iters, size_t max_retries, size_t mcmc_iters, size_t mcmc_burnin, bool f_test, size_t verbose);
-RcppExport SEXP _hgwrr_hgwr_mcmc(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP bw_optimSEXP, SEXP kernelSEXP, SEXP eps_iterSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP mcmc_itersSEXP, SEXP mcmc_burninSEXP, SEXP f_testSEXP, SEXP verboseSEXP) {
+List hgwr_mcmc(const arma::mat& g, const arma::mat& x, const arma::mat& z, const arma::vec& y, const arma::mat& u, const arma::vec& group, double bw, int bw_optim, size_t kernel, double eps_iter, size_t max_iters, size_t max_retries, size_t mcmc_iters, size_t mcmc_burnin, double beta_prior_variance, double d_prior_df_offset, double d_prior_mean, double sigma_prior_shape, double sigma_prior_scale, double inner_tolerance, bool save_draws, bool conditional_mode, bool f_test, size_t verbose);
+RcppExport SEXP _hgwrr_hgwr_mcmc(SEXP gSEXP, SEXP xSEXP, SEXP zSEXP, SEXP ySEXP, SEXP uSEXP, SEXP groupSEXP, SEXP bwSEXP, SEXP bw_optimSEXP, SEXP kernelSEXP, SEXP eps_iterSEXP, SEXP max_itersSEXP, SEXP max_retriesSEXP, SEXP mcmc_itersSEXP, SEXP mcmc_burninSEXP, SEXP beta_prior_varianceSEXP, SEXP d_prior_df_offsetSEXP, SEXP d_prior_meanSEXP, SEXP sigma_prior_shapeSEXP, SEXP sigma_prior_scaleSEXP, SEXP inner_toleranceSEXP, SEXP save_drawsSEXP, SEXP conditional_modeSEXP, SEXP f_testSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,9 +75,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< size_t >::type max_retries(max_retriesSEXP);
     Rcpp::traits::input_parameter< size_t >::type mcmc_iters(mcmc_itersSEXP);
     Rcpp::traits::input_parameter< size_t >::type mcmc_burnin(mcmc_burninSEXP);
+    Rcpp::traits::input_parameter< double >::type beta_prior_variance(beta_prior_varianceSEXP);
+    Rcpp::traits::input_parameter< double >::type d_prior_df_offset(d_prior_df_offsetSEXP);
+    Rcpp::traits::input_parameter< double >::type d_prior_mean(d_prior_meanSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma_prior_shape(sigma_prior_shapeSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma_prior_scale(sigma_prior_scaleSEXP);
+    Rcpp::traits::input_parameter< double >::type inner_tolerance(inner_toleranceSEXP);
+    Rcpp::traits::input_parameter< bool >::type save_draws(save_drawsSEXP);
+    Rcpp::traits::input_parameter< bool >::type conditional_mode(conditional_modeSEXP);
     Rcpp::traits::input_parameter< bool >::type f_test(f_testSEXP);
     Rcpp::traits::input_parameter< size_t >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(hgwr_mcmc(g, x, z, y, u, group, bw, bw_optim, kernel, eps_iter, max_iters, max_retries, mcmc_iters, mcmc_burnin, f_test, verbose));
+    rcpp_result_gen = Rcpp::wrap(hgwr_mcmc(g, x, z, y, u, group, bw, bw_optim, kernel, eps_iter, max_iters, max_retries, mcmc_iters, mcmc_burnin, beta_prior_variance, d_prior_df_offset, d_prior_mean, sigma_prior_shape, sigma_prior_scale, inner_tolerance, save_draws, conditional_mode, f_test, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,7 +93,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_hgwrr_spatial_hetero_bootstrap", (DL_FUNC) &_hgwrr_spatial_hetero_bootstrap, 7},
     {"_hgwrr_hgwr_bfml", (DL_FUNC) &_hgwrr_hgwr_bfml, 17},
-    {"_hgwrr_hgwr_mcmc", (DL_FUNC) &_hgwrr_hgwr_mcmc, 16},
+    {"_hgwrr_hgwr_mcmc", (DL_FUNC) &_hgwrr_hgwr_mcmc, 24},
     {NULL, NULL, 0}
 };
 
